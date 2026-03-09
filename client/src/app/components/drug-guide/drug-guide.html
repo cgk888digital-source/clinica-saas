@@ -173,123 +173,128 @@
       class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
       (click)="$event.stopPropagation()"
     >
-      <div class="modal-content border-0 shadow-lg" *ngIf="selectedDrug">
-        <div
-          class="modal-header text-white border-0"
-          style="background: linear-gradient(135deg, #0369a1, #0ea5e9)"
-        >
-          <div class="d-flex align-items-center gap-3">
-            <div class="bg-white bg-opacity-25 rounded-circle p-2">
-              <i class="bi bi-capsule-pill fs-4"></i>
+      @if (selectedDrug) {
+        <div class="modal-content border-0 shadow-lg">
+          <div
+            class="modal-header text-white border-0"
+            style="background: linear-gradient(135deg, #0369a1, #0ea5e9)"
+          >
+            <div class="d-flex align-items-center gap-3">
+              <div class="bg-white bg-opacity-25 rounded-circle p-2">
+                <i class="bi bi-capsule-pill fs-4"></i>
+              </div>
+              <div>
+                <h5 class="modal-title fw-bold mb-0">{{ selectedDrug.name }}</h5>
+                @if (selectedDrug.genericName) {
+                  <small class="opacity-75">{{ selectedDrug.genericName }}</small>
+                }
+              </div>
             </div>
-            <div>
-              <h5 class="modal-title fw-bold mb-0">{{ selectedDrug.name }}</h5>
-              @if (selectedDrug.genericName) {
-                <small class="opacity-75">{{ selectedDrug.genericName }}</small>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              (click)="showDetailModal.set(false)"
+            ></button>
+          </div>
+
+          <div class="modal-body p-4">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-box-seam text-muted"></i>
+                  <small class="text-uppercase text-muted fw-bold">Presentación</small>
+                </div>
+                <p class="mb-0 fw-medium">{{ selectedDrug.presentation || 'No especificado' }}</p>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-tag text-muted"></i>
+                  <small class="text-uppercase text-muted fw-bold">Categoría</small>
+                </div>
+                <span
+                  class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle fs-6 px-3"
+                >
+                  {{ selectedDrug.category || 'Sin categoría' }}
+                </span>
+              </div>
+              <div class="col-12">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <i class="bi bi-atom text-primary"></i>
+                  <small class="text-uppercase text-primary fw-bold">Componentes Activos</small>
+                </div>
+                <div class="bg-light rounded p-3">
+                  <p class="mb-0">{{ selectedDrug.activeComponents }}</p>
+                </div>
+              </div>
+
+              @if (selectedDrug.indications) {
+                <div class="col-md-6">
+                  <div class="border-start border-3 border-success ps-3">
+                    <small class="text-uppercase text-muted fw-bold d-block mb-1"
+                      >Indicaciones</small
+                    >
+                    <p class="small mb-0 text-secondary">{{ selectedDrug.indications }}</p>
+                  </div>
+                </div>
+              }
+              @if (selectedDrug.posology) {
+                <div class="col-md-6">
+                  <div class="border-start border-3 border-info ps-3">
+                    <small class="text-uppercase text-muted fw-bold d-block mb-1">Posología</small>
+                    <p class="small mb-0 text-secondary">{{ selectedDrug.posology }}</p>
+                  </div>
+                </div>
+              }
+              @if (selectedDrug.contraindications) {
+                <div class="col-md-6">
+                  <div class="border-start border-3 border-danger ps-3">
+                    <small class="text-uppercase text-muted fw-bold d-block mb-1"
+                      >Contraindicaciones</small
+                    >
+                    <p class="small mb-0 text-secondary">{{ selectedDrug.contraindications }}</p>
+                  </div>
+                </div>
+              }
+              @if (selectedDrug.adverseReactions) {
+                <div class="col-md-6">
+                  <div class="border-start border-3 border-warning ps-3">
+                    <small class="text-uppercase text-muted fw-bold d-block mb-1"
+                      >Reacciones Adversas</small
+                    >
+                    <p class="small mb-0 text-secondary">{{ selectedDrug.adverseReactions }}</p>
+                  </div>
+                </div>
+              }
+              @if (selectedDrug.precautions) {
+                <div class="col-12">
+                  <div class="alert alert-warning border-0 d-flex gap-3 align-items-start mb-0">
+                    <i class="bi bi-exclamation-triangle-fill fs-5 mt-1"></i>
+                    <div>
+                      <small class="fw-bold d-block mb-1">PRECAUCIONES</small>
+                      <p class="mb-0 small">{{ selectedDrug.precautions }}</p>
+                    </div>
+                  </div>
+                </div>
               }
             </div>
           </div>
-          <button
-            type="button"
-            class="btn-close btn-close-white"
-            (click)="showDetailModal.set(false)"
-          ></button>
-        </div>
 
-        <div class="modal-body p-4">
-          <div class="row g-4">
-            <div class="col-md-6">
-              <div class="d-flex align-items-center gap-2 mb-1">
-                <i class="bi bi-box-seam text-muted"></i>
-                <small class="text-uppercase text-muted fw-bold">Presentación</small>
-              </div>
-              <p class="mb-0 fw-medium">{{ selectedDrug.presentation || 'No especificado' }}</p>
-            </div>
-            <div class="col-md-6">
-              <div class="d-flex align-items-center gap-2 mb-1">
-                <i class="bi bi-tag text-muted"></i>
-                <small class="text-uppercase text-muted fw-bold">Categoría</small>
-              </div>
-              <span
-                class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle fs-6 px-3"
+          <div class="modal-footer border-0 pt-0">
+            @if (canEdit()) {
+              <button
+                class="btn btn-outline-secondary"
+                (click)="editDrug(selectedDrug!); showDetailModal.set(false)"
               >
-                {{ selectedDrug.category || 'Sin categoría' }}
-              </span>
-            </div>
-            <div class="col-12">
-              <div class="d-flex align-items-center gap-2 mb-1">
-                <i class="bi bi-atom text-primary"></i>
-                <small class="text-uppercase text-primary fw-bold">Componentes Activos</small>
-              </div>
-              <div class="bg-light rounded p-3">
-                <p class="mb-0">{{ selectedDrug.activeComponents }}</p>
-              </div>
-            </div>
-
-            @if (selectedDrug.indications) {
-              <div class="col-md-6">
-                <div class="border-start border-3 border-success ps-3">
-                  <small class="text-uppercase text-muted fw-bold d-block mb-1">Indicaciones</small>
-                  <p class="small mb-0 text-secondary">{{ selectedDrug.indications }}</p>
-                </div>
-              </div>
+                <i class="bi bi-pencil me-1"></i>Editar
+              </button>
             }
-            @if (selectedDrug.posology) {
-              <div class="col-md-6">
-                <div class="border-start border-3 border-info ps-3">
-                  <small class="text-uppercase text-muted fw-bold d-block mb-1">Posología</small>
-                  <p class="small mb-0 text-secondary">{{ selectedDrug.posology }}</p>
-                </div>
-              </div>
-            }
-            @if (selectedDrug.contraindications) {
-              <div class="col-md-6">
-                <div class="border-start border-3 border-danger ps-3">
-                  <small class="text-uppercase text-muted fw-bold d-block mb-1"
-                    >Contraindicaciones</small
-                  >
-                  <p class="small mb-0 text-secondary">{{ selectedDrug.contraindications }}</p>
-                </div>
-              </div>
-            }
-            @if (selectedDrug.adverseReactions) {
-              <div class="col-md-6">
-                <div class="border-start border-3 border-warning ps-3">
-                  <small class="text-uppercase text-muted fw-bold d-block mb-1"
-                    >Reacciones Adversas</small
-                  >
-                  <p class="small mb-0 text-secondary">{{ selectedDrug.adverseReactions }}</p>
-                </div>
-              </div>
-            }
-            @if (selectedDrug.precautions) {
-              <div class="col-12">
-                <div class="alert alert-warning border-0 d-flex gap-3 align-items-start mb-0">
-                  <i class="bi bi-exclamation-triangle-fill fs-5 mt-1"></i>
-                  <div>
-                    <small class="fw-bold d-block mb-1">PRECAUCIONES</small>
-                    <p class="mb-0 small">{{ selectedDrug.precautions }}</p>
-                  </div>
-                </div>
-              </div>
-            }
+            <button type="button" class="btn btn-light px-4" (click)="showDetailModal.set(false)">
+              Cerrar
+            </button>
           </div>
         </div>
-
-        <div class="modal-footer border-0 pt-0">
-          @if (canEdit()) {
-            <button
-              class="btn btn-outline-secondary"
-              (click)="editDrug(selectedDrug!); showDetailModal.set(false)"
-            >
-              <i class="bi bi-pencil me-1"></i>Editar
-            </button>
-          }
-          <button type="button" class="btn btn-light px-4" (click)="showDetailModal.set(false)">
-            Cerrar
-          </button>
-        </div>
-      </div>
+      }
+      <!-- end @if selectedDrug -->
     </div>
   </div>
 }
