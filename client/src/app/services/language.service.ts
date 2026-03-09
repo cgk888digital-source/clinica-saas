@@ -140,6 +140,9 @@ export class LanguageService {
       drug_guide: {
         title: 'Guía Farmacéutica Spilva',
         subtitle: 'Consulta de componentes, posología e indicaciones de medicamentos.',
+        vademecumLabel: 'Vademécum Venezuela en línea',
+        vademecumDesc: 'Accede al directorio completo de medicamentos disponibles en Venezuela.',
+        vademecumLink: 'Abrir Vademécum',
         newDrug: 'Nuevo Medicamento',
         searchPlaceholder: 'Buscar por nombre, genérico o componentes...',
         allCategories: 'Todas las categorías',
@@ -673,6 +676,9 @@ export class LanguageService {
       drug_guide: {
         title: 'Spilva Drug Guide',
         subtitle: 'Reference for drug components, dosage and indications.',
+        vademecumLabel: 'Venezuela Online Vademecum',
+        vademecumDesc: 'Access the complete directory of drugs available in Venezuela.',
+        vademecumLink: 'Open Vademecum',
         newDrug: 'New Drug',
         searchPlaceholder: 'Search by name, generic or components...',
         allCategories: 'All categories',
