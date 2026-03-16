@@ -14,6 +14,17 @@ Todas las modificaciones notables del proyecto serán documentadas en este archi
 
 ---
 
+## [2.1.0] - 2026-03-16
+
+### 🔐 Mejoras en Gestión de Contraseñas
+
+- ✅ **Toggle de Cambio de Contraseña**: Agregado interruptor (toggle) en el modal de cambio de contraseña del perfil de usuario que:
+  - Permite activar/desactivar la sección de cambio de contraseña
+  - Oculta los campos de contraseña por defecto para una experiencia más limpia
+  - Solo ejecuta el cambio cuando el toggle está activo
+
+---
+
 ## [2.0.1] - 2026-03-16
 
 ### 🛡️ Seguridad en Producción & Robustez (Mundo Real)
