@@ -83,7 +83,7 @@ Sistema completo de gestión para clínicas médicas desarrollado con Angular y 
 - ✅ **Exportación a Producción**: Herramienta `export_drugs_sql.js` para generar volcados SQL optimizados con lógica de _upsert_ (insert/update).
 - ✅ **Base de Datos Poblada**: Diccionario farmacéutico completo con nombres genéricos, componentes activos, indicaciones, posología y contraindicaciones.
 
-## 🆕 Novedades v1.8.6 (Marzo 2026)
+## 🆕 v2.0.0 (Enterprise Deployment Ready - Marzo 2026)
 
 - ✅ **Soporte Multilingüe**: Implementación total de `LanguageService` en todos los módulos (Dashboard, Citas, Historial, Facturación, Equipo).
 - ✅ **Gestión de Planes Pro**: Nueva interfaz de suscripción con soporte bilingüe para límites, nombres y características de planes.
