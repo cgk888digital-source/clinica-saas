@@ -234,7 +234,9 @@ const PORT = process.env.PORT || 5000;
 sequelize.sync({ force: false })
   .then(async () => {
     await seedRoles();
-    await seedTestData();
+    if (process.env.NODE_ENV !== 'production') {
+      await seedTestData();
+    }
 
     // Inicializar Socket.io para videoconsultas
     initializeSocket(server);

@@ -48,23 +48,22 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'El rol especificado no es válido.' });
     }
 
-    // Opción B: siempre generar contraseña temporal.
-    // Se ignora cualquier password enviado desde el cliente.
-    // El usuario DEBE cambiarla en su primer ingreso.
-    const tempPassword = generarPasswordTemporal();
+    // Si se envía una contraseña, se usa. Si no, se genera una temporal.
+    const finalPassword = password || generarPasswordTemporal();
+    const isTemporary = !password;
 
     const user = await User.create({
       username,
       email,
-      password: tempPassword,
+      password: finalPassword,
       firstName,
       lastName,
       businessName,
       accountType: finalAccountType,
       roleId: role.id,
       gender: patientData?.gender || req.body.gender,
-      mustChangePassword: true,
-      temporaryPassword: tempPassword  // Siempre se guarda la temporal
+      mustChangePassword: isTemporary,
+      temporaryPassword: isTemporary ? finalPassword : null
     }, { transaction: t });
 
 
@@ -188,44 +187,55 @@ const log = (msg) => {
 };
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
 
   try {
-    console.log(`[LOGIN DEBUG] Email received: "${email}"`);
+    // 1. Normalización de inputs (Robustez para el mundo real)
+    email = email ? email.trim() : '';
+    password = password ? password.trim() : '';
+
+    console.log(`[LOGIN] Intento de acceso para: "${email}"`);
     log(`[LOGIN START] Request received for: ${email}`);
 
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email y contraseña son requeridos' });
+    }
 
-    // Explicitly check env var
     if (!process.env.JWT_SECRET) {
       log(`[CRITICAL] JWT_SECRET MISSING`);
       return res.status(500).json({ message: 'Error interno: JWT_SECRET no configurado.' });
     }
 
+    // 2. Búsqueda insensible a mayúsculas (Case-insensitive)
     const user = await User.findOne({
       where: {
         [Op.or]: [
-          { email: email },
-          { username: email }
+          sequelize.where(sequelize.fn('LOWER', sequelize.col('User.email')), email.toLowerCase()),
+          sequelize.where(sequelize.fn('LOWER', sequelize.col('User.username')), email.toLowerCase())
         ]
       },
-      include: [
-        Role,
-        Organization
-      ]
+      include: [Role, Organization]
     });
 
     if (!user) {
-      log(`[LOGIN FAIL] User not found: ${email}`);
+      console.log(`[LOGIN] Usuario no encontrado: ${email}`);
       return res.status(401).json({ message: 'Credenciales inválidas (Usuario no encontrado)' });
     }
 
-    log(`User Found: ID=${user.id}, Role=${user.Role ? user.Role.name : 'NULL'}`);
+    // 3. Diagnóstico de contraseña (Solo visible en logs de servidor)
+    const storedHash = user.password || '';
+    console.log(`[LOGIN DEBUG] Usuario hallado: ${user.email} (ID: ${user.id})`);
+    console.log(`[LOGIN DEBUG] Longitud Hash: ${storedHash.length}, Empieza por: ${storedHash.substring(0, 4)}`);
+    console.log(`[LOGIN DEBUG] Longitud Password Input: ${password.length}`);
 
     const isMatch = await user.comparePassword(password);
+    
     if (!isMatch) {
-      log(`[LOGIN FAIL] Password mismatch for: ${email}`);
+      console.warn(`[LOGIN FAIL] Password mismatch para: ${email}`);
       return res.status(401).json({ message: 'Credenciales inválidas (Contraseña incorrecta)' });
     }
+
+    console.log(`[LOGIN SUCCESS] Sesión iniciada para: ${user.email}`);
 
     log(`Password Match. Checking account status...`);
     

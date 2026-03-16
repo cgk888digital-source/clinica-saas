@@ -49,7 +49,6 @@ const seedTestData = async () => {
 
       if (!created) {
         await user.update({ 
-          password: SEED_PASSWORD,
           roleId: roles[data.role].id,
           accountType: data.accountType || user.accountType,
           organizationId: data.organizationId || user.organizationId

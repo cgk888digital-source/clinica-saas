@@ -14,6 +14,20 @@ Todas las modificaciones notables del proyecto serán documentadas en este archi
 
 ---
 
+## [2.0.1] - 2026-03-16
+
+### 🛡️ Seguridad en Producción & Robustez (Mundo Real)
+
+- ✅ **Blindaje del Seeder**: Desativada la sobrescritura de contraseñas de usuarios existentes por el seeder de pruebas. El seeder ahora se restringe exclusivamente a entornos de desarrollo y QA.
+- ✅ **Respeto a la Privacidad**: El flujo de registro ahora utiliza la contraseña elegida por el usuario, eliminando el uso forzado de claves temporales autogeneradas fuera de los casos de recuperación.
+- ✅ **Normalización de Acceso**:
+  - Implementado inicio de sesión insensible a mayúsculas (`case-insensitive`) para mayor comodidad del usuario.
+  - Limpieza automática de espacios en blanco (`trim`) en campos de autenticación (evita errores al copiar/pegar).
+- ✅ **Diagnóstico Proactivo**: Agregados logs de diagnóstico detallados en el servidor para facilitar el troubleshooting de fallos de autenticación en entornos de producción (EasyPanel/Docker).
+- ✅ **Sincronización de Ramas**: Preparación y despliegue integrado en el flujo de Git para las ramas `develop`, `staging` y `master`.
+
+---
+
 ## [2.0.0] - 2026-03-16
 
 ### 🛡️ Seguridad Enterprise & Administración VIP
