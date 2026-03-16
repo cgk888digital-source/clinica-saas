@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { LanguageService } from '../../services/language.service';
-import { API_URL } from '../../api-config';
+import { API_URL, APP_VERSION } from '../../api-config';
 
 @Component({
   selector: 'app-public-booking',
@@ -17,6 +17,7 @@ import { API_URL } from '../../api-config';
 })
 export class PublicBooking implements OnInit, OnDestroy {
   bookingForm: FormGroup;
+  version = APP_VERSION;
   doctors = signal<any[]>([]);
   timeSlots: string[] = [];
   loading = signal(false);

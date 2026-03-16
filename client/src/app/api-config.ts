@@ -1,4 +1,7 @@
 import { isDevMode } from '@angular/core';
+import packageInfo from '../../package.json';
+
+export const APP_VERSION = packageInfo.version;
 
 // En producción, si el API está en el mismo dominio o gestionado por el mismo host
 // podemos usar una URL relativa o la URL específica de EasyPanel.

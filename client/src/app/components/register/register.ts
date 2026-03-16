@@ -4,7 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { LanguageService } from '../../services/language.service';
-import { API_URL } from '../../api-config';
+import { API_URL, APP_VERSION } from '../../api-config';
 
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
@@ -28,6 +28,7 @@ interface OrgOption {
 })
 export class Register implements OnInit, OnDestroy {
   registerForm: FormGroup;
+  version = APP_VERSION;
   loading = false;
   private formSub?: Subscription;
   private readonly STORAGE_KEY = 'medicus_register_draft';

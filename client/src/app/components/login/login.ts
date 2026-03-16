@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { AuthService } from '../../services/auth.service';
 
 import { LanguageService } from '../../services/language.service';
+import { APP_VERSION } from '../../api-config';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 
@@ -20,6 +21,7 @@ export class Login implements OnInit, OnDestroy {
   loading = signal(false);
   error = signal('');
   currentYear = new Date().getFullYear();
+  version = APP_VERSION;
   private formSub?: Subscription;
   private readonly STORAGE_KEY = 'medicus_login_email';
 

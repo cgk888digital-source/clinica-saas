@@ -5,6 +5,7 @@ import { Navbar } from './components/shared/navbar/navbar';
 import { Sidebar } from './components/shared/sidebar/sidebar';
 import { filter } from 'rxjs/operators';
 import { LanguageService } from './services/language.service';
+import { APP_VERSION } from './api-config';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class App implements OnInit {
   protected readonly title = signal('Medicus');
   isSidebarOpen = false;
   currentYear = new Date().getFullYear();
+  version = APP_VERSION;
   
   constructor(
     private router: Router,

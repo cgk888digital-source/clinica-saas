@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { API_URL } from '../../api-config';
+import { API_URL, APP_VERSION } from '../../api-config';
 
 @Component({
   selector: 'app-forgot-password',
@@ -14,6 +14,7 @@ import { API_URL } from '../../api-config';
 })
 export class ForgotPassword {
   forgotForm: FormGroup;
+  version = APP_VERSION;
   status = signal<{ type: string; message: string }>({ type: '', message: '' });
   loading = signal(false);
 
