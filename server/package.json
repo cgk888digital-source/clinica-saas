@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
+    "subscription:watchdog": "node run_subscription_watchdog.js",
+    "test:smtp": "node scripts/test-smtp.js",
     "test": "echo 'Server testing disabled'",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

@@ -78,3 +78,31 @@ exports.getPasswordResetEmail = (nombre, urlRecuperacion) => {
   `;
   return getBaseTemplate('Restablecer tu Contraseña', content);
 };
+
+exports.getSubscriptionExpiryReminderEmail = ({ nombre, organizationName, daysLeft, expiresAt, subscriptionUrl }) => {
+    const diasTexto = daysLeft === 1 ? '1 día' : `${daysLeft} días`;
+    const content = `
+        <h2 style="color: #0056b3;">Tu suscripción está por vencer</h2>
+        <p style="font-size: 16px;">Hola <strong>${nombre}</strong>,</p>
+        <p style="font-size: 16px;">Te recordamos que la suscripción de <strong>${organizationName}</strong> vence en <strong>${diasTexto}</strong>.</p>
+        <p style="font-size: 16px;">Fecha de vencimiento: <strong>${expiresAt}</strong></p>
+        <p style="font-size: 16px;">Para evitar interrupciones en tu servicio, te recomendamos renovar tu plan con anticipación.</p>
+        <div style="text-align: center; margin: 30px 0;">
+                <a href="${subscriptionUrl}" style="background-color: #0056b3; color: #ffffff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Gestionar suscripción</a>
+        </div>
+    `;
+    return getBaseTemplate('Aviso de Vencimiento de Suscripción', content);
+};
+
+exports.getSubscriptionExpiredEmail = ({ nombre, organizationName, subscriptionUrl }) => {
+    const content = `
+        <h2 style="color: #b22222;">Tu suscripción ha vencido</h2>
+        <p style="font-size: 16px;">Hola <strong>${nombre}</strong>,</p>
+        <p style="font-size: 16px;">La suscripción de <strong>${organizationName}</strong> ha vencido y tu cuenta ahora se encuentra en estado pendiente de pago.</p>
+        <p style="font-size: 16px;">Para recuperar el acceso completo y evitar bloqueos operativos, realiza la renovación desde el panel de suscripción.</p>
+        <div style="text-align: center; margin: 30px 0;">
+                <a href="${subscriptionUrl}" style="background-color: #b22222; color: #ffffff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Renovar ahora</a>
+        </div>
+    `;
+    return getBaseTemplate('Suscripción Vencida', content);
+};

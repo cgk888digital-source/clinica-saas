@@ -18,7 +18,19 @@
         </div>
 
         <div class="row g-3">
-          <div class="col-md-6">
+          <div class="col-md-4">
+            <div
+              class="glass-morphism p-3 rounded-3 shadow-sm cursor-pointer hover-scale transition-all"
+              routerLink="/subscription"
+            >
+              <i class="bi bi-tag-fill text-warning fs-4 mb-1 d-block"></i>
+              <h6 class="fw-bold mb-1">{{ langService.translate('landing.pricing') }}</h6>
+              <p class="x-small text-muted mb-0">
+                {{ langService.translate('landing.pricingDesc') }}
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
             <div
               class="glass-morphism p-3 rounded-3 shadow-sm cursor-pointer hover-scale transition-all"
               (click)="showSecurityLaws()"
@@ -30,7 +42,7 @@
               </p>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-4">
             <div
               class="glass-morphism p-3 rounded-3 shadow-sm cursor-pointer hover-scale transition-all"
               (click)="checkReminders()"

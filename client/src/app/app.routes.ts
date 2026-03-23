@@ -30,6 +30,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/public-booking/public-booking').then(m => m.PublicBooking),
     title: 'Medicus - Agendar Cita'
   },
+  {
+    path: 'subscription',
+    loadComponent: () => import('./components/subscription/subscription').then(m => m.Subscription),
+    title: 'Medicus - Planes y Precios'
+  },
 
   // Default redirect
   {
@@ -151,12 +156,6 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard, firstLoginGuard],
     data: { roles: ['SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'NURSE', 'RECEPTIONIST'] },
     title: 'Medicus - Guía Farmacéutica'
-  },
-  {
-    path: 'subscription',
-    loadComponent: () => import('./components/subscription/subscription').then(m => m.Subscription),
-    canActivate: [authGuard, firstLoginGuard],
-    title: 'Medicus - Planes y Precios'
   },
   {
     path: 'billing',

@@ -41,7 +41,8 @@ export class App implements OnInit {
           || path.includes('register')
           || path.includes('agendar-cita')
           || path.includes('forgot-password')
-          || path.includes('reset-password');
+          || path.includes('reset-password')
+          || path.includes('subscription');
   }
 
   toggleSidebar() {
