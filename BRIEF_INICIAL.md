@@ -1,8 +1,8 @@
-# 🏥 MEDICUS - Brief Inicial del Proyecto
+# 🏥 Clinica SaaS - Brief Inicial del Proyecto
 
 ## 📋 Resumen Ejecutivo
 
-**Medicus** es un sistema integral de gestión clínica y hospitalaria desarrollado con tecnologías web modernas (Angular + Node.js + PostgreSQL) que optimiza los flujos de trabajo médicos y administrativos, mejorando la experiencia tanto de pacientes como del personal de salud.
+**Clinica SaaS** es un sistema integral de gestión clínica y hospitalaria desarrollado con tecnologías web modernas (Angular + Node.js + PostgreSQL) que optimiza los flujos de trabajo médicos y administrativos, mejorando la experiencia tanto de pacientes como del personal de salud.
 
 **Versión Actual:** 1.8.0  
 **Estado:** Producción SaaS Multi-entidad  
@@ -27,7 +27,7 @@ Las clínicas y consultorios médicos enfrentan desafíos diarios en:
 
 ### Solución Propuesta
 
-Medicus ofrece una plataforma **todo-en-uno** que:
+Clinica SaaS ofrece una plataforma **todo-en-uno** que:
 
 - ✅ Centraliza la gestión de pacientes, doctores y personal
 - ✅ Automatiza el agendamiento y las notificaciones
@@ -361,7 +361,7 @@ MedicalRecord
 ## 📦 Estructura del Proyecto
 
 ```
-medicus-app/
+Clinica SaaS-app/
 ├── client/                      # Frontend Angular
 │   ├── src/
 │   │   ├── app/
@@ -564,7 +564,7 @@ medicus-app/
 
 ### SUPERADMIN
 
-- **Email:** admin@medicus.com
+- **Email:** admin@Clinica SaaS.com
 - **Password:** Configurable via variable de entorno `SUPERADMIN_PASSWORD`
 - **Acceso:** Total al sistema
 
@@ -581,7 +581,7 @@ medicus-app/
    - **Rol:** CLINIC (Dueño)
 
 3. **Dr. Javier Méndez**
-   - **User:** dr.mendez@medicus.com
+   - **User:** dr.mendez@Clinica SaaS.com
    - **Pass:** doctor123
    - **Rol:** PROFESSIONAL (Dueño)
 
@@ -611,8 +611,8 @@ npm install
 # Database
 DB_HOST=127.0.0.1
 DB_PORT=5432
-DB_NAME=medicus_dev
-DB_USER=medicus_app_admin
+DB_NAME=Clinica SaaS_dev
+DB_USER=Clinica SaaS_app_admin
 DB_PASSWORD=tu_password
 
 # JWT
@@ -624,7 +624,7 @@ SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_EMAIL=tu_email@gmail.com
 SMTP_PASSWORD=tu_app_password
-FROM_NAME=Clínica Medicus
+FROM_NAME=Clínica Clinica SaaS
 FROM_EMAIL=tu_email@gmail.com
 
 # Frontend URL
@@ -721,7 +721,7 @@ npm start
 **Email:** edwarvilchez1977@gmail.com  
 **GitHub:** [@edwarvilchez](https://github.com/edwarvilchez)
 
-**Repositorio:** https://github.com/edwarvilchez/medicus-app
+**Repositorio:** https://github.com/edwarvilchez/Clinica SaaS-app
 
 ---
 

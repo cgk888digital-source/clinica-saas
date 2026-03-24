@@ -1,4 +1,4 @@
-# Changelog - Medicus
+# Changelog - Clinica SaaS
 
 Todas las modificaciones notables del proyecto serán documentadas en este archivo.
 
@@ -78,7 +78,7 @@ Todas las modificaciones notables del proyecto serán documentadas en este archi
 - ✅ **Mensajes Contextuales en Login**: El componente de login detecta el flag `mustChangePassword` en la respuesta del servidor y muestra:
   - **Contraseña temporal**: SweetAlert de advertencia con mensaje "Contraseña Temporal Detectada" + redirección automática.
   - **Acceso normal**: SweetAlert de bienvenida estándar.
-- ✅ **Contraseña Temporal en Gestión de Equipo**: Al añadir miembros al equipo, la API devuelve la contraseña temporal generada para que el administrador la comunique al nuevo empleado (en lugar de usar la clave fija `medicus123`).
+- ✅ **Contraseña Temporal en Gestión de Equipo**: Al añadir miembros al equipo, la API devuelve la contraseña temporal generada para que el administrador la comunique al nuevo empleado (en lugar de usar la clave fija `Clinica SaaS123`).
 - ✅ **Limpieza al Cambiar**: Al actualizar la contraseña, se limpia también el campo `temporaryPassword` en la base de datos.
 
 #### Base de Datos
@@ -163,7 +163,7 @@ Todas las modificaciones notables del proyecto serán documentadas en este archi
 ### 🔐 Mejoras de Autenticación
 
 - ✅ **Login Dual**: Implementada capacidad de iniciar sesión usando email O username
-  - Los usuarios pueden usar `beta@medicus.com` o `dr.beta` indistintamente
+  - Los usuarios pueden usar `beta@Clinica SaaS.com` o `dr.beta` indistintamente
   - Mejora la flexibilidad y experiencia de usuario
   - Backward compatible con el sistema existente
 - ✅ **Validación de JWT_SECRET**: Verificación explícita de la variable de entorno antes de generar tokens
@@ -212,7 +212,7 @@ Todas las modificaciones notables del proyecto serán documentadas en este archi
 - ✅ **Nginx Configuration**: SPA routing + cache optimization + security headers
 - ✅ **Health Checks**: Implementados en todos los servicios (db, server, client)
 - ✅ **Persistent Volumes**: postgres_data, uploads_data
-- ✅ **Network Isolation**: Red privada `medicus_network`
+- ✅ **Network Isolation**: Red privada `Clinica SaaS_network`
 - ✅ **Environment Variables**: Template de producción (.env.production.example)
 
 ### 📚 Documentación de Deployment
@@ -375,7 +375,7 @@ Todas las modificaciones notables del proyecto serán documentadas en este archi
 ### 🧪 Laboratorio Premium
 
 - ✅ **Rediseño de Reportes**: Nuevo motor de generación de PDF con estética moderna (Card Layout, Sombras, Tipografía Slate).
-- ✅ **Branding Medicus**: Aplicación de identidad visual corporativa con iconos de marca y barras de acento en Azul Medicus.
+- ✅ **Branding Clinica SaaS**: Aplicación de identidad visual corporativa con iconos de marca y barras de acento en Azul Clinica SaaS.
 - ✅ **Legibilidad Avanzada**: Sistema de filas alternas ("Zebra stripes") y resaltado crítico en negrita roja para resultados anormales.
 - ✅ **Optimización de Espacio**: Eliminación de campos redundantes y ajuste de grid para prevenir superposiciones de texto.
 
@@ -577,7 +577,7 @@ Todas las modificaciones notables del proyecto serán documentadas en este archi
 #### Formulario de Registro (Optimización de Altura)
 
 - ✅ **Contenedor Scrollable Interno**: Implementación de un área de scroll interna para los campos del formulario (`max-height: 62vh`), garantizando que la cabecera (branding) y el botón de acción siempre sean visibles.
-- ✅ **Scrollbar Premium**: Añadidos estilos personalizados para una barra de desplazamiento delgada y elegante que coincide con la identidad visual de Medicus.
+- ✅ **Scrollbar Premium**: Añadidos estilos personalizados para una barra de desplazamiento delgada y elegante que coincide con la identidad visual de Clinica SaaS.
 - ✅ **Ajustes de Espaciado**: Refinamiento de paddings y márgenes para evitar el corte de contenido en pantallas con resolución limitada.
 
 ---
@@ -641,7 +641,7 @@ Todas las modificaciones notables del proyecto serán documentadas en este archi
 
 #### Mejoras de UI/UX
 
-- ✅ **Branding Consistente**: Logo y nombre "MEDICUS" en todas las páginas públicas
+- ✅ **Branding Consistente**: Logo y nombre "Clinica SaaS" en todas las páginas públicas
 - ✅ **Layouts Optimizados**: Formularios sin scroll en pantallas normales
 - ✅ **Páginas Públicas Limpias**: Sin sidebar/navbar en:
   - Login
@@ -683,7 +683,7 @@ Todas las modificaciones notables del proyecto serán documentadas en este archi
   SMTP_SECURE=false
   SMTP_EMAIL=edwarvilchez1977@gmail.com
   SMTP_PASSWORD=[App Password]
-  FROM_NAME=Clínica Medicus
+  FROM_NAME=Clínica Clinica SaaS
   FROM_EMAIL=edwarvilchez1977@gmail.com
   CLIENT_URL=http://localhost:4200
   ```

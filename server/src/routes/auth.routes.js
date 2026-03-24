@@ -36,7 +36,7 @@ const {
  *               email:
  *                 type: string
  *                 format: email
- *                 example: admin@medicus.com
+ *                 example: admin@clinicasaas.com
  *               password:
  *                 type: string
  *                 example: admin123

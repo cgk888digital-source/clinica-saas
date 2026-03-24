@@ -1,9 +1,9 @@
-# 🚀 Guía Rápida de Deployment - MEDICUS en EasyPanel
+# 🚀 Guía Rápida de Deployment - Clinica SaaS en EasyPanel
 
 ## ✅ Estado Actual del Proyecto
 
 **Versión:** v1.8.1  
-**Repositorio:** https://github.com/edwarvilchez/medicus-app  
+**Repositorio:** https://github.com/edwarvilchez/Clinica SaaS-app  
 **Rama Principal:** master  
 **Stack:** PEAN (PostgreSQL + Express + Angular + Node.js)
 
@@ -51,7 +51,7 @@
 
 3. **Configura el repositorio:**
    - **Propietario:** `edwarvilchez`
-   - **Repositorio:** `https://github.com/edwarvilchez/medicus-app.git`
+   - **Repositorio:** `https://github.com/edwarvilchez/Clinica SaaS-app.git`
    - **Rama:** `master` (producción) o `develop` (testing)
    - **Ruta de compilación:** `/` (raíz, porque usamos docker-compose)
 
@@ -65,8 +65,8 @@ Copia y pega estas variables (actualiza los valores marcados con `CHANGE_THIS`):
 # Database
 DB_HOST=db
 DB_PORT=5432
-DB_NAME=medicus_prod
-DB_USER=medicus_user
+DB_NAME=Clinica SaaS_prod
+DB_USER=Clinica SaaS_user
 DB_PASSWORD=CHANGE_THIS_TO_SECURE_PASSWORD
 
 # JWT Secret (genera uno con: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))")
@@ -78,12 +78,12 @@ SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_EMAIL=your-email@gmail.com
 SMTP_PASSWORD=your-gmail-app-password
-FROM_NAME=Clínica Medicus
+FROM_NAME=Clínica Clinica SaaS
 FROM_EMAIL=your-email@gmail.com
 
 # URLs (EasyPanel te dará estos dominios)
-CLIENT_URL=https://medicus.easypanel.host
-API_URL=https://medicus-api.easypanel.host
+CLIENT_URL=https://Clinica SaaS.easypanel.host
+API_URL=https://Clinica SaaS-api.easypanel.host
 
 # Application
 NODE_ENV=production
@@ -143,8 +143,8 @@ Esto creará todas las tablas en PostgreSQL.
 
 **Por defecto, EasyPanel te da:**
 
-- Frontend: `https://medicus.easypanel.host`
-- Backend: `https://medicus-api.easypanel.host`
+- Frontend: `https://Clinica SaaS.easypanel.host`
+- Backend: `https://Clinica SaaS-api.easypanel.host`
 
 **Para usar tu propio dominio:**
 
@@ -173,21 +173,21 @@ API_URL=https://api.tudominio.com
 
 ```bash
 # Health check
-curl https://medicus-api.easypanel.host/
+curl https://Clinica SaaS-api.easypanel.host/
 
-# Debe retornar: {"message":"Welcome to Medicus API"}
+# Debe retornar: {"message":"Welcome to Clinica SaaS API"}
 ```
 
 ### 2. Verificar Swagger UI
 
 ```
-https://medicus-api.easypanel.host/api-docs
+https://Clinica SaaS-api.easypanel.host/api-docs
 ```
 
 ### 3. Verificar Frontend
 
 ```
-https://medicus.easypanel.host
+https://Clinica SaaS.easypanel.host
 ```
 
 ### 4. Verificar Logs
@@ -243,8 +243,8 @@ git push origin master
 
 **Solución:** Verifica que:
 
-1. El repositorio sea `medicus-app` (no `nominus`)
-2. La URL sea: `https://github.com/edwarvilchez/medicus-app.git`
+1. El repositorio sea `Clinica SaaS-app` (no `nominus`)
+2. La URL sea: `https://github.com/edwarvilchez/Clinica SaaS-app.git`
 3. EasyPanel tenga permisos para acceder al repositorio
 
 ### ❌ Error: "Database connection failed"
@@ -305,8 +305,8 @@ Configura alertas por email si:
 
 Después de seguir estos pasos, tendrás:
 
-✅ **API Backend:** https://medicus-api.easypanel.host  
-✅ **Frontend Angular:** https://medicus.easypanel.host  
+✅ **API Backend:** https://Clinica SaaS-api.easypanel.host  
+✅ **Frontend Angular:** https://Clinica SaaS.easypanel.host  
 ✅ **Base de Datos:** PostgreSQL 14 (privada)  
 ✅ **CI/CD:** Auto-deploy desde GitHub  
 ✅ **SSL/HTTPS:** Configurado automáticamente  

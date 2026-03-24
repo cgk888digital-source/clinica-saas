@@ -1,6 +1,6 @@
-# Especialidades Médicas - Medicus
+# Especialidades Médicas - Clinica SaaS
 
-Este documento lista todas las especialidades médicas disponibles en el sistema Medicus.
+Este documento lista todas las especialidades médicas disponibles en el sistema Clinica SaaS.
 
 ## Total de Especialidades: 51
 

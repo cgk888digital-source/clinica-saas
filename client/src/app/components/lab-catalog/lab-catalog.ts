@@ -88,7 +88,7 @@ export class LabCatalog implements OnInit {
       showCancelButton: true,
       confirmButtonText: this.langService.translate('common.save'),
       cancelButtonText: this.langService.translate('common.cancel'),
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       preConfirm: () => {
         const name = (document.getElementById('swal-test-name') as HTMLInputElement).value;
         const price = (document.getElementById('swal-test-price') as HTMLInputElement).value;
@@ -152,7 +152,7 @@ export class LabCatalog implements OnInit {
       showCancelButton: true,
       confirmButtonText: this.langService.translate('common.save'),
       cancelButtonText: this.langService.translate('common.cancel'),
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       showLoaderOnConfirm: true,
       preConfirm: (file) => {
         if (!file) {
@@ -221,7 +221,7 @@ export class LabCatalog implements OnInit {
       showCancelButton: true,
       confirmButtonText: this.langService.translate('common.save'),
       cancelButtonText: this.langService.translate('common.cancel'),
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       preConfirm: () => {
         const name = (document.getElementById('swal-combo-name') as HTMLInputElement).value;
         const totalPrice = (document.getElementById('swal-combo-price') as HTMLInputElement).value;

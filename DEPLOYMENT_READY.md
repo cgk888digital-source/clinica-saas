@@ -1,11 +1,11 @@
-# ✅ MEDICUS - Preparado para Deployment en EasyPanel
+# ✅ Clinica SaaS - Preparado para Deployment en EasyPanel
 
 ## 🎉 Estado: LISTO PARA DESPLEGAR
 
 **Fecha:** 15 de Febrero, 2026  
 **Versión:** v1.8.2  
 **Commit:** c05de9d  
-**Repositorio:** https://github.com/edwarvilchez/medicus-app
+**Repositorio:** https://github.com/edwarvilchez/Clinica SaaS-app
 
 ---
 
@@ -51,12 +51,12 @@ En la interfaz que viste en la captura de pantalla, configura:
 
 ```
 Propietario: edwarvilchez
-Repositorio: https://github.com/edwarvilchez/medicus-app.git
+Repositorio: https://github.com/edwarvilchez/Clinica SaaS-app.git
 Rama: master
 Ruta de compilación: /server
 ```
 
-**IMPORTANTE:** Asegúrate de que sea `medicus-app` y NO `nominus`
+**IMPORTANTE:** Asegúrate de que sea `Clinica SaaS-app` y NO `nominus`
 
 ### Paso 4: Configurar Variables de Entorno
 
@@ -66,8 +66,8 @@ Copia estas variables en EasyPanel → Environment Variables:
 # Database (EasyPanel te dará estos valores si usas su PostgreSQL)
 DB_HOST=db
 DB_PORT=5432
-DB_NAME=medicus_prod
-DB_USER=medicus_user
+DB_NAME=Clinica SaaS_prod
+DB_USER=Clinica SaaS_user
 DB_PASSWORD=[GENERA_UNA_CONTRASEÑA_SEGURA]
 
 # JWT Secret (genera con el comando de abajo)
@@ -79,12 +79,12 @@ SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_EMAIL=[TU_EMAIL]
 SMTP_PASSWORD=[TU_APP_PASSWORD_DE_GMAIL]
-FROM_NAME=Clínica Medicus
+FROM_NAME=Clínica Clinica SaaS
 FROM_EMAIL=[TU_EMAIL]
 
 # URLs (actualiza con tus dominios de EasyPanel)
-CLIENT_URL=https://medicus.easypanel.host
-API_URL=https://medicus-api.easypanel.host
+CLIENT_URL=https://Clinica SaaS.easypanel.host
+API_URL=https://Clinica SaaS-api.easypanel.host
 
 # Application
 NODE_ENV=production
@@ -125,9 +125,9 @@ npm run migrate
 
 ### Paso 8: Verificar
 
-1. **API:** https://medicus-api.easypanel.host/
-2. **Swagger:** https://medicus-api.easypanel.host/api-docs
-3. **Frontend:** https://medicus.easypanel.host
+1. **API:** https://Clinica SaaS-api.easypanel.host/
+2. **Swagger:** https://Clinica SaaS-api.easypanel.host/api-docs
+3. **Frontend:** https://Clinica SaaS.easypanel.host
 
 ---
 
@@ -171,13 +171,13 @@ npm run migrate
 │  ┌───────────────────────────────────┐  │
 │  │  Frontend (Nginx + Angular)       │  │
 │  │  Port: 80                         │  │
-│  │  URL: medicus.easypanel.host      │  │
+│  │  URL: Clinica SaaS.easypanel.host      │  │
 │  └───────────┬───────────────────────┘  │
 │              │ Proxy /api & /socket.io  │
 │  ┌───────────▼───────────────────────┐  │
 │  │  Backend (Node.js + Express)      │  │
 │  │  Port: 5000                       │  │
-│  │  URL: medicus-api.easypanel.host  │  │
+│  │  URL: Clinica SaaS-api.easypanel.host  │  │
 │  └───────────┬───────────────────────┘  │
 │              │                          │
 │  ┌───────────▼───────────────────────┐  │
@@ -231,8 +231,8 @@ Si encuentras algún error durante el deployment:
 
 Después del deployment exitoso:
 
-✅ **API Backend funcionando:** https://medicus-api.easypanel.host  
-✅ **Frontend funcionando:** https://medicus.easypanel.host  
+✅ **API Backend funcionando:** https://Clinica SaaS-api.easypanel.host  
+✅ **Frontend funcionando:** https://Clinica SaaS.easypanel.host  
 ✅ **Base de datos creada** con todas las tablas  
 ✅ **SSL/HTTPS activo** automáticamente  
 ✅ **WebSocket funcionando** para videoconsultas  
@@ -240,7 +240,7 @@ Después del deployment exitoso:
 
 ---
 
-**🎉 ¡Todo listo para desplegar MEDICUS en producción!**
+**🎉 ¡Todo listo para desplegar Clinica SaaS en producción!**
 
 _Preparado por: Antigravity AI_  
 _Fecha: 15 de Febrero, 2026_

@@ -134,7 +134,7 @@ exports.register = async (req, res) => {
 
       await sendEmail({
         email: user.email,
-        subject: 'Bienvenido a Medicus - Tus accesos',
+        subject: 'Bienvenido a Clinica SaaS - Tus accesos',
         message: `Hola ${user.firstName},\n\nTu cuenta ha sido creada exitosamente.\n\nUsuario: ${user.email}\nContraseña temporal: ${tempPassword}\n\nURL de acceso: ${urlLogin}`,
         html: htmlContent
       });
@@ -314,7 +314,7 @@ exports.forgotPassword = async (req, res) => {
     const clientUrl = process.env.CLIENT_URL || 'http://localhost:4200';
     const resetUrl = `${clientUrl}/reset-password/${token}`;
 
-    const message = `Hola ${user.firstName},\n\nHas solicitado restablecer tu contraseña en Medicus. Por favor, utiliza el siguiente enlace para crear una nueva clave:\n\n${resetUrl}\n\nEste enlace expirará en 1 hora por tu seguridad.\n\nSi no solicitaste este cambio, simplemente ignora este correo.\n\nSaludos,\nEquipo de Medicus.`;
+    const message = `Hola ${user.firstName},\n\nHas solicitado restablecer tu contraseña en Clinica SaaS. Por favor, utiliza el siguiente enlace para crear una nueva clave:\n\n${resetUrl}\n\nEste enlace expirará en 1 hora por tu seguridad.\n\nSi no solicitaste este cambio, simplemente ignora este correo.\n\nSaludos,\nEquipo de Clinica SaaS.`;
 
     const sendEmail = require('../utils/sendEmail');
     const { getPasswordResetEmail } = require('../utils/emailTemplates');
@@ -322,7 +322,7 @@ exports.forgotPassword = async (req, res) => {
     try {
       await sendEmail({
         email: user.email,
-        subject: 'Recuperación de Contraseña - Medicus',
+        subject: 'Recuperación de Contraseña - Clinica SaaS',
         message: message,
         html: getPasswordResetEmail(user.firstName, resetUrl)
       });
@@ -390,7 +390,7 @@ exports.resetPassword = async (req, res) => {
       await sendEmail({
         email: user.email,
         subject: 'Actualización de Seguridad - Cambio de Contraseña',
-        message: `Hola ${user.firstName},\n\nTe informamos que la contraseña de tu cuenta en Medicus ha sido cambiada exitosamente.\n\nSi no realizaste este cambio, por favor contacta a soporte de inmediato.\n\nSaludos,\nEquipo de Medicus.`,
+        message: `Hola ${user.firstName},\n\nTe informamos que la contraseña de tu cuenta en Clinica SaaS ha sido cambiada exitosamente.\n\nSi no realizaste este cambio, por favor contacta a soporte de inmediato.\n\nSaludos,\nEquipo de Clinica SaaS.`,
         html: getPasswordChangedEmail(user.firstName)
       });
     } catch (emailError) {
@@ -435,7 +435,7 @@ exports.changePassword = async (req, res) => {
       await sendEmail({
         email: user.email,
         subject: 'Actualización de Seguridad - Cambio de Contraseña',
-        message: `Hola ${user.firstName},\n\nTe informamos que la contraseña de tu cuenta en Medicus acaba de ser cambiada exitosamente.\n\nSi tú no realizaste este cambio, por favor contacta al administrador del sistema inmediatamente.\n\nSaludos,\nEquipo de Medicus.`,
+        message: `Hola ${user.firstName},\n\nTe informamos que la contraseña de tu cuenta en Clinica SaaS acaba de ser cambiada exitosamente.\n\nSi tú no realizaste este cambio, por favor contacta al administrador del sistema inmediatamente.\n\nSaludos,\nEquipo de Clinica SaaS.`,
         html: getPasswordChangedEmail(user.firstName)
       });
     } catch (emailError) {

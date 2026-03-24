@@ -31,7 +31,7 @@ export class Register implements OnInit, OnDestroy {
   version = APP_VERSION;
   loading = false;
   private formSub?: Subscription;
-  private readonly STORAGE_KEY = 'medicus_register_draft';
+  private readonly STORAGE_KEY = 'ClinicaSaaS_register_draft';
 
   /** Step 1 = type selection, Step 2 = form */
   step = signal<1 | 2>(1);
@@ -193,7 +193,7 @@ export class Register implements OnInit, OnDestroy {
                 padding: 0.75rem 1.5rem;
                 border-radius: 0.5rem;
                 margin: 0.75rem 0;
-                border: 1px solid #0ea5e9;
+                border: 1px solid #10b981;
               ">${res.temporaryPassword || '(ver en API)'}</div>
               <p class="text-warning small mb-0">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i>
@@ -201,7 +201,7 @@ export class Register implements OnInit, OnDestroy {
               </p>
             `,
             icon: 'success',
-            confirmButtonColor: '#0ea5e9',
+            confirmButtonColor: '#10b981',
             confirmButtonText: 'Ir al Login',
             allowOutsideClick: false,
           }).then(() => this.router.navigate(['/login']));
@@ -243,7 +243,7 @@ export class Register implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonText: 'Iniciar Sesión',
       cancelButtonText: 'Cerrar',
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
     }).then(r => { if (r.isConfirmed) this.router.navigate(['/login']); });
   }
 }

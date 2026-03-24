@@ -9,7 +9,7 @@ const { Role, User, Patient, Doctor, Nurse, Staff, Specialty, Department, Organi
  *     process.env.TEST_PASSWORD || 'Med1cus!2026'
  */
 
-const SEED_PASSWORD = process.env.TEST_PASSWORD || 'Med1cus!2026';
+const SEED_PASSWORD = process.env.TEST_PASSWORD || 'ClinicaSaaS!2026';
 
 const seedTestData = async () => {
   try {
@@ -95,28 +95,28 @@ const seedTestData = async () => {
       lastName: 'Vilchez',
       role: 'SUPERADMIN',
       accountType: 'HOSPITAL',
-      businessName: 'Hospital Central Medicus',
+      businessName: 'Hospital Central Clinica SaaS',
     });
 
     const admin2 = await upsertUser({
-      username: 'medicus_admin',
-      email: 'admin@medicus.com', // Primary Admin 2 (Classic)
+      username: 'ClinicaSaaS_admin',
+      email: 'admin@clinicasaas.com', // Primary Admin 2 (Classic)
       firstName: 'Admin',
-      lastName: 'Medicus',
+      lastName: 'Clinica SaaS',
       role: 'SUPERADMIN',
       accountType: 'HOSPITAL',
-      businessName: 'Hospital Central Medicus',
+      businessName: 'Hospital Central Clinica SaaS',
     });
 
     // Alias from Screenshot (if they typed this)
     await upsertUser({
       username: 'edwar.vilchez',
-      email: 'edwarvilchez@medicus-app.com', 
+      email: 'edwarvilchez@clinicasaas.app.com', 
       firstName: 'Edwar',
       lastName: 'Vilchez',
       role: 'SUPERADMIN',
       accountType: 'HOSPITAL',
-      businessName: 'Hospital Central Medicus',
+      businessName: 'Hospital Central Clinica SaaS',
     });
     
     // Hospital is ACTIVE (Paid/Stable)
@@ -127,7 +127,7 @@ const seedTestData = async () => {
     // To test the "7 days left" banner
     const clinicAdmin = await upsertUser({
       username: 'staff.mora',
-      email: 'staff.mora@medicus.com',
+      email: 'staff.mora@clinicasaas.com',
       firstName: 'Ricardo',
       lastName: 'Mora',
       role: 'ADMINISTRATIVE',
@@ -142,7 +142,7 @@ const seedTestData = async () => {
     // To test the blocking middleware and "Expired" banner
     const expiredDoc = await upsertUser({
       username: 'dr.cardenas',
-      email: 'dr.cardenas@medicus.com',
+      email: 'dr.cardenas@clinicasaas.com',
       firstName: 'Andrés',
       lastName: 'Cárdenas',
       role: 'DOCTOR',
@@ -164,7 +164,7 @@ const seedTestData = async () => {
     const hospitalStaff = [
       {
         username: 'dr.luna',
-        email: 'dr.luna@medicus.com',
+        email: 'dr.luna@clinicasaas.com',
         firstName: 'Valeria',
         lastName: 'Luna',
         role: 'DOCTOR',
@@ -174,7 +174,7 @@ const seedTestData = async () => {
       },
       {
         username: 'enf.rios',
-        email: 'enf.rios@medicus.com',
+        email: 'enf.rios@clinicasaas.com',
         firstName: 'Carolina',
         lastName: 'Ríos',
         role: 'NURSE',
@@ -184,7 +184,7 @@ const seedTestData = async () => {
       },
       {
         username: 'recep.vega',
-        email: 'recep.vega@medicus.com',
+        email: 'recep.vega@clinicasaas.com',
         firstName: 'Isabel',
         lastName: 'Vega',
         role: 'RECEPTIONIST',
@@ -232,12 +232,12 @@ const seedTestData = async () => {
 
     console.log(`\n✅ Database Seeded Successfully!`);
     console.log(`   🔑 Password for all accounts: ${SEED_PASSWORD}`);
-    console.log(`   - admin@medicus.com (SUPERADMIN)`);
+    console.log(`   - admin@clinicasaas.com (SUPERADMIN)`);
     console.log(`   - edwarvilchez1977@gmail.com (SUPERADMIN)`);
-    console.log(`   - edwarvilchez@medicus-app.com (SUPERADMIN)`);
-    console.log(`   - staff.mora@medicus.com (TRIAL Clinic - 7 days left)`);
-    console.log(`   - dr.cardenas@medicus.com (EXPIRED Professional - blocked)`);
-    console.log(`   - dr.luna@medicus.com (Doctor in Active Hospital)`);
+    console.log(`   - edwarvilchez@clinicasaas.app.com (SUPERADMIN)`);
+    console.log(`   - staff.mora@clinicasaas.com (TRIAL Clinic - 7 days left)`);
+    console.log(`   - dr.cardenas@clinicasaas.com (EXPIRED Professional - blocked)`);
+    console.log(`   - dr.luna@clinicasaas.com (Doctor in Active Hospital)`);
 
   } catch (error) {
     console.error('❌ Error seeding test data:', error);

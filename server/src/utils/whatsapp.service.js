@@ -20,7 +20,7 @@ class WhatsAppService {
       text: title,
       dates: `${start}/${end}`,
       details: details,
-      location: 'Clínica Medicus'
+      location: 'Clínica Clinica SaaS'
     });
 
     return `${baseUrl}&${params.toString()}`;
@@ -48,13 +48,13 @@ Hola ${patientName}, tu cita ha sido agendada con éxito:
 📅 *Fecha:* ${date}
 ⏰ *Hora:* ${time}
 👨‍⚕️ *Doctor:* ${doctorName}
-🏥 *Clínica Medicus*
+🏥 *Clínica Clinica SaaS*
 
 📅 *Añadir a tu calendario:*
 ${calendarLink}
 
 Si deseas cancelar o reagendar, por favor utiliza el siguiente enlace:
-https://medicus.app/citas/gestion/${appointmentId}
+https://clinicasaas.app/citas/gestion/${appointmentId}
 
 ¡Te esperamos!`;
 
@@ -73,7 +73,7 @@ Hola ${patientName}, te recordamos que tienes una cita en 15 minutos:
 👨‍⚕️ *Doctor:* ${doctorName}
 
 Si no puedes asistir, por favor notifícanos inmediatamente:
-https://medicus.app/citas/cancelar/${appointmentId}`;
+https://clinicasaas.app/citas/cancelar/${appointmentId}`;
 
     this._simulateSend(patientPhone, message);
     return { success: true, messageId: 'rem-' + Date.now() };

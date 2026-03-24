@@ -8,9 +8,9 @@ const getBaseTemplate = (title, content) => `
                 <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                     <tr style="background-color: #00233e;">
                         <td style="padding: 30px; text-align: center;">
-                            <img src="cid:logo_medicus" alt="Medicus" style="width: 120px; height: auto; border-radius: 50%; border: 2px solid #6ed1b3; margin-bottom: 10px;" />
+                            <img src="cid:logo_Clinica SaaS" alt="Clinica SaaS" style="width: 120px; height: auto; border-radius: 50%; border: 2px solid #6ed1b3; margin-bottom: 10px;" />
                             <h1 style="color: #6ed1b3; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 1px;">
-                                Medicus
+                                Clinica SaaS
                             </h1>
                         </td>
                     </tr>
@@ -21,7 +21,7 @@ const getBaseTemplate = (title, content) => `
                     </tr>
                     <tr>
                         <td style="padding: 20px; text-align: center; background-color: #f8f9fa; color: #777777; font-size: 12px;">
-                            <p style="margin: 0;">&copy; ${new Date().getFullYear()} Medicus App. Todos los derechos reservados.</p>
+                            <p style="margin: 0;">&copy; ${new Date().getFullYear()} clinicasaas.app. Todos los derechos reservados.</p>
                         </td>
                     </tr>
                 </table>
@@ -49,7 +49,7 @@ exports.getWelcomeEmail = (nombre, email, password, urlLogin) => {
         <a href="${urlLogin}" style="background-color: #28a745; color: #ffffff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Acceder a mi cuenta</a>
     </div>
   `;
-  return getBaseTemplate('Bienvenido a Medicus', content);
+  return getBaseTemplate('Bienvenido a Clinica SaaS', content);
 };
 
 exports.getPasswordChangedEmail = (nombre) => {
@@ -69,7 +69,7 @@ exports.getPasswordResetEmail = (nombre, urlRecuperacion) => {
   const content = `
     <h2 style="color: #0056b3;">Recuperar Contraseña</h2>
     <p style="font-size: 16px;">Hola <strong>${nombre}</strong>,</p>
-    <p style="font-size: 16px;">Recibimos una solicitud para restablecer la contraseña de tu cuenta en <strong>Medicus</strong>.</p>
+    <p style="font-size: 16px;">Recibimos una solicitud para restablecer la contraseña de tu cuenta en <strong>Clinica SaaS</strong>.</p>
     <p style="font-size: 16px;">Haz clic en el botón de abajo para elegir una nueva contraseña. Este enlace es válido por <strong>60 minutos</strong>.</p>
     <div style="text-align: center; margin: 30px 0;">
         <a href="${urlRecuperacion}" style="background-color: #0056b3; color: #ffffff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Restablecer mi contraseña</a>

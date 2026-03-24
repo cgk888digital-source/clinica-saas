@@ -23,7 +23,7 @@ export class Login implements OnInit, OnDestroy {
   currentYear = new Date().getFullYear();
   version = APP_VERSION;
   private formSub?: Subscription;
-  private readonly STORAGE_KEY = 'medicus_login_email';
+  private readonly STORAGE_KEY = 'ClinicaSaaS_login_email';
 
   constructor(
     private fb: FormBuilder,
@@ -118,7 +118,7 @@ export class Login implements OnInit, OnDestroy {
       title: 'Protección y Blindaje Legal',
       html: `
         <div class="text-start">
-          <p>Medicus cumple con los más altos estándares internacionales:</p>
+          <p>Clinica SaaS cumple con los más altos estándares internacionales:</p>
           <ul class="list-group list-group-flush mb-0 small">
             <li class="list-group-item bg-transparent px-0 border-0">
               <i class="bi bi-shield-check text-primary me-2"></i><strong>ISO/IEC 27001:</strong> Gestión de Seguridad de la Información.
@@ -137,7 +137,7 @@ export class Login implements OnInit, OnDestroy {
       `,
       icon: 'info',
       confirmButtonText: 'Entendido',
-      confirmButtonColor: '#0ea5e9'
+      confirmButtonColor: '#10b981'
     });
   }
 
@@ -149,7 +149,7 @@ export class Login implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonText: 'Ir al Formulario',
       cancelButtonText: 'Cerrar',
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       cancelButtonColor: '#64748b'
     });
   }

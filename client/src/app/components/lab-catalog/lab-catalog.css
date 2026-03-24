@@ -50,11 +50,11 @@
 }
 
 .text-primary {
-  color: #0ea5e9 !important;
+  color: #10b981 !important;
 }
 
 .btn-primary-premium {
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
   padding: 0.6rem 1.4rem;
@@ -76,6 +76,6 @@
 
 .nav-pills .nav-link.active {
   background-color: white !important;
-  color: #0ea5e9 !important;
+  color: #10b981 !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }

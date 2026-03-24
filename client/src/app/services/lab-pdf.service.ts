@@ -24,13 +24,13 @@ export class LabPdfService {
     
     // Branding Setup
     const branding = {
-      name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Medicus Platform'),
+      name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Clinica SaaS Platform'),
       tagline: user?.businessName ? 'Servicios de Salud Integrales' : 'Gestión Médica Profesional'
     };
 
-    // --- CABECERA PREMIUM (Medicus Header) ---
+    // --- CABECERA PREMIUM (Clinica SaaS Header) ---
     // Background Accent (Top Blue Bar)
-    doc.setFillColor(14, 165, 233); // #0ea5e9 (Medicus Blue)
+    doc.setFillColor(14, 165, 233); // #10b981 (Clinica SaaS Blue)
     doc.rect(0, 0, pageWidth, 2, 'F');
 
     // Heartbeat Icon / Logo Placeholder (Stylized Heart)
@@ -50,14 +50,14 @@ export class LabPdfService {
     
     doc.setFontSize(8.5);
     doc.setFont('helvetica', 'medium'); // Try helvetica-bold if medium is not available
-    doc.setTextColor(14, 165, 233); // Medicus Blue
+    doc.setTextColor(14, 165, 233); // Clinica SaaS Blue
     doc.text(branding.tagline.toUpperCase(), 35, 23);
 
     // Platform Identity (Top Right)
     doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(148, 163, 184); // Slate-400
-    doc.text('POWERED BY MEDICUS PLATFORM', pageWidth - 14, 8, { align: 'right' });
+    doc.text('POWERED BY Clinica SaaS PLATFORM', pageWidth - 14, 8, { align: 'right' });
 
     // Lab Order / Document ID (Derecha)
     doc.setFontSize(14);
@@ -126,7 +126,7 @@ export class LabPdfService {
       doc.setFont('helvetica', 'bold');
       doc.text(section.title.toUpperCase(), 23, y + 5);
       
-      doc.setDrawColor(14, 165, 233); // Medicus Blue line
+      doc.setDrawColor(14, 165, 233); // Clinica SaaS Blue line
       doc.setLineWidth(1);
       doc.line(23, y + 7, 60, y + 7); 
 

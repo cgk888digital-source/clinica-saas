@@ -151,8 +151,8 @@ exports.collectPayment = async (req, res) => {
                 if (owner && owner.email) {
                     await sendEmail({
                         email: owner.email,
-                        subject: '¡Plan Medicus Activado!',
-                        message: `Hola ${owner.firstName},\n\nHemos verificado con éxito tu pago de ${payment.amount} USD. Tu organización ${org.name} ahora tiene un plan ${org.type} ACTIVO hasta el ${newEndDate.toLocaleDateString()}.\n\nPlan: ${payment.planType}\nCiclo: ${payment.billingCycle}\n\nGracias por confiar en Medicus.\n\nSaludos,\nEquipo de Facturación.`
+                        subject: '¡Plan Clinica SaaS Activado!',
+                        message: `Hola ${owner.firstName},\n\nHemos verificado con éxito tu pago de ${payment.amount} USD. Tu organización ${org.name} ahora tiene un plan ${org.type} ACTIVO hasta el ${newEndDate.toLocaleDateString()}.\n\nPlan: ${payment.planType}\nCiclo: ${payment.billingCycle}\n\nGracias por confiar en Clinica SaaS.\n\nSaludos,\nEquipo de Facturación.`
                     });
                 }
             }

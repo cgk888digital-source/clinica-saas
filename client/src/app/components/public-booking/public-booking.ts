@@ -23,7 +23,7 @@ export class PublicBooking implements OnInit, OnDestroy {
   loading = signal(false);
   step = signal(1);
   private formSub?: Subscription;
-  private readonly STORAGE_KEY = 'medicus_booking_draft';
+  private readonly STORAGE_KEY = 'ClinicaSaaS_booking_draft';
 
   constructor(
     private fb: FormBuilder,
@@ -185,7 +185,7 @@ export class PublicBooking implements OnInit, OnDestroy {
               icon: 'success',
               showConfirmButton: true,
               confirmButtonText: this.langService.translate('public_booking.success.gotIt'),
-              confirmButtonColor: '#0ea5e9'
+              confirmButtonColor: '#10b981'
             }).then(() => {
               localStorage.removeItem(this.STORAGE_KEY);
               this.bookingForm.reset();
@@ -218,7 +218,7 @@ export class PublicBooking implements OnInit, OnDestroy {
     const isEs = this.langService.lang() === 'es';
     
     const message = encodeURIComponent(
-      `*${isEs ? 'Confirmación de Cita - Clínica Medicus' : 'Appointment Confirmation - Medicus Clinic'}*\n\n` +
+      `*${isEs ? 'Confirmación de Cita - Clínica Clinica SaaS' : 'Appointment Confirmation - Clinica SaaS Clinic'}*\n\n` +
       `${isEs ? 'Hola' : 'Hello'} ${patientName}, ${isEs ? 'tu cita ha sido agendada' : 'your appointment has been scheduled'}:\n\n` +
       `*Doctor:* ${doctorName}\n` +
       `*${isEs ? 'Fecha' : 'Date'}:* ${dateTime}\n` +
@@ -241,7 +241,7 @@ export class PublicBooking implements OnInit, OnDestroy {
     const endTime = endDateISO.replace(/-/g, '').replace(/:/g, '') + 'Z';
 
     const details = `Cita con Dr. ${doctorName}\nPaciente: ${patientName}\nMotivo: ${formData.reason}`;
-    const location = 'Clínica Medicus';
+    const location = 'Clínica Clinica SaaS';
     const isEs = this.langService.lang() === 'es';
     const title = isEs ? 'Cita Médica: ' : 'Medical Appointment: ';
 

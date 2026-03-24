@@ -13,7 +13,7 @@ Los archivos con credenciales de prueba (`CREDENCIALES_TESTING.txt`, `USUARIOS_P
 2. **Navegar al directorio del servidor:**
 
    ```bash
-   cd /path/to/medicus/server
+   cd /path/to/Clinica SaaS/server
    ```
 
 3. **Configurar variables de entorno:**
@@ -79,7 +79,7 @@ Si prefieres crear usuarios manualmente:
 1. **Conectarse a PostgreSQL:**
 
    ```bash
-   psql -U postgres -d medicus_production
+   psql -U postgres -d Clinica SaaS_production
    ```
 
 2. **Crear usuario administrador:**

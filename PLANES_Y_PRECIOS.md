@@ -8,7 +8,7 @@
 
 ## Follow-up Changes
 5. **Register Page Addition**: Added a new link on the `/register` view fashioned like the "Agenda Fácil" and "Historial Digital" cards, making it easy for users signing up to inspect "Planes y Precios".
-6. **Subscription Page UX**: Enhanced the subscription view (`/subscription`) by hiding the full dashboard layout (sidebar and navbar). Instead, it now incorporates a clean, minimalistic top header showcasing the Medicus branding and context-aware action buttons ("Ir al Dashboard" or "Iniciar Sesión").
+6. **Subscription Page UX**: Enhanced the subscription view (`/subscription`) by hiding the full dashboard layout (sidebar and navbar). Instead, it now incorporates a clean, minimalistic top header showcasing the Clinica SaaS branding and context-aware action buttons ("Ir al Dashboard" or "Iniciar Sesión").
 
 ## Verification
 A browser subagent verified visual and functional requirements:

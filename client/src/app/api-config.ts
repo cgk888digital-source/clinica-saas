@@ -20,24 +20,24 @@ const getBaseUrl = (): string => {
     if (host.includes('-frontend')) {
       result = 'https://' + host.replace('-frontend', '-api');
     } else {
-      // Si no tiene el sufijo -frontend, asumimos que es el nombre base (ej. medicus.xxx)
-      // y le agregamos -api (ej. medicus-api.xxx)
+      // Si no tiene el sufijo -frontend, asumimos que es el nombre base (ej. Clinica SaaS.xxx)
+      // y le agregamos -api (ej. clinicasaas-api.xxx)
       const parts = host.split('.');
       parts[0] = parts[0] + '-api';
       result = 'https://' + parts.join('.');
     }
   } else if (host.includes('nominusve.com')) {
-    if (host === 'medicus.nominusve.com') {
-      result = 'https://medicus-api.nominusve.com';
+    if (host === 'clinicasaas.nominusve.com') {
+      result = 'https://clinicasaas-api.nominusve.com';
     } else {
-      result = 'https://' + host.replace('medicus.', 'medicus-api.');
+      result = 'https://' + host.replace('Clinica SaaS.', 'clinicasaas-api.');
     }
   }
 
   if (!result) {
     console.warn('⚠️ No se detectó entorno de producción. Usando rutas relativas.');
   } else {
-    console.log(`🚀 Medicus API detectada: ${result}`);
+    console.log(`🚀 Clinica SaaS API detectada: ${result}`);
   }
 
   return result;
@@ -49,6 +49,6 @@ export const SOCKET_URL = BASE_URL || 'http://localhost:5000';
 
 // Exponer para debug en consola
 if (typeof window !== 'undefined') {
-  (window as any).MEDICUS_API_URL = API_URL;
-  (window as any).MEDICUS_BASE_URL = BASE_URL;
+  (window as any).ClinicaSaaS_API_URL = API_URL;
+  (window as any).ClinicaSaaS_BASE_URL = BASE_URL;
 }

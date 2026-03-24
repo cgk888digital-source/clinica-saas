@@ -119,7 +119,7 @@ exports.createPublicAppointment = async (req, res) => {
 
       const emailMessage = `Hola ${patientInfo.firstName},
 
-Tu cita ha sido agendada exitosamente en Clínica Medicus.
+Tu cita ha sido agendada exitosamente en Clínica Clinica SaaS.
 
 📋 DETALLES DE LA CITA:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -127,7 +127,7 @@ Tu cita ha sido agendada exitosamente en Clínica Medicus.
 📅 Fecha: ${formattedDate}
 ⏰ Hora: ${formattedTime}
 📝 Motivo: ${appointmentInfo.reason}
-🏥 Lugar: Clínica Medicus
+🏥 Lugar: Clínica Clinica SaaS
 
 ${appointmentInfo.notes ? `📌 Notas: ${appointmentInfo.notes}\n` : ''}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -140,11 +140,11 @@ IMPORTANTE:
 También hemos enviado la confirmación a tu WhatsApp: ${patient.phone}
 
 Saludos,
-Equipo de Clínica Medicus`;
+Equipo de Clínica Clinica SaaS`;
 
       await sendEmail({
         email: user.email,
-        subject: '✅ Confirmación de Cita - Clínica Medicus',
+        subject: '✅ Confirmación de Cita - Clínica Clinica SaaS',
         message: emailMessage
       });
       console.log('✅ Email confirmation sent successfully to:', user.email);

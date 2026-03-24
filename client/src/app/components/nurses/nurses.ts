@@ -86,7 +86,7 @@ export class Nurses implements OnInit {
             </div>
             <div class="col-md-6">
               <label class="form-label small fw-bold mb-1">${this.langService.translate('nurses.fields.email')}</label>
-              <input id="email" type="email" class="form-control form-control-sm" placeholder="enfermera@medicus.com">
+              <input id="email" type="email" class="form-control form-control-sm" placeholder="enfermera@clinicasaas.com">
             </div>
             <div class="col-md-6">
               <label class="form-label small fw-bold mb-1">${this.langService.translate('nurses.fields.phone')}</label>
@@ -128,7 +128,7 @@ export class Nurses implements OnInit {
       showCancelButton: true,
       confirmButtonText: this.langService.translate('nurses.new'),
       cancelButtonText: this.langService.translate('common.cancel'),
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       cancelButtonColor: '#64748b',
       width: '600px',
       customClass: {
@@ -173,7 +173,7 @@ export class Nurses implements OnInit {
                 title: this.langService.translate('nurses.messages.created'),
                 text: this.langService.translate('nurses.messages.createdMsg'),
                 icon: 'success',
-                confirmButtonColor: '#0ea5e9'
+                confirmButtonColor: '#10b981'
               });
             },
             error: (err) => {
@@ -209,7 +209,7 @@ export class Nurses implements OnInit {
                 title: this.langService.translate('nurses.messages.deleted'),
                 text: this.langService.translate('nurses.messages.deletedMsg'),
                 icon: 'success',
-                confirmButtonColor: '#0ea5e9'
+                confirmButtonColor: '#10b981'
               });
             },
             error: () => {

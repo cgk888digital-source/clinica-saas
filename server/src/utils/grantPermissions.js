@@ -10,8 +10,8 @@ const grantPermissions = async () => {
     database: 'postgres'
   });
 
-  const envs = ['medicus_dev', 'medicus_qa', 'medicus_prod'];
-  const appUser = process.env.APP_DB_USER || 'medicus_app_admin';
+  const envs = ['ClinicaSaaS_dev', 'ClinicaSaaS_qa', 'ClinicaSaaS_prod'];
+  const appUser = process.env.APP_DB_USER || 'clinicasaas.app_admin';
 
   try {
     await client.connect();

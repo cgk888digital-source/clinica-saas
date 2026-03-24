@@ -110,7 +110,7 @@ const corsOptions = {
         return callback(null, true);
       }
       
-      callback(new Error(`CORS Error: Origin ${origin} is not allowed by Medicus API Security Policy`));
+      callback(new Error(`CORS Error: Origin ${origin} is not allowed by Clinica SaaS API Security Policy`));
     }
   },
   credentials: true,

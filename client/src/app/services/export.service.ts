@@ -16,7 +16,7 @@ export interface BrandingInfo {
 })
 export class ExportService {
   private defaultBranding: BrandingInfo = {
-    name: 'Medicus Platform',
+    name: 'Clinica SaaS Platform',
     tagline: 'Healthcare Management System',
     address: 'Global Solutions'
   };
@@ -27,7 +27,7 @@ export class ExportService {
 
   private updateDefaultBranding() {
     this.defaultBranding = {
-      name: 'Medicus Platform',
+      name: 'Clinica SaaS Platform',
       tagline: this.langService.translate('landing.description').substring(0, 40) + '...',
       address: 'Cloud Healthcare'
     };
@@ -124,10 +124,10 @@ export class ExportService {
     const tagline = brand.tagline || 'PLATAFORMA MÉDICA INTEGRAL';
     doc.text(tagline.toUpperCase(), 15, 24);
 
-    // --- MEDICUS BRANDING (Small corner) ---
+    // --- Clinica SaaS BRANDING (Small corner) ---
     doc.setFontSize(7);
     doc.setFont('helvetica', 'bold');
-    doc.text('POWERED BY MEDICUS', 15, 35);
+    doc.text('POWERED BY Clinica SaaS', 15, 35);
 
     // Document Title (Right aligned, on a different level to avoid overlap)
     doc.setFontSize(11);
@@ -197,7 +197,7 @@ export class ExportService {
         doc.text(str, pageWidth / 2, pageHeight - 12, { align: 'center' });
         
         doc.text(brand.address || '', 15, pageHeight - 12);
-        doc.text(`Powered by Medicus Platform`, pageWidth - 15, pageHeight - 12, { align: 'right' });
+        doc.text(`Powered by Clinica SaaS Platform`, pageWidth - 15, pageHeight - 12, { align: 'right' });
       }
     });
 

@@ -176,7 +176,7 @@ export class TeamComponent implements OnInit {
 
   onSubmit() {
     // Generate a temporary password if backend expects it, or backend generates it.
-    // My backend code: password: password || 'medicus123'
+    // My backend code: password: password || 'ClinicaSaaS123'
     // So distinct input is not needed per user request "invitation".
 
     Swal.fire({

@@ -7,10 +7,10 @@ const seedVideoReadyAppointment = async () => {
 
     // 1. Find or Create Doctor (Dr. Méndez)
     const [doctorUser] = await User.findOrCreate({ 
-      where: { email: 'dr.mendez@medicus.com' },
+      where: { email: 'dr.mendez@clinicasaas.com' },
       defaults: {
         username: 'dr.mendez',
-        password: process.env.TEST_PASSWORD || 'medicus123',
+        password: process.env.TEST_PASSWORD || 'ClinicaSaaS123',
         firstName: 'Javier',
         lastName: 'Méndez',
         roleId: 2, // Assuming 2 is DOCTOR
@@ -33,7 +33,7 @@ const seedVideoReadyAppointment = async () => {
       where: { email: 'pac.gonzalez@email.com' },
        defaults: {
         username: 'pac.gonzalez',
-        password: process.env.TEST_PASSWORD || 'medicus123',
+        password: process.env.TEST_PASSWORD || 'ClinicaSaaS123',
         firstName: 'Juan',
         lastName: 'González',
         roleId: 3, // Assuming 3 is PATIENT
@@ -83,8 +83,8 @@ const seedVideoReadyAppointment = async () => {
     console.log(`   Status: ${appointment.status}`);
 
     console.log('\n🔐 Test Credentials:');
-    console.log(`   Doctor: dr.mendez@medicus.com / ${process.env.TEST_PASSWORD || 'medicus123'}`);
-    console.log(`   Patient: pac.gonzalez@email.com / ${process.env.TEST_PASSWORD || 'medicus123'}`);
+    console.log(`   Doctor: dr.mendez@clinicasaas.com / ${process.env.TEST_PASSWORD || 'ClinicaSaaS123'}`);
+    console.log(`   Patient: pac.gonzalez@email.com / ${process.env.TEST_PASSWORD || 'ClinicaSaaS123'}`);
 
   } catch (error) {
     console.error('❌ Error seeding appointment:', error);

@@ -57,7 +57,7 @@ async function importPatient(data, transaction) {
     const user = await User.create({
         username: data.username,
         email: data.email,
-        password: data.password || 'Medicus123!', // Default password if not provided
+        password: data.password || 'ClinicaSaaS123!', // Default password if not provided
         firstName: data.firstName,
         lastName: data.lastName,
         gender: data.gender,
@@ -94,7 +94,7 @@ async function importDoctor(data, transaction) {
     const user = await User.create({
         username: data.username,
         email: data.email,
-        password: data.password || 'Medicus123!',
+        password: data.password || 'ClinicaSaaS123!',
         firstName: data.firstName,
         lastName: data.lastName,
         gender: data.gender,

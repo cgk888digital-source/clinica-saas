@@ -239,7 +239,7 @@ export class LabResults implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Subir',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       preConfirm: () => {
       }
     }).then((result) => {

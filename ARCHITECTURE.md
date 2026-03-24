@@ -1,6 +1,6 @@
-# 🏗️ Arquitectura del Proyecto - MEDICUS
+# 🏗️ Arquitectura del Proyecto - Clinica SaaS
 
-**Medicus** es un sistema integral de gestión médica y hospitalaria diseñado para optimizar los flujos de trabajo clínicos y administrativos. Este documento detalla la arquitectura técnica, las tecnologías utilizadas y la estructura del código.
+**Clinica SaaS** es un sistema integral de gestión médica y hospitalaria diseñado para optimizar los flujos de trabajo clínicos y administrativos. Este documento detalla la arquitectura técnica, las tecnologías utilizadas y la estructura del código.
 
 ---
 

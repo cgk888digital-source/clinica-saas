@@ -33,8 +33,8 @@ const runSubscriptionWatchdog = async () => {
         if (owner && owner.email) {
             await sendEmail({
                 email: owner.email,
-                subject: 'Tu suscripción en Medicus ha vencido',
-                message: `Hola ${owner.firstName},\n\nTe informamos que la suscripción de ${org.name} ha vencido y tu cuenta está en estado pendiente de pago.\n\nRenueva aquí: ${subscriptionUrl}\n\nSaludos,\nEquipo Medicus.`,
+                subject: 'Tu suscripción en Clinica SaaS ha vencido',
+                message: `Hola ${owner.firstName},\n\nTe informamos que la suscripción de ${org.name} ha vencido y tu cuenta está en estado pendiente de pago.\n\nRenueva aquí: ${subscriptionUrl}\n\nSaludos,\nEquipo Clinica SaaS.`,
                 html: getSubscriptionExpiredEmail({
                     nombre: owner.firstName,
                     organizationName: org.name,
@@ -75,7 +75,7 @@ const runSubscriptionWatchdog = async () => {
                 await sendEmail({
                     email: owner.email,
                     subject: `Recordatorio: tu suscripción vence en ${daysLabel}`,
-                    message: `Hola ${owner.firstName},\n\nTe recordamos que la suscripción de ${org.name} vence en ${daysLabel} (fecha de vencimiento: ${expiresAt}).\n\nRenueva aquí: ${subscriptionUrl}\n\nSaludos,\nEquipo Medicus.`,
+                    message: `Hola ${owner.firstName},\n\nTe recordamos que la suscripción de ${org.name} vence en ${daysLabel} (fecha de vencimiento: ${expiresAt}).\n\nRenueva aquí: ${subscriptionUrl}\n\nSaludos,\nEquipo Clinica SaaS.`,
                     html: getSubscriptionExpiryReminderEmail({
                         nombre: owner.firstName,
                         organizationName: org.name,

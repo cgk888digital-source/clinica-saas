@@ -11,7 +11,7 @@ sendEmail.js
 , la configuración fallaba silenciosamente y utilizaba una conexión no segura que agotaba el tiempo de espera.
 Las políticas de seguridad de Yahoo exigen que el correo remitente (From) coincida exactamente con la cuenta autenticada. En el 
 .env
- estaban configurados como dos cuentas diferentes (acrespo123@yahoo.es y acrespo@medicus-app.com).
+ estaban configurados como dos cuentas diferentes (acrespo123@yahoo.es y acrespo@Clinica SaaS-app.com).
 El backend no reportaba el fallo del envío. Al fallar el servicio SMTP, silenciosamente pasaba al modo simulación (consola) y respondía al cliente con un éxito 200 OK.
 Solución Implementada:
 

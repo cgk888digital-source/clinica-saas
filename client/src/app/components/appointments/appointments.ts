@@ -253,13 +253,13 @@ export class Appointments implements OnInit {
     const endDateISO = endDateObj.toISOString().split('.')[0];
     const endTime = endDateISO.replace(/-/g, '').replace(/:/g, '') + 'Z';
     const details = `Cita con Dr. ${doctorName}\nPaciente: ${patientName}\nMotivo: ${formData.reason}`;
-    const location = 'Clínica Medicus';
+    const location = 'Clínica Clinica SaaS';
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Cita Médica: ' + formData.reason)}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&dates=${startTime}/${endTime}&add=edwarvilchez1977@gmail.com`;
   }
 
   getWhatsAppLink(formData: any, patientName: string, doctorName: string, phone: string) {
     const message = encodeURIComponent(
-      `*Confirmación de Cita - Clínica Medicus*\n\n` +
+      `*Confirmación de Cita - Clínica Clinica SaaS*\n\n` +
       `Hola ${patientName}, tu cita ha sido agendada:\n\n` +
       `*Doctor:* ${doctorName}\n` +
       `*Fecha:* ${formData.date.replace('T', ' ')}\n` +
@@ -458,11 +458,11 @@ export class Appointments implements OnInit {
       denyButtonColor: '#22c55e',
       cancelButtonColor: '#64748b',
     }).then((result) => {
-      const filename = `Listado_Citas_Medicus_${new Date().toISOString().split('T')[0]}`;
-      const title = 'Listado de Citas Médicas - Medicus';
+      const filename = `Listado_Citas_ClinicaSaaS_${new Date().toISOString().split('T')[0]}`;
+      const title = 'Listado de Citas Médicas - Clinica SaaS';
       const user = this.authService.currentUser();
       const branding = {
-        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Medicus Platform'),
+        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Clinica SaaS Platform'),
         professional: user ? `${user.firstName} ${user.lastName}` : undefined,
         tagline: this.langService.translate('appointments_list.subtitle')
       };

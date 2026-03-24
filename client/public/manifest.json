@@ -1,8 +1,8 @@
 {
-  "name": "Medicus - Gestión Clínica",
-  "short_name": "Medicus",
-  "description": "Sistema integral de gestión clínica y hospitalaria",
-  "theme_color": "#0ea5e9",
+  "name": "Clinica SaaS - Gestión Profesional",
+  "short_name": "Clinica SaaS",
+  "description": "Plataforma SaaS de gestión clínica moderna y eficiente",
+  "theme_color": "#10b981",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",

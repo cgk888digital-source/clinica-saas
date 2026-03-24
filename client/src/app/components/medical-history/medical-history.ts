@@ -268,11 +268,11 @@ export class MedicalHistory implements OnInit {
           <title>Informe Médico - ${patientName}</title>
           <style>
             body { font-family: 'Helvetica', sans-serif; padding: 40px; color: #333; line-height: 1.6; }
-            .header { text-align: center; border-bottom: 2px solid #0ea5e9; padding-bottom: 20px; margin-bottom: 30px; }
-            .logo { font-size: 24px; font-weight: bold; color: #0ea5e9; }
+            .header { text-align: center; border-bottom: 2px solid #10b981; padding-bottom: 20px; margin-bottom: 30px; }
+            .logo { font-size: 24px; font-weight: bold; color: #10b981; }
             .meta { display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 14px; }
             .section { margin-bottom: 25px; }
-            h3 { color: #0ea5e9; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px; }
+            h3 { color: #10b981; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px; }
             p { margin: 5px 0; }
             .leave { background: #fffbeb; padding: 15px; border-radius: 8px; border: 1px solid #fcd34d; }
             .footer { margin-top: 50px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; padding-top: 20px; }
@@ -280,7 +280,7 @@ export class MedicalHistory implements OnInit {
         </head>
         <body>
           <div class="header">
-            <div class="logo">MEDICUS</div>
+            <div class="logo">Clinica SaaS</div>
             <div>Informe Médico Clínico</div>
           </div>
           
@@ -347,7 +347,7 @@ export class MedicalHistory implements OnInit {
           ${leaveHtml}
 
           <div class="footer">
-            <p>Generado electrónicamente por Medicus Platform</p>
+            <p>Generado electrónicamente por Clinica SaaS Platform</p>
             <p>${new Date().toLocaleString()}</p>
           </div>
         </body>
@@ -391,7 +391,7 @@ export class MedicalHistory implements OnInit {
       const title = `Historia Médica: ${patientName}`;
       const user = this.authService.currentUser();
       const branding = {
-        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Medicus Platform'),
+        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Clinica SaaS Platform'),
         professional: user ? `${user.firstName} ${user.lastName}` : undefined,
         tagline: this.langService.translate('medical_history.subtitle')
       };

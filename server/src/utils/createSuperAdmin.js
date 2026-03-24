@@ -7,7 +7,7 @@ async function createSuperAdmin() {
 
     // Check if superadmin already exists
     let superAdmin = await User.findOne({ 
-      where: { email: 'admin@medicus.com' } 
+      where: { email: 'admin@clinicasaas.com' } 
     });
 
     if (superAdmin) {
@@ -28,7 +28,7 @@ async function createSuperAdmin() {
         // Create SUPERADMIN user (hooks will hash password)
         superAdmin = await User.create({
           username: 'superadmin',
-          email: 'admin@medicus.com',
+          email: 'admin@clinicasaas.com',
           password: process.env.SUPERADMIN_PASSWORD || 'admin123',
           firstName: 'Administrador',
           lastName: 'Sistema',
@@ -41,7 +41,7 @@ async function createSuperAdmin() {
     console.log('┌────────────────────────────────────────────────────────┐');
     console.log('│              CREDENCIALES SUPERADMIN                   │');
     console.log('├────────────────────────────────────────────────────────┤');
-    console.log('│ Email:    admin@medicus.com                            │');
+    console.log('│ Email:    admin@clinicasaas.com                            │');
     console.log('│ Username: superadmin                                   │');
     console.log('│ Password: [PROTEGIDO] (Ver variable SUPERADMIN_PASSWORD)     │');
     console.log('│ Nombre:   Administrador Sistema                        │');

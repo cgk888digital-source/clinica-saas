@@ -70,10 +70,10 @@ export class BulkData {
     
     if (type === 'patients') {
       csvContent = 'firstName,lastName,email,username,password,documentId,birthDate,gender,phone,address,bloodType,allergies\n' +
-                   'Juan,Perez,juan@ejemplo.com,jperez,Medicus123!,12345678,1990-05-15,Male,04121234567,Caracas,O+,Ninguna';
+                   'Juan,Perez,juan@ejemplo.com,jperez,ClinicaSaaS123!,12345678,1990-05-15,Male,04121234567,Caracas,O+,Ninguna';
     } else {
       csvContent = 'firstName,lastName,email,username,password,licenseNumber,phone,address,specialty,gender\n' +
-                   'Maria,Gomez,maria@ejemplo.com,mgomez,Medicus123!,MPPS-9999,04247654321,Valencia,Cardiologia,Female';
+                   'Maria,Gomez,maria@ejemplo.com,mgomez,ClinicaSaaS123!,MPPS-9999,04247654321,Valencia,Cardiologia,Female';
     }
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

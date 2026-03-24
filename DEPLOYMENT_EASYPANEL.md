@@ -1,4 +1,4 @@
-# 🚀 Guía de Deployment en Easypanel - MEDICUS v1.8.1
+# 🚀 Guía de Deployment en Easypanel - Clinica SaaS v1.8.1
 
 ## 📊 STATUS ACTUAL DEL PROYECTO
 
@@ -62,7 +62,7 @@ https://easypanel.io
 ### 2. Repositorio en GitHub
 
 ```
-✅ Ya tienes: https://github.com/edwarvilchez/medicus-app
+✅ Ya tienes: https://github.com/edwarvilchez/Clinica SaaS-app
 ✅ Todas las ramas están actualizadas
 ```
 
@@ -233,13 +233,13 @@ services:
     image: postgres:14-alpine
     restart: always
     environment:
-      POSTGRES_DB: ${DB_NAME:-medicus}
+      POSTGRES_DB: ${DB_NAME:-Clinica SaaS}
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - medicus-network
+      - Clinica SaaS-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -258,7 +258,7 @@ services:
       NODE_ENV: production
       DB_HOST: db
       DB_PORT: 5432
-      DB_NAME: ${DB_NAME:-medicus}
+      DB_NAME: ${DB_NAME:-Clinica SaaS}
       DB_USER: ${DB_USER:-postgres}
       DB_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
@@ -267,14 +267,14 @@ services:
       SMTP_PORT: ${SMTP_PORT}
       SMTP_EMAIL: ${SMTP_EMAIL}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
-      FROM_NAME: ${FROM_NAME:-Clínica Medicus}
+      FROM_NAME: ${FROM_NAME:-Clínica Clinica SaaS}
       FROM_EMAIL: ${FROM_EMAIL}
       LOG_LEVEL: ${LOG_LEVEL:-info}
     depends_on:
       db:
         condition: service_healthy
     networks:
-      - medicus-network
+      - Clinica SaaS-network
     volumes:
       - uploads_data:/usr/src/app/uploads
 
@@ -289,7 +289,7 @@ services:
     depends_on:
       - server
     networks:
-      - medicus-network
+      - Clinica SaaS-network
 
 volumes:
   postgres_data:
@@ -298,7 +298,7 @@ volumes:
     driver: local
 
 networks:
-  medicus-network:
+  Clinica SaaS-network:
     driver: bridge
 ```
 
@@ -312,7 +312,7 @@ networks:
 2. Clic en **"New Project"**
 3. Selecciona **"GitHub Repository"**
 4. Conecta tu cuenta de GitHub
-5. Selecciona el repositorio: `edwarvilchez/medicus-app`
+5. Selecciona el repositorio: `edwarvilchez/Clinica SaaS-app`
 6. Rama: `master` (producción) o `develop` (testing)
 
 ### 2.2 Configurar Variables de Entorno
@@ -321,8 +321,8 @@ En Easypanel → Settings → Environment Variables:
 
 ```env
 # Database
-DB_NAME=medicus_prod
-DB_USER=medicus_user
+DB_NAME=Clinica SaaS_prod
+DB_USER=Clinica SaaS_user
 DB_PASSWORD=GENERA_UNA_CONTRASEÑA_SEGURA
 
 # JWT
@@ -333,7 +333,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_EMAIL=tu_email@gmail.com
 SMTP_PASSWORD=TU_CONTRASENA_AQUI
-FROM_NAME=Clínica Medicus
+FROM_NAME=Clínica Clinica SaaS
 FROM_EMAIL=tu_email@gmail.com
 
 # URLs (actualizar con tu dominio)
@@ -378,14 +378,14 @@ Easypanel detectará automáticamente `docker-compose.yml` y:
 **Backend API:**
 
 ```
-Easypanel te dará un subdominio: medicus-api.easypanel.host
+Easypanel te dará un subdominio: Clinica SaaS-api.easypanel.host
 O configura tu dominio: api.tudominio.com
 ```
 
 **Frontend:**
 
 ```
-Easypanel te dará: medicus.easypanel.host
+Easypanel te dará: Clinica SaaS.easypanel.host
 O configura: www.tudominio.com
 ```
 
@@ -421,7 +421,7 @@ Esto creará las tablas en PostgreSQL.
 
 ```bash
 curl https://api.tudominio.com/
-# Debe retornar: {"message":"Welcome to Medicus API"}
+# Debe retornar: {"message":"Welcome to Clinica SaaS API"}
 
 # Swagger UI
 https://api.tudominio.com/api-docs
@@ -537,22 +537,22 @@ git push origin master
 2. Si usas PostgreSQL de Easypanel, usa el internal hostname: `db:5432`
 3. Verifica que el contenedor `db` esté healthy
 
-### Problema: Error "database medicus_prod does not exist"
+### Problema: Error "database Clinica SaaS_prod does not exist"
 
-**Causa:** El archivo `server/src/config/db.config.js` tenía nombres de base de datos hardcodeados (`medicus_dev`, `medicus_qa`, `medicus_prod`) en lugar de usar la variable de entorno `DB_NAME`.
+**Causa:** El archivo `server/src/config/db.config.js` tenía nombres de base de datos hardcodeados (`Clinica SaaS_dev`, `Clinica SaaS_qa`, `Clinica SaaS_prod`) en lugar de usar la variable de entorno `DB_NAME`.
 
 **Solución Aplicada (v1.8.1):**
 
 ```javascript
 // ❌ ANTES (hardcoded)
 production: {
-  database: 'medicus_prod',
+  database: 'Clinica SaaS_prod',
   // ...
 }
 
 // ✅ DESPUÉS (usando env var)
 production: {
-  database: process.env.DB_NAME || 'medicus_prod',
+  database: process.env.DB_NAME || 'Clinica SaaS_prod',
   // ...
 }
 ```
@@ -561,7 +561,7 @@ production: {
 
 1. Asegúrate de que `DB_NAME` esté configurado en las variables de entorno de EasyPanel
 2. El valor debe coincidir con el nombre de la base de datos creada en PostgreSQL
-3. Ejemplo: `DB_NAME=medicus_app_db`
+3. Ejemplo: `DB_NAME=Clinica SaaS_app_db`
 
 ### Problema: Error "password authentication failed for user postgres"
 
@@ -573,10 +573,10 @@ production: {
 2. Copia las credenciales exactas (Usuario, Contraseña, Base de datos)
 3. Actualiza las variables de entorno del API:
    ```env
-   DB_USER=medicus_app_admin  # Debe coincidir exactamente
+   DB_USER=Clinica SaaS_app_admin  # Debe coincidir exactamente
    DB_PASSWORD=TU_CONTRASENA_SEGURA_AQUI
-   DB_NAME=medicus_app_db      # Debe coincidir exactamente
-   DB_HOST=medicus_app_medicus_app_db  # Nombre interno del servicio
+   DB_NAME=Clinica SaaS_app_db      # Debe coincidir exactamente
+   DB_HOST=Clinica SaaS_app_Clinica SaaS_app_db  # Nombre interno del servicio
    ```
 4. Reinicia el servicio API (click en "Implementar")
 
@@ -601,7 +601,7 @@ production: {
 
 ```bash
 # Accede al contenedor
-docker exec -it medicus-server sh
+docker exec -it Clinica SaaS-server sh
 
 # Ejecuta manualmente
 npx sequelize-cli db:migrate
@@ -666,7 +666,7 @@ Después de seguir esta guía, tendrás:
 
 ---
 
-**🚀 ¡Listo para desplegar MEDICUS v1.8.1 en producción!**
+**🚀 ¡Listo para desplegar Clinica SaaS v1.8.1 en producción!**
 
 ### Error: "Node.js version v18.20.8 detected. The Angular CLI requires a minimum Node.js version of v20.19 or v22.12."
 

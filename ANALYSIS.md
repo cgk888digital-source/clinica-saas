@@ -1,4 +1,4 @@
-# Análisis rápido del proyecto Medicus
+# Análisis rápido del proyecto Clinica SaaS
 
 ## Resumen
 Aplicación full-stack para gestión clínica: frontend en Angular (v21) y backend en Node/Express con Sequelize + PostgreSQL. Soporta websockets para videoconsulta.

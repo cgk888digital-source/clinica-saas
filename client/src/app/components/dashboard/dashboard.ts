@@ -206,8 +206,8 @@ export class Dashboard implements OnInit {
         { 
           data: Array.from(daysMap.values()), 
           label: this.langService.translate('dashboard.stats.appointments'), 
-          backgroundColor: '#0ea5e9',
-          hoverBackgroundColor: '#0284c7',
+          backgroundColor: '#10b981',
+          hoverBackgroundColor: '#059669',
           borderColor: 'transparent',
           barThickness: typeof window !== 'undefined' && window.innerWidth < 768 ? 10 : 20,
           borderRadius: 4
@@ -225,7 +225,7 @@ export class Dashboard implements OnInit {
       datasets: [{
         data: activeStats.map(s => s.pending + s.completed),
         backgroundColor: [
-          '#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', 
+          '#10b981', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', 
           '#ec4899', '#6366f1', '#14b8a6', '#f97316', '#84cc16'
         ],
         hoverOffset: 4,
@@ -291,11 +291,11 @@ export class Dashboard implements OnInit {
       cancelButtonColor: '#64748b',
     }).then((result) => {
       const filename = `Reporte_Diario_${new Date().toISOString().split('T')[0]}`;
-      const title = 'Reporte de Actividad - Medicus';
+      const title = 'Reporte de Actividad - Clinica SaaS';
       const user = this.authService.currentUser();
       
       const branding = {
-        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Medicus Platform'),
+        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Clinica SaaS Platform'),
         professional: user ? `${user.firstName} ${user.lastName}` : undefined,
         tagline: user?.businessName ? this.langService.translate('landing.description').substring(0, 30) + '...' : 'Gestión Clínica Profesional'
       };

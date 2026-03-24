@@ -142,7 +142,7 @@ export class Navbar {
               container.style.display = toggleState ? 'block' : 'none';
             }
             label.textContent = toggleState ? 'Sí' : 'No';
-            slider.style.backgroundColor = toggleState ? '#0ea5e9' : '#ccc';
+            slider.style.backgroundColor = toggleState ? '#10b981' : '#ccc';
             slider.style.transform = toggleState ? 'translateX(24px)' : 'translateX(0)';
           });
         }
@@ -214,7 +214,7 @@ export class Navbar {
       showCancelButton: true,
       confirmButtonText: 'Actualizar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       preConfirm: (value) => {
         if (!value || isNaN(parseFloat(value))) {
           Swal.showValidationMessage('Ingrese un valor válido');

@@ -481,7 +481,7 @@ export class Payments implements OnInit {
           showCancelButton: true,
           confirmButtonText: this.langService.translate('payments.newPayment'),
           cancelButtonText: this.langService.translate('common.cancel'),
-          confirmButtonColor: '#0ea5e9',
+          confirmButtonColor: '#10b981',
           cancelButtonColor: '#64748b',
           preConfirm: () => {
             const patientId = (document.getElementById('patientId') as HTMLSelectElement).value;
@@ -594,7 +594,7 @@ export class Payments implements OnInit {
         </div>
       `,
       confirmButtonText: this.langService.translate('common.cancel'),
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       showCancelButton: true,
       cancelButtonText: `<i class="bi bi-printer me-1"></i> ${this.langService.translate('common.printing')}`,
       cancelButtonColor: '#64748b'
@@ -634,11 +634,11 @@ export class Payments implements OnInit {
       denyButtonColor: '#22c55e',
       cancelButtonColor: '#64748b',
     }).then((result) => {
-      const filename = `Reporte_Pagos_Medicus_${new Date().toISOString().split('T')[0]}`;
-      const title = 'Listado de Pagos - Medicus';
+      const filename = `Reporte_Pagos_ClinicaSaaS_${new Date().toISOString().split('T')[0]}`;
+      const title = 'Listado de Pagos - Clinica SaaS';
       const user = this.authService.currentUser();
       const branding = {
-        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Medicus Platform'),
+        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Clinica SaaS Platform'),
         professional: user ? `${user.firstName} ${user.lastName}` : undefined,
         tagline: this.langService.translate('payments.subtitle')
       };

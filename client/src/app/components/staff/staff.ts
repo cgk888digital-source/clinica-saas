@@ -83,7 +83,7 @@ export class Staff implements OnInit {
             </div>
             <div class="col-md-6">
               <label class="form-label small fw-bold mb-1">Email</label>
-              <input id="email" type="email" class="form-control form-control-sm" placeholder="staff@medicus.com">
+              <input id="email" type="email" class="form-control form-control-sm" placeholder="staff@clinicasaas.com">
             </div>
             <div class="col-md-6">
               <label class="form-label small fw-bold mb-1">Teléfono</label>
@@ -130,7 +130,7 @@ export class Staff implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Crear Personal',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       cancelButtonColor: '#64748b',
       width: '600px',
       customClass: {
@@ -175,7 +175,7 @@ export class Staff implements OnInit {
                 title: '¡Personal Creado!',
                 text: 'El miembro del personal ha sido registrado exitosamente.',
                 icon: 'success',
-                confirmButtonColor: '#0ea5e9'
+                confirmButtonColor: '#10b981'
               });
             },
             error: (err) => {
@@ -211,7 +211,7 @@ export class Staff implements OnInit {
                 title: '¡Eliminado!',
                 text: 'El miembro del personal ha sido removido.',
                 icon: 'success',
-                confirmButtonColor: '#0ea5e9'
+                confirmButtonColor: '#10b981'
               });
             },
             error: () => {

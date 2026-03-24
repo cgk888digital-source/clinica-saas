@@ -234,7 +234,7 @@ export class VideoHistory implements OnInit {
     doc.text('Informe de Videoconsulta', 20, 25);
     
     doc.setFontSize(10);
-    doc.text('Medicus - Plataforma de Telemedicina', 140, 25);
+    doc.text('Clinica SaaS - Plataforma de Telemedicina', 140, 25);
 
     // Info General
     doc.setTextColor(60, 60, 60);
@@ -300,8 +300,8 @@ export class VideoHistory implements OnInit {
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
     doc.text(`Generado el ${new Date().toLocaleString()}`, 20, pageHeight - 10);
-    doc.text('Medicus App', 180, pageHeight - 10);
+    doc.text('clinicasaas.app', 180, pageHeight - 10);
 
-    doc.save(`Medicus_Informe_${vc.id}.pdf`);
+    doc.save(`ClinicaSaaS_Informe_${vc.id}.pdf`);
   }
 }

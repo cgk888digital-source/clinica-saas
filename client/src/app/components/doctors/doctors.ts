@@ -144,7 +144,7 @@ export class Doctors implements OnInit {
 
   isAdmin() {
     const user = this.authService.currentUser();
-    const authorizedEmails = ['cgk888digital@gmail.com', 'admin@medicus.com'];
+    const authorizedEmails = ['cgk888digital@gmail.com', 'admin@clinicasaas.com'];
     return this.authService.hasRole(['SUPERADMIN']) && authorizedEmails.includes(user?.email);
   }
 
@@ -199,7 +199,7 @@ export class Doctors implements OnInit {
       showCloseButton: true,
       showConfirmButton: true,
       confirmButtonText: 'Agendar Cita',
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       customClass: {
         popup: 'rounded-4 border-0 shadow-lg'
       }
@@ -258,7 +258,7 @@ export class Doctors implements OnInit {
             </div>
             <div class="col-md-6">
               <label class="form-label small fw-bold mb-1">Email</label>
-              <input id="email" type="email" class="form-control form-control-sm" placeholder="doctor@medicus.com">
+              <input id="email" type="email" class="form-control form-control-sm" placeholder="doctor@clinicasaas.com">
             </div>
             <div class="col-md-6">
               <label class="form-label small fw-bold mb-1">Teléfono</label>
@@ -285,7 +285,7 @@ export class Doctors implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Crear Doctor',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       cancelButtonColor: '#64748b',
       width: '600px',
       customClass: {
@@ -328,7 +328,7 @@ export class Doctors implements OnInit {
                 title: '¡Doctor Creado!',
                 text: 'El doctor ha sido registrado exitosamente en el sistema.',
                 icon: 'success',
-                confirmButtonColor: '#0ea5e9'
+                confirmButtonColor: '#10b981'
               });
             },
             error: (err) => {

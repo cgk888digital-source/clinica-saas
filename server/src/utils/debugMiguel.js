@@ -6,7 +6,7 @@ const checkUser = async () => {
         await sequelize.authenticate();
         console.log('DB Connected');
         
-        // Find user by email 'miguel@medicus.com' (Assuming Miguel's email, or list all Miguels)
+        // Find user by email 'miguel@clinicasaas.com' (Assuming Miguel's email, or list all Miguels)
         const users = await User.findAll({ where: { firstName: 'Miguel' }, include: [Doctor] });
         
         console.log('Miguel Users found:', users.length);

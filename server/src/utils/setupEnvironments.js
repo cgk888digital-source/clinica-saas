@@ -11,9 +11,9 @@ const createSchemas = async () => {
     database: 'postgres'
   });
 
-  const envs = ['medicus_dev', 'medicus_qa', 'medicus_prod'];
-  const appUser = process.env.APP_DB_USER || 'medicus_app_admin';
-  const appPassword = process.env.APP_DB_PASSWORD || 'medicus_app_pass';
+  const envs = ['ClinicaSaaS_dev', 'ClinicaSaaS_qa', 'ClinicaSaaS_prod'];
+  const appUser = process.env.APP_DB_USER || 'clinicasaas.app_admin';
+  const appPassword = process.env.APP_DB_PASSWORD || 'clinicasaas.app_pass';
 
   try {
     await client.connect();
@@ -47,7 +47,7 @@ const createSchemas = async () => {
         await client.query(`CREATE DATABASE ${dbName}`);
         console.log(`✅ Base de datos '${dbName}' creada exitosamente.`);
         
-        // Grant privileges to medicus_app_db user
+        // Grant privileges to clinicasaas.app_db user
         await client.query(`GRANT ALL PRIVILEGES ON DATABASE ${dbName} TO ${appUser}`);
         console.log(`   → Permisos otorgados a '${appUser}'`);
       } else {
@@ -60,9 +60,9 @@ const createSchemas = async () => {
 
     console.log('\n--- ✅ Proceso completado exitosamente ---');
     console.log('\n📊 Configuración de ambientes:');
-    console.log('  • medicus_dev  → Desarrollo (NODE_ENV=development)');
-    console.log('  • medicus_qa   → QA/Testing (NODE_ENV=qa)');
-    console.log('  • medicus_prod → Producción (NODE_ENV=production)');
+    console.log('  • ClinicaSaaS_dev  → Desarrollo (NODE_ENV=development)');
+    console.log('  • ClinicaSaaS_qa   → QA/Testing (NODE_ENV=qa)');
+    console.log('  • ClinicaSaaS_prod → Producción (NODE_ENV=production)');
     console.log(`\n👤 Usuario de aplicación: ${appUser}`);
     console.log('\n💡 Para cambiar de ambiente, modifica NODE_ENV en tu .env');
     

@@ -99,7 +99,7 @@ export class Patients implements OnInit {
                 title: 'Eliminado',
                 text: 'El paciente ha sido borrado del sistema.',
                 icon: 'success',
-                confirmButtonColor: '#0ea5e9'
+                confirmButtonColor: '#10b981'
               });
             },
             error: () => {
@@ -154,7 +154,7 @@ export class Patients implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Crear Paciente',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       cancelButtonColor: '#64748b',
       width: '600px',
       customClass: {
@@ -197,7 +197,7 @@ export class Patients implements OnInit {
                 title: '¡Paciente Creado!',
                 text: 'El paciente ha sido registrado exitosamente en el sistema.',
                 icon: 'success',
-                confirmButtonColor: '#0ea5e9'
+                confirmButtonColor: '#10b981'
               });
             },
             error: (err) => {
@@ -241,11 +241,11 @@ export class Patients implements OnInit {
       denyButtonColor: '#22c55e',
       cancelButtonColor: '#64748b',
     }).then((result) => {
-      const filename = `Listado_Pacientes_Medicus_${new Date().toISOString().split('T')[0]}`;
-      const title = 'Listado de Pacientes - Medicus';
+      const filename = `Listado_Pacientes_ClinicaSaaS_${new Date().toISOString().split('T')[0]}`;
+      const title = 'Listado de Pacientes - Clinica SaaS';
       const user = this.authService.currentUser();
       const branding = {
-        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Medicus Platform'),
+        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Clinica SaaS Platform'),
         professional: user ? `${user.firstName} ${user.lastName}` : undefined,
         tagline: this.langService.translate('patients_list.subtitle')
       };

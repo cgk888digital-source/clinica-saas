@@ -1,13 +1,13 @@
-/* Global Styles for Medicus */
+/* Global Styles for Clinica SaaS */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #0ea5e9;
-  --primary-dark: #0284c7;
+  --primary: #10b981;
+  --primary-dark: #059669;
   --secondary: #64748b;
-  --accent: #10b981;
+  --accent: #f59e0b;
   --background: #f8fafc;
   --surface: #ffffff;
   --text: #0f172a;

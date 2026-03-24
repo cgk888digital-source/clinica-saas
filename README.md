@@ -157,7 +157,7 @@ Sistema completo de gestión para clínicas médicas desarrollado con Angular y 
 
 ## 🛡️ Estándares y Cumplimiento Internacional
 
-Medicus está diseñado siguiendo los más altos estándares internacionales para garantizar la seguridad de la información y la calidad del servicio:
+Clinica SaaS está diseñado siguiendo los más altos estándares internacionales para garantizar la seguridad de la información y la calidad del servicio:
 
 - 🔒 **ISO/IEC 27001**: Implementamos controles de seguridad de la información para proteger la confidencialidad, integridad y disponibilidad de los datos médicos.
 - 💎 **ISO 9001:2015**: Procesos orientados a la gestión de calidad y mejora continua de la experiencia del paciente y doctor.
@@ -198,8 +198,8 @@ Medicus está diseñado siguiendo los más altos estándares internacionales par
 
 ```bash
 # 1. Clonar repositorio
-git clone https://github.com/edwarvilchez/medicus-app.git
-cd medicus-app
+git clone https://github.com/edwarvilchez/Clinica SaaS-app.git
+cd Clinica SaaS-app
 
 # 2. Configurar variables de entorno
 cp .env.production.example .env
@@ -209,7 +209,7 @@ cp .env.production.example .env
 docker-compose up -d
 
 # 4. Ejecutar migraciones
-docker exec medicus-server npm run migrate
+docker exec Clinica SaaS-server npm run migrate
 ```
 
 **Servicios desplegados:**
@@ -245,8 +245,8 @@ docker exec medicus-server npm run migrate
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/edwarvilchez/medicus-app.git
-cd medicus-app
+git clone https://github.com/edwarvilchez/Clinica SaaS-app.git
+cd Clinica SaaS-app
 ```
 
 ### 2. Configurar Backend
@@ -262,7 +262,7 @@ Crear archivo `.env`:
 # Database
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=medicus
+DB_NAME=Clinica SaaS
 DB_USER=postgres
 DB_PASSWORD=tu_password
 
@@ -275,7 +275,7 @@ SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_EMAIL=tu_email@gmail.com
 SMTP_PASSWORD=tu_app_password
-FROM_NAME=Clínica Medicus
+FROM_NAME=Clínica Clinica SaaS
 FROM_EMAIL=tu_email@gmail.com
 
 # Frontend URL
@@ -322,7 +322,7 @@ Credenciales por defecto:
 
 ```
 Admin:
-Email: admin@medicus.com
+Email: admin@Clinica SaaS.com
 Password: <Configurado en .env o base de datos>
 ```
 
@@ -357,7 +357,7 @@ El sistema usa Nodemailer para enviar:
 ## 📊 Estructura del Proyecto
 
 ```
-medicus-app/
+Clinica SaaS-app/
 ├── client/                 # Frontend Angular
 │   ├── src/
 │   │   ├── app/

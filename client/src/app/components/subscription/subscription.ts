@@ -254,7 +254,7 @@ export class Subscription implements OnInit {
       confirmButtonText: isEs ? 'Confirmar Pago' : 'Confirm Payment',
       showCancelButton: true,
       cancelButtonText: isEs ? 'Cancelar' : 'Cancel',
-      confirmButtonColor: '#0ea5e9',
+      confirmButtonColor: '#10b981',
       preConfirm: () => {
         const method = (document.getElementById('method') as HTMLSelectElement).value;
         const ref = (document.getElementById('ref') as HTMLInputElement).value;

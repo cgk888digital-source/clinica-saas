@@ -1,6 +1,6 @@
 # Subscription System & Client Area
 
-This document outlines the new subscription and payment features added to Medicus.
+This document outlines the new subscription and payment features added to Clinica SaaS.
 
 ## Features
 
@@ -21,14 +21,14 @@ This document outlines the new subscription and payment features added to Medicu
 ## How to Test
 
 1.  **Login as an Organization Owner**:
-    - Use `staff.mora@medicus.com` (Clinic, Trial) or register a new user.
+    - Use `staff.mora@Clinica SaaS.com` (Clinic, Trial) or register a new user.
     - Navigate to "Planes y Precios" in the sidebar.
     - Select a plan (e.g., Hospital, Anual).
     - Click "Elegir Plan" and simulate a payment (enter random reference).
     - Submit. You should see a success message.
 
 2.  **Approve Payment (As Admin)**:
-    - Login as `admin@medicus.com` (Password: `Med1cus!2026`).
+    - Login as `admin@Clinica SaaS.com` (Password: `Med1cus!2026`).
     - Navigate to "Pagos" (`/payments`).
     - You will see the new payment. It might show organization name instead of patient name.
     - Click the "Cobrar" (Wallet) icon to approve it.
