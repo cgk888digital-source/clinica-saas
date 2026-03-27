@@ -75,7 +75,14 @@ Sistema completo de gestión para clínicas médicas desarrollado con Angular y 
 - ✅ **Gestión de Organización**
 - ✅ **SuperAdmin Bypass**: Acceso total sin restricciones de suscripción
 
-## 🆕 Novedades v1.8.7 (Marzo 2026)
+## 🆕 v2.1.0 (Dashboard & Branding - Marzo 2026)
+
+- ✅ **Sincronización de Ingresos**: Implementación de lógica dual-currency (USD/VES) en el Dashboard. Ahora las tarjetas superiores y el análisis detallado muestran montos combinados coherentes.
+- ✅ **Módulo de Imagen Corporativa Fix**: Corrección del error de guardado mediante la vinculación automática de organizaciones para superadministradores.
+- ✅ **Backend v2.1.0 Ready**: Sincronización total de versiones entre Frontend y Backend para una mejor trazabilidad y salud del sistema.
+- ✅ **Optimización de Seeder**: Mejora en la inicialización de datos de prueba para prevenir usuarios huérfanos sin organización asignada.
+
+## 🆕 v1.8.7 (Marzo 2026)
 
 ### 💊 Guía Farmacéutica (Vademécum Venezuela)
 
