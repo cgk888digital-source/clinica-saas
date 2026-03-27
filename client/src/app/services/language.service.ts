@@ -541,6 +541,22 @@ const ES_DICT = {
     bloodType: 'Tipo de Sangre',
     allergies: 'Alergias',
     acceptTerms: 'Acepto los términos. Datos bajo ISO 27001, ISO 9001 y GDPR.'
+  },
+  subscription: {
+    pricingTitle: 'Planes y Precios',
+    choosePlan: 'Elija su Plan Perfecto',
+    scalePlan: 'Escale su práctica médica con nosotros',
+    trialTitle: 'Prueba de 14 Días Gratis',
+    trialDesc: 'Pruebe todas las funciones premium de Clinica SaaS sin costo inicial. Sin tarjeta de crédito.',
+    startTrial: 'Comenzar Prueba Gratis',
+    activeSession: 'Sesión Activa - Gestión de Plan',
+    recommended: 'Recomendado',
+    monthly: 'Mensual',
+    choosePlanBtn: 'Elegir este Plan',
+    currentPlan: 'Tu Plan Actual',
+    customDeployment: 'Despliegue a Medida (Enterprise)',
+    customDeploymentDesc: 'Soporte premium para grandes instituciones y redes hospitalarias.',
+    supportEmail: 'Correo de Soporte Técnico'
   }
 };
 
@@ -828,7 +844,7 @@ const EN_DICT = {
       reason: 'Reason'
     },
     actions: {
-      confirm: 'Confirmar Attendance',
+      confirm: 'Confirm Attendance',
       cancel: 'Cancel Appointment',
       reschedule: 'Reschedule',
       startConsultation: 'Start Consultation'
@@ -1084,6 +1100,22 @@ const EN_DICT = {
     bloodType: 'Blood Type',
     allergies: 'Allergies',
     acceptTerms: 'I accept the terms. Data under ISO 27001, ISO 9001, and GDPR compliance.'
+  },
+  subscription: {
+    pricingTitle: 'Plans & Pricing',
+    choosePlan: 'Choose Your Perfect Plan',
+    scalePlan: 'Scale your medical practice with us',
+    trialTitle: '14-Day Free Trial',
+    trialDesc: 'Try all Clinica SaaS premium features at no initial cost. No credit card required.',
+    startTrial: 'Start Free Trial',
+    activeSession: 'Active Session - Plan Management',
+    recommended: 'Recommended',
+    monthly: 'Monthly',
+    choosePlanBtn: 'Choose this Plan',
+    currentPlan: 'Your Current Plan',
+    customDeployment: 'Custom Deployment (Enterprise)',
+    customDeploymentDesc: 'For hospital networks and large medical centers, we offer solutions on dedicated servers.',
+    supportEmail: 'Technical Support Email'
   }
 };
 

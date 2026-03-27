@@ -15,25 +15,6 @@
     "migrate": "npx sequelize-cli db:migrate",
     "test-email": "node src/utils/testEmail.js"
   },
-  "jest": {
-    "testEnvironment": "node",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "testMatch": [
-      "**/__tests__/**/*.test.js",
-      "**/?(*.)+(spec|test).js"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/index.js",
-      "!src/config/**",
-      "!src/migrations/**",
-      "!src/utils/seeder.js",
-      "!src/utils/testSeeder.js"
-    ]
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",

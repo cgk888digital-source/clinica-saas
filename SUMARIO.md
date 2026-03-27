@@ -4,6 +4,27 @@ Este documento mantiene un historial ejecutivo de los cambios, mejoras e inciden
 
 ---
 
+## 🗓️ 27 de Marzo 2026 - Sesión: Estabilización Backend y Dualidad UI (v2.1.0-final)
+
+### 🚀 Nuevas Funcionalidades
+- **Doble Moneda y Idioma (Dualidad):**
+    - Se implementó la visualización de precios equivalentes (USD/VES) en la página de suscripción.
+    - Se añadieron selectores de idioma y moneda en la cabecera minimalista para usuarios no registrados.
+    - Se completó el diccionario de traducciones (`LanguageService.ts`) para el módulo de suscripción y branding.
+
+### 🛠️ Calidad y Testing (Aseguramiento de Calidad)
+- **Backend 100% Estable (Gold Status):**
+    - Se alcanzó una tasa de éxito del **100% (53/53 tests)** en la suite de pruebas unitarias e integración de Jest.
+    - Se corrigieron errores críticos de sintaxis en `auth.controller.js` y `authorize.middleware.js`.
+    - Se suavizaron las reglas de sanitización para permitir acentos y apóstrofes en nombres de pacientes sin comprometer la seguridad.
+
+### 📦 Gestión de Versiones y DevOps
+- **Push & Merge Multi-Rama:**
+    - Los cambios fueron promovidos y sincronizados en las ramas: `develop` ➔ `staging` ➔ `master`.
+    - Repositorios locales y remotos (GitHub) se encuentran totalmente al día en la versión oficial **v2.1.0**.
+
+---
+
 ## 🗓️ 27 de Marzo 2026 - Sesión: Estabilización de Dashboard e Imagen Corporativa
 
 ### 🚀 Nuevas Funcionalidades

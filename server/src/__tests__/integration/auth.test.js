@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../index');
+const { app } = require('../../index');
 
 describe('Authentication Endpoints', () => {
   describe('POST /api/auth/login', () => {
@@ -93,7 +93,7 @@ describe('Rate Limiting', () => {
       requests.push(
         request(app)
           .post('/api/auth/login')
-          .send({ email: 'test@test.com', password: 'wrong' })
+          .send({ email: 'test@test.com', password: 'wrong-password' })
       );
     }
     

@@ -171,12 +171,12 @@ exports.register = async (req, res) => {
     const { getWelcomeEmail } = require('../utils/emailTemplates');
     try {
       const urlLogin = `${process.env.CLIENT_URL || 'http://localhost:4200'}/login`;
-      const htmlContent = getWelcomeEmail(user.firstName, user.email, tempPassword, urlLogin);
+      const htmlContent = getWelcomeEmail(user.firstName, user.email, finalPassword, urlLogin);
 
       await sendEmail({
         email: user.email,
         subject: 'Bienvenido a Clinica SaaS - Tus accesos',
-        message: `Hola ${user.firstName},\n\nTu cuenta ha sido creada exitosamente.\n\nUsuario: ${user.email}\nContraseña temporal: ${tempPassword}\n\nURL de acceso: ${urlLogin}`,
+        message: `Hola ${user.firstName},\n\nTu cuenta ha sido creada exitosamente.\n\nUsuario: ${user.email}\nContraseña temporal: ${finalPassword}\n\nURL de acceso: ${urlLogin}`,
         html: htmlContent
       });
     } catch (emailError) {
@@ -199,7 +199,7 @@ exports.register = async (req, res) => {
         mustChangePassword: true
       },
       // En modo desarrollo se expone la contraseña temporal para facilitar las pruebas
-      ...(process.env.NODE_ENV !== 'production' && { temporaryPassword: tempPassword })
+      ...(process.env.NODE_ENV !== 'production' && { temporaryPassword: finalPassword })
     });
   } catch (error) {
     await t.rollback();

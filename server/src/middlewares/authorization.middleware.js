@@ -3,6 +3,8 @@
  * Centralized authorization for resources based on user roles
  */
 
+const logger = require('../utils/logger');
+
 const ROLES = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   ADMIN: 'ADMIN',
@@ -101,6 +103,11 @@ const PERMISSIONS = {
  * Check if user role has permission for specific action
  */
 const hasPermission = (userRole, permission) => {
+  // SUPER_ADMIN always has permission
+  if (userRole === ROLES.SUPER_ADMIN) {
+    return true;
+  }
+
   const allowedRoles = PERMISSIONS[permission];
   if (!allowedRoles) {
     return false;

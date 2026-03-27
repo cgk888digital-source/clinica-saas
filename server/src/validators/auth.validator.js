@@ -21,8 +21,15 @@ const registerSchema = Joi.object({
     'string.email': 'El correo electrónico no es válido',
     'any.required': 'El correo electrónico es requerido',
   }),
-  // No se valida password: el servidor la genera automáticamente (Opción B)
-  password: Joi.string().optional().allow('', null),
+  password: Joi.string()
+    .min(8)
+    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .optional()
+    .allow('', null)
+    .messages({
+      'string.min': 'Password debe tener al menos 8 caracteres',
+      'string.pattern.base': 'Password debe contener al menos una mayúscula, una minúscula y un número',
+    }),
   firstName: Joi.string().min(2).max(100).required().messages({
     'string.min': 'El nombre debe tener al menos 2 caracteres',
     'any.required': 'El nombre es requerido',

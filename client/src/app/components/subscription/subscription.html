@@ -7,12 +7,29 @@
       </div>
       <h2 class="fw-bold mb-0 text-primary fs-4">CLINICA SAAS</h2>
     </div>
-    <a *ngIf="!authService.currentUser()" routerLink="/login" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold">
-      <i class="bi bi-box-arrow-in-right me-1"></i> {{ 'auth.login' | translate }}
-    </a>
-    <a *ngIf="authService.currentUser()" routerLink="/dashboard" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold">
-      <i class="bi bi-grid-fill me-1"></i> {{ 'sidebar.dashboard' | translate }}
-    </a>
+
+    <!-- Toggles for Language and Currency (Duality) -->
+    <div class="d-none d-md-flex align-items-center gap-2">
+      <!-- Currency Toggle -->
+      <div class="bg-light border rounded-pill p-1 d-flex gap-1 shadow-sm">
+        <button [class]="currencyService.currency() === 'USD' ? 'btn btn-xs btn-primary rounded-circle p-1 fw-bold shadow-sm' : 'btn btn-xs text-muted p-1 fw-bold'" (click)="currencyService.setCurrency('USD')" style="width: 28px; height: 28px; font-size: 10px;">$</button>
+        <button [class]="currencyService.currency() === 'VES' ? 'btn btn-xs btn-primary rounded-circle p-1 fw-bold shadow-sm' : 'btn btn-xs text-muted p-1 fw-bold'" (click)="currencyService.setCurrency('VES')" style="width: 28px; height: 28px; font-size: 10px;">Bs</button>
+      </div>
+      <!-- Language Toggle -->
+      <div class="bg-light border rounded-pill p-1 d-flex gap-1 shadow-sm">
+        <button [class]="langService.lang() === 'es' ? 'btn btn-xs btn-primary rounded-circle p-1 fw-bold shadow-sm' : 'btn btn-xs text-muted p-1 fw-bold'" (click)="langService.setLanguage('es')" style="width: 28px; height: 28px; font-size: 10px;">ES</button>
+        <button [class]="langService.lang() === 'en' ? 'btn btn-xs btn-primary rounded-circle p-1 fw-bold shadow-sm' : 'btn btn-xs text-muted p-1 fw-bold'" (click)="langService.setLanguage('en')" style="width: 28px; height: 28px; font-size: 10px;">EN</button>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <a *ngIf="!authService.currentUser()" routerLink="/login" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold">
+        <i class="bi bi-box-arrow-in-right me-1"></i> {{ 'auth.login' | translate }}
+      </a>
+      <a *ngIf="authService.currentUser()" routerLink="/dashboard" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold">
+        <i class="bi bi-grid-fill me-1"></i> {{ 'sidebar.dashboard' | translate }}
+      </a>
+    </div>
   </div>
 
   <div class="container">
@@ -100,16 +117,22 @@
             </div>
           </div>
 
-          <div class="d-flex align-items-baseline gap-1 mb-4">
-            <span class="price-tag">{{ currencyService.formatAmount(getPrice(plan.price)) }}</span>
-            <span class="period-tag"
-              >/
-              {{
-                billingCycle() === 'Mensual'
-                  ? ('subscription.monthly' | translate)
-                  : getCurrentCycleLabel().toLowerCase()
-              }}</span
-            >
+          <div class="mb-4">
+            <div class="d-flex align-items-baseline gap-1">
+              <span class="price-tag">{{ currencyService.formatAmount(getPrice(plan.price)) }}</span>
+              <span class="period-tag"
+                >/
+                {{
+                  billingCycle() === 'Mensual'
+                    ? ('subscription.monthly' | translate)
+                    : getCurrentCycleLabel().toLowerCase()
+                }}</span
+              >
+            </div>
+            <!-- Dual Currency (Equivalent) -->
+            <div class="x-small text-muted fw-bold mt-1">
+               ≈ {{ currencyService.formatAmount(getPrice(plan.price), currencyService.currency() === 'USD' ? 'VES' : 'USD') }}
+            </div>
           </div>
 
           <div class="mb-4 flex-grow-1">

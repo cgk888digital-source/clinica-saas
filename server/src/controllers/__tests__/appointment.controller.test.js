@@ -39,6 +39,11 @@ jest.mock('../../models', () => ({
   User: {},
 }));
 
+// Mock appointment validator
+jest.mock('../../utils/appointmentValidator', () => ({
+  validateAppointment: jest.fn().mockResolvedValue({ valid: true })
+}));
+
 describe('Appointment Controller', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -121,6 +126,17 @@ describe('Appointment Controller', () => {
     });
 
     it('should accept valid appointment data', async () => {
+      const { Appointment } = require('../../models');
+      const mockAppointment = { id: 'appointment-uuid' };
+      const mockDetails = {
+        id: 'appointment-uuid',
+        Patient: { phone: '123456', User: { firstName: 'John', lastName: 'Doe' } },
+        Doctor: { User: { firstName: 'Dr', lastName: 'House' } }
+      };
+
+      Appointment.create.mockResolvedValue(mockAppointment);
+      Appointment.findByPk.mockResolvedValue(mockDetails);
+
       const res = await request(app)
         .post('/api/appointments')
         .send({
@@ -132,7 +148,6 @@ describe('Appointment Controller', () => {
           notes: 'Annual physical exam',
         });
 
-      // El test pasará si la validación es correcta
       expect(res.status).toBeLessThan(500);
     });
   });

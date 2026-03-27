@@ -31,6 +31,14 @@ const configs = {
       acquire: 30000,
       idle: 10000
     }
+  },
+  test: {
+    username: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'postgres',
+    database: process.env.DB_NAME || 'clinica_saas_test',
+    host: process.env.DB_HOST || 'localhost',
+    dialect: 'postgres',
+    logging: false
   }
 };
 

@@ -29,6 +29,9 @@ const FIELDS_TO_SKIP = [
   'observations',
   'medicalNotes',
   'prescriptionNotes',
+  'firstName',
+  'lastName',
+  'name',
 ];
 
 const sanitizeString = (str) => {
