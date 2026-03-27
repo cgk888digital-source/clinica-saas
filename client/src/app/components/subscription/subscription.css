@@ -2,17 +2,17 @@
 .pricing-page {
   background: linear-gradient(135deg, #f9fafb 0%, #ffffff 50%, #eff6ff 100%);
   min-height: 100vh;
-  padding: 4rem 1rem;
+  padding: 1.5rem 1rem;
 }
 
 /* Trial Banner */
 .trial-banner {
   background: linear-gradient(to right, #2563eb, #10b981);
-  border-radius: 2rem;
-  padding: 2rem;
-  margin-bottom: 3rem;
+  border-radius: 1.5rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
   color: white;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .trial-banner h3 {
@@ -26,8 +26,8 @@
 .plan-card {
   position: relative;
   background: white;
-  border-radius: 2rem;
-  padding: 1.5rem;
+  border-radius: 1.5rem;
+  padding: 1.25rem;
   border: 2px solid #f3f4f6;
   transition: all 0.5s ease;
   box-shadow:
@@ -65,13 +65,13 @@
 
 /* Icon Containers */
 .icon-box {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.65rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
 .icon-blue {
@@ -93,7 +93,7 @@
 
 /* Pricing Text */
 .price-tag {
-  font-size: 2.25rem;
+  font-size: 1.85rem;
   font-weight: 900;
   color: #111827;
   line-height: 1;
@@ -111,7 +111,7 @@
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.4rem;
 }
 
 .check-icon {

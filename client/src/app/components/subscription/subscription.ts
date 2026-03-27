@@ -31,6 +31,7 @@ interface PricingPlan {
 export class Subscription implements OnInit {
   billingCycle = signal('Mensual');
   currentPlan = signal<string | null>(null);
+  currentYear = new Date().getFullYear();
   
   cycles = [
     { id: 'Mensual', id_en: 'Monthly', discount: null },
