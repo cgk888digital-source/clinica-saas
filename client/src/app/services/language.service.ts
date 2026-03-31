@@ -49,7 +49,24 @@ const ES_DICT = {
     sidebar: 'Gestión de Equipo'
   },
   billing: {
-    sidebar: 'Mi Suscripción'
+    sidebar: 'Mi Suscripción',
+    title: 'Mi Suscripción y Facturación',
+    subtitle: 'Gestione su plan, métodos de pago e historial de transacciones',
+    updatePlan: 'Actualizar Plan',
+    timeRemaining: 'Tiempo restante',
+    days: 'días',
+    expiresOn: 'Vence el:',
+    reminderNotice: 'Recuerde mantener sus pagos al día para evitar la interrupción del servicio.',
+    paymentHistory: 'Historial de Pagos',
+    noPayments: 'No se encontraron pagos recientes en su historial.',
+    table: {
+      date: 'Fecha',
+      concept: 'Concepto',
+      method: 'Método / Banco',
+      amount: 'Monto',
+      status: 'Estado',
+      receipt: 'Recibo / PDF'
+    }
   },
   payments: {
     title: 'Control de Pagos',
@@ -293,14 +310,19 @@ const ES_DICT = {
     filterSpecialty: 'Filtrar por Especialidad',
     whatsappService: 'Servicio de WhatsApp',
     serviceActive: 'Servicio Activo',
+    time: 'Hora de la Cita',
+    reason: 'Motivo de Consulta',
+    reasonPlaceholder: 'Ej: Control Mensual, Chequeo...',
+    notes: 'Notas Adicionales',
+    videoCall: 'Vídeo Llamada',
     scheduled: 'Citas Programadas',
+    whatsappDesc: 'Recordatorios automáticos para sus pacientes',
     tabs: {
       day: 'Hoy',
       week: 'Semana',
       month: 'Mes'
     },
-    new: 'Nueva Cita',
-    whatsappDesc: 'Recordatorios automáticos para sus pacientes'
+    new: 'Nueva Cita'
   },
   doctors: {
     title: 'Gestión de Especialistas',
@@ -608,7 +630,24 @@ const EN_DICT = {
     sidebar: 'Team Management'
   },
   billing: {
-    sidebar: 'My Subscription'
+    sidebar: 'My Subscription',
+    title: 'My Subscription & Billing',
+    subtitle: 'Manage your plan, payment methods, and transaction history',
+    updatePlan: 'Update Plan',
+    timeRemaining: 'Time remaining',
+    days: 'days',
+    expiresOn: 'Expires on:',
+    reminderNotice: 'Keep your payments up to date to avoid service interruption.',
+    paymentHistory: 'Payment History',
+    noPayments: 'No recent payments found in your history.',
+    table: {
+      date: 'Date',
+      concept: 'Concept',
+      method: 'Method / Bank',
+      amount: 'Amount',
+      status: 'Status',
+      receipt: 'Receipt / PDF'
+    }
   },
   payments: {
     title: 'Payment Control',
@@ -852,14 +891,19 @@ const EN_DICT = {
     filterSpecialty: 'Filter by Specialty',
     whatsappService: 'WhatsApp Service',
     serviceActive: 'Service Active',
+    time: 'Appointment Time',
+    reason: 'Consultation Reason',
+    reasonPlaceholder: 'e.g. Monthly Control, Checkup...',
+    notes: 'Additional Notes',
+    videoCall: 'Video Call',
     scheduled: 'Scheduled Appointments',
+    whatsappDesc: 'Automatic reminders for your patients',
     tabs: {
       day: 'Today',
       week: 'Week',
       month: 'Month'
     },
-    new: 'New Appointment',
-    whatsappDesc: 'Automatic reminders for your patients'
+    new: 'New Appointment'
   },
   doctors: {
     title: 'Specialists Management',
