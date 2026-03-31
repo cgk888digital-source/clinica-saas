@@ -2,6 +2,19 @@
 
 Todas las modificaciones notables del proyecto serán documentadas en este archivo.
 
+## [2.1.1] - 2026-03-31
+
+### 📊 Optimización de Dashboard e Inteligencia de Negocios
+
+- ✅ **Análisis de Ingresos Pro**: 
+  - **Semanas Dinámicas**: El resumen semanal ahora muestra los últimos 7 días en lugar de la semana calendario, garantizando datos visibles en cualquier día.
+  - **Días Reales**: El resumen diario ahora cubre las últimas 24 horas, eliminando discrepancias por zonas horarias del servidor.
+- ✅ **Expansión de Roles**: Habilitado el acceso al análisis financiero para roles de `DOCTOR` y `RECEPTIONIST` (antes restringido a administradores).
+- ✅ **Dualidad Monetaria**: Incorporado el campo `amountBs` al modelo de datos de pagos para una trazabilidad exacta de ingresos en Bolívares.
+
+---
+
+
 ## [1.8.8] - 2026-03-09
 
 ### 🔬 Laboratorio: Catálogo Maestro y Dualidad Monetaria

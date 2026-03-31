@@ -39,13 +39,11 @@ exports.getStats = async (req, res) => {
     const now = new Date();
     
     // Time Ranges
-    const todayStart = new Date(now);
-    todayStart.setHours(0,0,0,0);
+    const todayStart = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const todayEnd = new Date(now);
-    todayEnd.setHours(23,59,59,999);
 
     const weekStart = new Date(now);
-    weekStart.setDate(now.getDate() - now.getDay());
+    weekStart.setDate(now.getDate() - 7);
     weekStart.setHours(0,0,0,0);
 
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -160,7 +158,7 @@ exports.getStats = async (req, res) => {
     });
 
     // 4. Income Stats (only for authorized roles)
-    if (['SUPER_ADMIN', 'SUPERADMIN', 'ADMINISTRATIVE'].includes(userRole)) {
+    if (['SUPER_ADMIN', 'SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'RECEPTIONIST'].includes(userRole)) {
       const paymentWhere = isSuperAdmin ? {} : { organizationId };
       
       const dayPayments = await Payment.findAll({ 

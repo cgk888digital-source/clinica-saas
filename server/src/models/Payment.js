@@ -11,6 +11,11 @@ const Payment = sequelize.define('Payment', {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
   },
+  amountBs: {
+    type: DataTypes.DECIMAL(20, 2),
+    allowNull: true,
+    defaultValue: 0.00
+  },
   method: {
     type: DataTypes.STRING,
     defaultValue: 'Cash'
