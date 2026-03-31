@@ -1,57 +1,69 @@
+const { Resend } = require('resend');
 const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
-  // 1. Create a transporter
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true' || process.env.SMTP_SECURE === 'SSL' || parseInt(process.env.SMTP_PORT) === 465,
-    auth: {
-      user: process.env.SMTP_EMAIL,
-      pass: process.env.SMTP_PASSWORD
-    }
-  });
+  const isResendActive = !!process.env.RESEND_API_KEY;
+  const fromName = process.env.FROM_NAME || 'MedicalCare 888';
+  const fromEmail = process.env.FROM_EMAIL || 'no-reply@medicalcare-888.com';
 
-  const path = require('path');
-  const logoPath = path.join(__dirname, '../assets/logo.png');
+  console.log(`📨 Attempting to send email via ${isResendActive ? 'Resend SDK' : 'Nodemailer SMTP'}`);
 
-  // 2. Define the email options
-  const mailOptions = {
-    from: `"${process.env.FROM_NAME || 'clinicasaas.app'}" <${process.env.FROM_EMAIL || process.env.SMTP_EMAIL}>`,
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-    html: options.html,
-    attachments: [
-      {
-        filename: 'logo.png',
-        path: logoPath,
-        cid: 'logo_Clinica SaaS' // same cid value as in the html img src
-      }
-    ]
-  };
-
-  // 3. Try to send, fallback to simulation on ANY error
   try {
-    // If explicitly missing credentials, throw immediately to go to catch
-    if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
-      throw new Error('SMTP credentials missing');
-    }
+    if (isResendActive) {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      
+      const { data, error } = await resend.emails.send({
+        from: `${fromName} <${fromEmail}>`,
+        to: Array.isArray(options.email) ? options.email : [options.email],
+        subject: options.subject,
+        html: options.html,
+        text: options.message || ''
+      });
 
-    await transporter.verify(); // Verify connection first
-    await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent officially to ${options.email}`);
+      if (error) {
+        throw new Error(`Resend Error: ${error.message}`);
+      }
+
+      console.log(`✅ Email sent via Resend: ${data.id}`);
+      return data;
+
+    } else {
+      // Fallback: Nodemailer SMTP (requires SMTP_HOST, EMAIL, PASSWORD)
+      if (!process.env.SMTP_EMAIL || !process.env.SMTP_PASSWORD) {
+        throw new Error('Email credentials (Resend or SMTP) missing in environment');
+      }
+
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: process.env.SMTP_SECURE === 'true' || parseInt(process.env.SMTP_PORT) === 465,
+        auth: {
+          user: process.env.SMTP_EMAIL,
+          pass: process.env.SMTP_PASSWORD
+        }
+      });
+
+      const mailOptions = {
+        from: `"${fromName}" <${fromEmail}>`,
+        to: options.email,
+        subject: options.subject,
+        text: options.message,
+        html: options.html
+      };
+
+      await transporter.sendMail(mailOptions);
+      console.log(`✅ Email sent via Nodemailer to ${options.email}`);
+    }
 
   } catch (error) {
-    console.warn(`⚠️  Email delivery failed (${error.message}). Falling back to SIMULATION MODE.`);
-    console.log('📨  [SIMULATED EMAIL FALLBACK - CHECK LOGS]');
+    console.warn(`⚠️ Email delivery failed: ${error.message}`);
+    // Simulate/Log for developers
+    console.log('📨  [SIMULATED EMAIL LOG]');
     console.log(`    To: ${options.email}`);
     console.log(`    Subject: ${options.subject}`);
-    console.log(`    Message Preview: ${options.message ? options.message.substring(0, 150) : 'No text content'}`);
-
-    // In production, we might want to log this to a file or monitoring service
-    // Throw the error so the app flow (like "Forgot Password") knows it failed
-    // and doesn't silently ignore the email failure.
+    
+    // In production, we don't want to break the entire app if email fails (unless it's critical).
+    // For now, we throw the error so the calling controller can handle it.
     throw error;
   }
 };

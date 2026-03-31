@@ -522,7 +522,7 @@ const ES_DICT = {
     }
   },
   register: {
-    title: 'Crear cuenta en Clinica SaaS',
+    title: 'Crear cuenta en MedicalCare 888',
     join: 'Únete a',
     heroDesc: 'Crea tu cuenta y accede a la mejor plataforma de gestión clínica.',
     easyAgenda: 'Agenda Fácil',
@@ -547,7 +547,7 @@ const ES_DICT = {
     choosePlan: 'Elija su Plan Perfecto',
     scalePlan: 'Escale su práctica médica con nosotros',
     trialTitle: 'Prueba de 14 Días Gratis',
-    trialDesc: 'Pruebe todas las funciones premium de Clinica SaaS sin costo inicial. Sin tarjeta de crédito.',
+    trialDesc: 'Pruebe todas las funciones premium de MedicalCare 888 sin costo inicial. Sin tarjeta de crédito.',
     startTrial: 'Comenzar Prueba Gratis',
     activeSession: 'Sesión Activa - Gestión de Plan',
     recommended: 'Recomendado',
@@ -1081,7 +1081,7 @@ const EN_DICT = {
     }
   },
   register: {
-    title: 'Create account in Clinica SaaS',
+    title: 'Create account in MedicalCare 888',
     join: 'Join',
     heroDesc: 'Create your account and access the best clinical management platform.',
     easyAgenda: 'Easy Booking',
@@ -1106,7 +1106,7 @@ const EN_DICT = {
     choosePlan: 'Choose Your Perfect Plan',
     scalePlan: 'Scale your medical practice with us',
     trialTitle: '14-Day Free Trial',
-    trialDesc: 'Try all Clinica SaaS premium features at no initial cost. No credit card required.',
+    trialDesc: 'Try all MedicalCare 888 premium features at no initial cost. No credit card required.',
     startTrial: 'Start Free Trial',
     activeSession: 'Active Session - Plan Management',
     recommended: 'Recommended',

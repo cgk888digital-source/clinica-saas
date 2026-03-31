@@ -23,8 +23,15 @@ const configs = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
+    port: process.env.DB_PORT || 5432,
     dialect: 'postgres',
     logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    },
     pool: {
       max: 5,
       min: 0,
@@ -45,16 +52,25 @@ const configs = {
 const env = process.env.NODE_ENV || 'development';
 const config = configs[env];
 
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  {
-    host: config.host,
-    dialect: config.dialect,
-    logging: config.logging,
-    pool: config.pool
-  }
-);
+const sequelize = config.url 
+  ? new Sequelize(config.url, {
+      dialect: config.dialect,
+      logging: config.logging,
+      pool: config.pool,
+      dialectOptions: config.dialectOptions
+    })
+  : new Sequelize(
+      config.database,
+      config.username,
+      config.password,
+      {
+        host: config.host,
+        port: config.port,
+        dialect: config.dialect,
+        logging: config.logging,
+        pool: config.pool,
+        dialectOptions: config.dialectOptions
+      }
+    );
 
 module.exports = sequelize;

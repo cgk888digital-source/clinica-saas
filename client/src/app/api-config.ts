@@ -26,12 +26,14 @@ const getBaseUrl = (): string => {
       parts[0] = parts[0] + '-api';
       result = 'https://' + parts.join('.');
     }
-  } else if (host.includes('nominusve.com')) {
+    } else if (host.includes('nominusve.com')) {
     if (host === 'clinicasaas.nominusve.com') {
       result = 'https://clinicasaas-api.nominusve.com';
     } else {
       result = 'https://' + host.replace('Clinica SaaS.', 'clinicasaas-api.');
     }
+  } else if (host.includes('medicalcare-888.com')) {
+    result = 'https://api.medicalcare-888.com';
   }
 
   if (!result) {

@@ -1,27 +1,34 @@
-const getBaseTemplate = (title, content) => `
+const getBaseTemplate = (title, content) => {
+    const logotype = process.env.BRAND_LOGO_URL || 'https://cgk888.com/images/logo.png';
+    const primaryColor = '#0f172a'; // CGK Dark Blue
+
+    return `
 <!DOCTYPE html>
 <html>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding: 20px;">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; background-color: #f8fafc;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f8fafc; padding: 40px 0;">
         <tr>
             <td align="center">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                    <tr style="background-color: #00233e;">
-                        <td style="padding: 30px; text-align: center;">
-                            <img src="cid:logo_Clinica SaaS" alt="Clinica SaaS" style="width: 120px; height: auto; border-radius: 50%; border: 2px solid #6ed1b3; margin-bottom: 10px;" />
-                            <h1 style="color: #6ed1b3; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 1px;">
-                                Clinica SaaS
-                            </h1>
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);">
+                    <tr style="background-color: ${primaryColor};">
+                        <td style="padding: 40px 30px; text-align: center;">
+                            <img src="${logotype}" alt="CGK 888" style="height: 60px; margin-bottom: 20px;" />
+                            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">${title}</h1>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 40px; color: #333333; line-height: 1.6;">
+                        <td style="padding: 45px 35px; color: #334155; font-size: 16px; line-height: 1.6;">
                             ${content}
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 20px; text-align: center; background-color: #f8f9fa; color: #777777; font-size: 12px;">
-                            <p style="margin: 0;">&copy; ${new Date().getFullYear()} clinicasaas.app. Todos los derechos reservados.</p>
+                        <td style="padding: 30px; text-align: center; background-color: #f1f5f9; border-top: 1px solid #e2e8f0;">
+                            <p style="margin: 0; font-weight: 600; color: #1e293b; font-size: 14px;">CGK 888 Digital Ecosystem</p>
+                            <p style="margin: 5px 0 0 0; color: #64748b; font-size: 11px;">&copy; ${new Date().getFullYear()} Clinica SaaS. Todos los derechos reservados.</p>
                         </td>
                     </tr>
                 </table>
@@ -31,22 +38,21 @@ const getBaseTemplate = (title, content) => `
 </body>
 </html>
 `;
+};
 
 exports.getWelcomeEmail = (nombre, email, password, urlLogin) => {
   const content = `
-    <h2 style="color: #0056b3;">¡Hola, ${nombre}!</h2>
-    <p style="font-size: 16px;">Gracias por unirte a nuestra plataforma. Estamos comprometidos con brindarte las mejores herramientas para la gestión de salud y soluciones escalables.</p>
-    <p style="font-size: 16px;">Tu cuenta ha sido creada exitosamente. Ya puedes acceder a todas nuestras funcionalidades con las siguientes credenciales temporales:</p>
-    
-    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border: 1px solid #e9ecef; margin: 20px 0;">
-        <p style="margin: 0 0 10px 0;"><strong>Usuario/Email:</strong> ${email}</p>
-        <p style="margin: 0;"><strong>Contraseña Temporal:</strong> <span style="font-family: monospace; font-size: 16px; background-color: #e9ecef; padding: 2px 6px; border-radius: 3px;">${password}</span></p>
+    <h2 style="color: #0f172a; margin-top: 0;">¡Bienvenido, ${nombre}!</h2>
+    <p>Tu cuenta operativa en <strong>Clinica SaaS</strong> está lista. Estas son tus credenciales temporales:</p>
+    <div style="background-color: #f1f5f9; padding: 25px; border-radius: 12px; margin: 25px 0; border: 1px solid #e2e8f0;">
+        <p style="margin: 0 0 10px 0;"><strong>Usuario:</strong> ${email}</p>
+        <p style="margin: 0;"><strong>Contraseña:</strong> <span style="font-family: monospace; background: #fff; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 4px;">${password}</span></p>
     </div>
-
-    <p style="font-size: 14px; color: #dc3545;"><strong>Importante:</strong> Por tu seguridad, el sistema te solicitará cambiar esta contraseña en tu primer inicio de sesión.</p>
-
+    <div style="background-color: #fef2f2; padding: 12px; border-radius: 8px; border-left: 4px solid #ef4444; margin-bottom: 25px;">
+        <p style="margin: 0; font-size: 14px; color: #991b1b;"><strong>Seguridad:</strong> Deberás cambiar esta contraseña al ingresar por primera vez.</p>
+    </div>
     <div style="text-align: center; margin-top: 30px;">
-        <a href="${urlLogin}" style="background-color: #28a745; color: #ffffff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Acceder a mi cuenta</a>
+        <a href="${urlLogin}" style="background-color: #10b981; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">Acceder a mi Panel</a>
     </div>
   `;
   return getBaseTemplate('Bienvenido a Clinica SaaS', content);
@@ -54,55 +60,48 @@ exports.getWelcomeEmail = (nombre, email, password, urlLogin) => {
 
 exports.getPasswordChangedEmail = (nombre) => {
   const content = `
-    <h2 style="color: #0056b3;">Actualización de Seguridad</h2>
-    <p style="font-size: 16px;">Hola <strong>${nombre}</strong>,</p>
-    <p style="font-size: 16px;">Has actualizado tu contraseña de manera exitosa.</p>
-    <p style="font-size: 16px; background-color: #e9f7ef; padding: 15px; border-left: 4px solid #28a745;">
-        <strong>Nota:</strong> Tu cuenta ahora está más protegida. Recuerda no compartir tus credenciales con terceros.
-    </p>
-    <p style="font-size: 16px;">Si no realizaste este cambio, por favor contacta a nuestro equipo de soporte técnico de inmediato para asegurar tu cuenta.</p>
+    <h2 style="color: #0f172a; margin-top: 0;">Seguridad de la Cuenta</h2>
+    <p>Hola <strong>${nombre}</strong>,</p>
+    <p>Te informamos que la contraseña de tu cuenta ha sido actualizada exitosamente.</p>
+    <div style="background-color: #ecfdf5; padding: 20px; border-radius: 12px; border: 1px solid #d1fae5; margin: 25px 0; color: #065f46;">
+        <p style="margin: 0;"><strong>Confirmación:</strong> Tu nueva contraseña ya está vigente. Si no realizaste este cambio, contacta a soporte de inmediato.</p>
+    </div>
   `;
-  return getBaseTemplate('Cambio de Contraseña Exitoso', content);
+  return getBaseTemplate('Contraseña Actualizada', content);
 };
 
 exports.getPasswordResetEmail = (nombre, urlRecuperacion) => {
   const content = `
-    <h2 style="color: #0056b3;">Recuperar Contraseña</h2>
-    <p style="font-size: 16px;">Hola <strong>${nombre}</strong>,</p>
-    <p style="font-size: 16px;">Recibimos una solicitud para restablecer la contraseña de tu cuenta en <strong>Clinica SaaS</strong>.</p>
-    <p style="font-size: 16px;">Haz clic en el botón de abajo para elegir una nueva contraseña. Este enlace es válido por <strong>60 minutos</strong>.</p>
-    <div style="text-align: center; margin: 30px 0;">
-        <a href="${urlRecuperacion}" style="background-color: #0056b3; color: #ffffff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Restablecer mi contraseña</a>
+    <h2 style="color: #0f172a; margin-top: 0;">Recuperación de Acceso</h2>
+    <p>Hola <strong>${nombre}</strong>, recibimos una solicitud para restablecer tu contraseña.</p>
+    <div style="text-align: center; margin: 35px 0;">
+        <a href="${urlRecuperacion}" style="background-color: #0f172a; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">Restablecer Contraseña</a>
     </div>
-    <p style="font-size: 13px; color: #999999;">Si no solicitaste este cambio o recordaste tu contraseña, puedes ignorar este correo sin problemas; tu contraseña actual y accesos seguirán funcionando.</p>
+    <p style="font-size: 13px; color: #94a3b8; text-align: center;">Si no solicitaste esto, puedes ignorar este correo de forma segura.</p>
   `;
-  return getBaseTemplate('Restablecer tu Contraseña', content);
+  return getBaseTemplate('Restablecer Contraseña', content);
 };
 
 exports.getSubscriptionExpiryReminderEmail = ({ nombre, organizationName, daysLeft, expiresAt, subscriptionUrl }) => {
-    const diasTexto = daysLeft === 1 ? '1 día' : `${daysLeft} días`;
     const content = `
-        <h2 style="color: #0056b3;">Tu suscripción está por vencer</h2>
-        <p style="font-size: 16px;">Hola <strong>${nombre}</strong>,</p>
-        <p style="font-size: 16px;">Te recordamos que la suscripción de <strong>${organizationName}</strong> vence en <strong>${diasTexto}</strong>.</p>
-        <p style="font-size: 16px;">Fecha de vencimiento: <strong>${expiresAt}</strong></p>
-        <p style="font-size: 16px;">Para evitar interrupciones en tu servicio, te recomendamos renovar tu plan con anticipación.</p>
-        <div style="text-align: center; margin: 30px 0;">
-                <a href="${subscriptionUrl}" style="background-color: #0056b3; color: #ffffff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Gestionar suscripción</a>
+        <h2 style="color: #d97706; margin-top: 0;">Aviso de Suscripción</h2>
+        <p>Hola <strong>${nombre}</strong>, la suscripción de <strong>${organizationName}</strong> vence en ${daysLeft} días (el ${expiresAt}).</p>
+        <p>Evita interrupciones en el servicio renovando tu plan hoy mismo.</p>
+        <div style="text-align: center; margin: 35px 0;">
+                <a href="${subscriptionUrl}" style="background-color: #d97706; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">Gestionar Renovación</a>
         </div>
     `;
-    return getBaseTemplate('Aviso de Vencimiento de Suscripción', content);
+    return getBaseTemplate('Vencimiento Próximo', content);
 };
 
 exports.getSubscriptionExpiredEmail = ({ nombre, organizationName, subscriptionUrl }) => {
     const content = `
-        <h2 style="color: #b22222;">Tu suscripción ha vencido</h2>
-        <p style="font-size: 16px;">Hola <strong>${nombre}</strong>,</p>
-        <p style="font-size: 16px;">La suscripción de <strong>${organizationName}</strong> ha vencido y tu cuenta ahora se encuentra en estado pendiente de pago.</p>
-        <p style="font-size: 16px;">Para recuperar el acceso completo y evitar bloqueos operativos, realiza la renovación desde el panel de suscripción.</p>
-        <div style="text-align: center; margin: 30px 0;">
-                <a href="${subscriptionUrl}" style="background-color: #b22222; color: #ffffff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Renovar ahora</a>
+        <h2 style="color: #dc2626; margin-top: 0;">Suscripción Vencida</h2>
+        <p>Hola <strong>${nombre}</strong>, la suscripción de <strong>${organizationName}</strong> ha finalizado. El acceso se encuentra restringido temporalmente.</p>
+        <div style="text-align: center; margin: 35px 0;">
+                <a href="${subscriptionUrl}" style="background-color: #dc2626; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block;">Reactivar Ahora</a>
         </div>
     `;
-    return getBaseTemplate('Suscripción Vencida', content);
+    return getBaseTemplate('Cuenta Suspendida', content);
 };
+

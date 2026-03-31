@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import ExcelJS from 'exceljs';
 import { LanguageService } from './language.service';
 
 export interface BrandingInfo {
@@ -59,6 +56,7 @@ export class ExportService {
    * Export data to Excel (XLSX)
    */
   async exportToExcel(filename: string, headers: string[], rows: any[][], branding?: BrandingInfo) {
+    const { default: ExcelJS } = await import('exceljs');
     const brand = { ...this.defaultBranding, ...branding };
     const data = [
       [brand.name.toUpperCase()],
@@ -103,7 +101,10 @@ export class ExportService {
   /**
    * Export data to PDF with Premium Design and Dynamic Branding
    */
-  exportToPdf(filename: string, title: string, headers: string[], rows: any[][], branding?: BrandingInfo) {
+  async exportToPdf(filename: string, title: string, headers: string[], rows: any[][], branding?: BrandingInfo) {
+    const { default: jsPDF } = await import('jspdf');
+    const { default: autoTable } = await import('jspdf-autotable');
+    
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.width;
     const pageHeight = doc.internal.pageSize.height;
