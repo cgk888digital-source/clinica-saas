@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "name": "clinica-888",
+  "name": "clinica-888-stable",
   "builds": [
     {
-      "src": "server/src/index.js",
+      "src": "api/index.js",
       "use": "@vercel/node"
     },
     {
@@ -17,11 +17,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/server/src/index.js"
+      "destination": "api/index.js"
     },
     {
       "source": "/(.*)",
-      "destination": "/client/$1"
+      "destination": "client/$1"
     }
   ],
   "env": {
