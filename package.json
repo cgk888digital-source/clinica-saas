@@ -1,0 +1,12 @@
+{
+  "name": "clinica-888-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "engines": {
+    "node": ">=18.x"
+  }
+}
