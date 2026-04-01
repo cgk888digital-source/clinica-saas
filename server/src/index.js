@@ -227,7 +227,29 @@ const shutdown = async (signal) => {
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
-if (process.env.NODE_ENV !== 'test') startServer();
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+  startServer();
+}
 
-module.exports = { app, server };
+// Initializer for serverless environments (Verce)
+const connectDB = async () => {
+    try {
+        await sequelize.authenticate();
+        await initializeDatabase();
+        await seedRoles();
+        initializeSocket(server);
+    } catch (err) {
+        logger.fatal({ err }, 'Lazy initialization failed');
+    }
+};
+
+// Check connection on each request if needed
+app.use(async (req, res, next) => {
+    if (process.env.VERCEL) {
+        await connectDB();
+    }
+    next();
+});
+
+module.exports = app;
 
