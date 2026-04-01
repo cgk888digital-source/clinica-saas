@@ -314,11 +314,11 @@ export class Dashboard implements OnInit {
       cancelButtonColor: '#64748b',
     }).then((result) => {
       const filename = `Reporte_Diario_${new Date().toISOString().split('T')[0]}`;
-      const title = 'Reporte de Actividad - Clinica SaaS';
+      const title = 'Reporte de Actividad - MedicalCare 888';
       const user = this.authService.currentUser();
       
       const branding = {
-        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Clinica SaaS Platform'),
+        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'MedicalCare 888 Platform'),
         professional: user ? `${user.firstName} ${user.lastName}` : undefined,
         tagline: user?.businessName ? this.langService.translate('landing.description').substring(0, 30) + '...' : 'Gestión Clínica Profesional'
       };

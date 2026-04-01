@@ -234,7 +234,7 @@ export class VideoHistory implements OnInit {
     doc.text('Informe de Videoconsulta', 20, 25);
     
     doc.setFontSize(10);
-    doc.text('Clinica SaaS - Plataforma de Telemedicina', 140, 25);
+    doc.text('MedicalCare 888 - Plataforma de Telemedicina', 140, 25);
 
     // Info General
     doc.setTextColor(60, 60, 60);

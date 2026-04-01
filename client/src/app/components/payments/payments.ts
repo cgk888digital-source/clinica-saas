@@ -641,10 +641,10 @@ export class Payments implements OnInit {
       cancelButtonColor: '#64748b',
     }).then((result) => {
       const filename = `Reporte_Pagos_ClinicaSaaS_${new Date().toISOString().split('T')[0]}`;
-      const title = 'Listado de Pagos - Clinica SaaS';
+      const title = 'Listado de Pagos - MedicalCare 888';
       const user = this.authService.currentUser();
       const branding = {
-        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'Clinica SaaS Platform'),
+        name: user?.businessName || (user?.accountType === 'PROFESSIONAL' ? `${user.firstName} ${user.lastName}` : 'MedicalCare 888 Platform'),
         professional: user ? `${user.firstName} ${user.lastName}` : undefined,
         tagline: this.langService.translate('payments.subtitle')
       };

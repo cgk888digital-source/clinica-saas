@@ -528,7 +528,10 @@ const ES_DICT = {
     registerHere: 'Regístrate aquí',
     publicBooking: 'Agendar Cita (Público)',
     businessName: 'Nombre del Centro / Consultorio',
-    businessNamePlaceholder: 'Ej: Centro Médico San José'
+    businessNamePlaceholder: 'Ej: Centro Médico San José',
+    professional: 'Profesional de Salud',
+    clinic: 'Clínica / Consultorio',
+    hospital: 'Hospital / Centro'
   },
   patients_list: {
     title: 'Gestión de Pacientes',
@@ -562,7 +565,77 @@ const ES_DICT = {
     address: 'Dirección',
     bloodType: 'Tipo de Sangre',
     allergies: 'Alergias',
-    acceptTerms: 'Acepto los términos. Datos bajo ISO 27001, ISO 9001 y GDPR.'
+    acceptTerms: 'Acepto los términos. Datos bajo ISO 27001, ISO 9001 y GDPR.',
+    patient: 'Paciente',
+    patientDesc: 'Accede a tus citas y expediente médico.',
+    professionalDesc: 'Gestiona tu consulta y pacientes.',
+    clinicDesc: 'Administra tu clínica completa.',
+    hospitalDesc: 'Gestión hospitalaria centralizada.',
+    error: 'Error al registrar'
+  },
+  public_booking: {
+    title: 'Agendar Cita Médica',
+    subtitle: 'Reserva tu consulta en minutos, sin necesidad de cuenta',
+    backToLogin: 'Volver al Login',
+    steps: {
+      personal: 'Datos Personales',
+      appointment: 'Datos de la Cita'
+    },
+    personalInfo: {
+      title: 'Información Personal',
+      firstName: 'Nombre',
+      lastName: 'Apellido',
+      email: 'Correo Electrónico',
+      phone: 'Teléfono (WhatsApp)',
+      document: 'Cédula / Pasaporte',
+      placeholders: {
+        firstName: 'Ej: Juan',
+        lastName: 'Ej: Pérez',
+        email: 'correo@ejemplo.com',
+        phone: '04121234567',
+        document: 'V-12345678'
+      }
+    },
+    appointmentInfo: {
+      title: 'Detalles de la Cita',
+      doctor: 'Especialista',
+      doctorPlaceholder: 'Seleccione un especialista',
+      date: 'Fecha de la Cita',
+      time: 'Hora',
+      timePlaceholder: 'Seleccione una hora',
+      reason: 'Motivo de Consulta',
+      reasonPlaceholder: 'Ej: Control General, Revisión...',
+      notes: 'Notas Adicionales (Opcional)',
+      notesPlaceholder: 'Cualquier información relevante...'
+    },
+    actions: {
+      continue: 'Continuar',
+      back: 'Volver',
+      confirm: 'Confirmar y Agendar',
+      booking: 'Agendando...',
+      hasAccount: '¿Ya tienes cuenta?',
+      loginNow: 'Iniciar Sesión'
+    },
+    errors: {
+      required: 'Este campo es obligatorio',
+      email: 'Ingresa un correo electrónico válido',
+      minlength: 'Demasiado corto',
+      pattern: 'Formato inválido',
+      invalidDate: 'Fecha no válida',
+      selectDoctor: 'Selecciona un especialista',
+      selectTime: 'Selecciona una hora',
+      general: 'Ocurrió un error al agendar la cita. Intenta de nuevo.'
+    },
+    success: {
+      title: '¡Cita Agendada!',
+      msg: 'Tu cita ha sido registrada exitosamente.',
+      notification: 'Recibirás una confirmación por WhatsApp.',
+      calendar: 'Agregar al Calendario',
+      didYouKnow: '¿Sabías que puedes crear una cuenta?',
+      accountBenefits: 'Con una cuenta puedes ver tu historial, gestionar tus citas y mucho más.',
+      createAccount: 'Crear Cuenta Gratis',
+      gotIt: 'Entendido'
+    }
   },
   subscription: {
     pricingTitle: 'Planes y Precios',
@@ -1109,7 +1182,10 @@ const EN_DICT = {
     registerHere: 'Register here',
     publicBooking: 'Book Appointment (Public)',
     businessName: 'Center / Clinic Name',
-    businessNamePlaceholder: 'e.g. San Jose Medical Center'
+    businessNamePlaceholder: 'e.g. San Jose Medical Center',
+    professional: 'Health Professional',
+    clinic: 'Clinic / Practice',
+    hospital: 'Hospital / Center'
   },
   patients_list: {
     title: 'Patient Management',
@@ -1143,7 +1219,77 @@ const EN_DICT = {
     address: 'Address',
     bloodType: 'Blood Type',
     allergies: 'Allergies',
-    acceptTerms: 'I accept the terms. Data under ISO 27001, ISO 9001, and GDPR compliance.'
+    acceptTerms: 'I accept the terms. Data under ISO 27001, ISO 9001, and GDPR compliance.',
+    patient: 'Patient',
+    patientDesc: 'Access your appointments and medical record.',
+    professionalDesc: 'Manage your practice and patients.',
+    clinicDesc: 'Manage your full clinic operations.',
+    hospitalDesc: 'Centralized hospital management.',
+    error: 'Registration error'
+  },
+  public_booking: {
+    title: 'Book Medical Appointment',
+    subtitle: 'Reserve your consultation in minutes, no account needed',
+    backToLogin: 'Back to Login',
+    steps: {
+      personal: 'Personal Info',
+      appointment: 'Appointment'
+    },
+    personalInfo: {
+      title: 'Personal Information',
+      firstName: 'First Name',
+      lastName: 'Last Name',
+      email: 'Email Address',
+      phone: 'Phone (WhatsApp)',
+      document: 'ID / Passport',
+      placeholders: {
+        firstName: 'e.g. John',
+        lastName: 'e.g. Smith',
+        email: 'email@example.com',
+        phone: '+1 555-1234567',
+        document: '12345678'
+      }
+    },
+    appointmentInfo: {
+      title: 'Appointment Details',
+      doctor: 'Specialist',
+      doctorPlaceholder: 'Select a specialist',
+      date: 'Appointment Date',
+      time: 'Time',
+      timePlaceholder: 'Select a time slot',
+      reason: 'Reason for Visit',
+      reasonPlaceholder: 'e.g. General Checkup, Follow-up...',
+      notes: 'Additional Notes (Optional)',
+      notesPlaceholder: 'Any relevant information...'
+    },
+    actions: {
+      continue: 'Continue',
+      back: 'Back',
+      confirm: 'Confirm & Book',
+      booking: 'Booking...',
+      hasAccount: 'Already have an account?',
+      loginNow: 'Log In'
+    },
+    errors: {
+      required: 'This field is required',
+      email: 'Please enter a valid email address',
+      minlength: 'Too short',
+      pattern: 'Invalid format',
+      invalidDate: 'Invalid date',
+      selectDoctor: 'Please select a specialist',
+      selectTime: 'Please select a time slot',
+      general: 'An error occurred while booking the appointment. Please try again.'
+    },
+    success: {
+      title: 'Appointment Booked!',
+      msg: 'Your appointment has been successfully registered.',
+      notification: 'You will receive a WhatsApp confirmation.',
+      calendar: 'Add to Calendar',
+      didYouKnow: 'Did you know you can create an account?',
+      accountBenefits: 'With an account you can view your history, manage appointments and more.',
+      createAccount: 'Create Free Account',
+      gotIt: 'Got it'
+    }
   },
   subscription: {
     pricingTitle: 'Plans & Pricing',
