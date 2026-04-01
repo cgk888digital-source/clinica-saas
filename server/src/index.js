@@ -194,11 +194,18 @@ app.use(async (req, res, next) => {
 app.use((err, req, res, next) => {
   logger.error({ err, path: req.path }, 'Global Error Handler');
   
-  const isDbError = err.name?.includes('Sequelize') || err.message?.includes('Database');
+  const isDbError = err.name?.includes('Sequelize') || err.message?.includes('Database') || lastInitError;
   
   res.status(err.status || 500).json({
     message: err.message || 'Internal Server Error',
-    ...(isDbError && { error: 'Database Connection Failed' }),
+    ...(isDbError && { 
+      error: 'Database Connection Failed',
+      debug_init: lastInitError ? {
+        message: lastInitError.message,
+        name: lastInitError.name,
+        code: lastInitError.parent?.code || lastInitError.code
+      } : 'Unknown DB Error'
+    }),
     ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
   });
 });
@@ -248,10 +255,11 @@ if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
 
 // Initializer for serverless environments (Vercel)
 let isInitialized = false;
+let lastInitError = null;
 const connectDB = async () => {
     if (isInitialized) return;
     try {
-        validateEnv(); // Validate now during cold start
+        validateEnv();
         await sequelize.authenticate();
         await initializeDatabase();
         await seedRoles();
@@ -259,8 +267,8 @@ const connectDB = async () => {
         isInitialized = true;
         logger.info('🚀 Vercel Cold Start: Initialization successful');
     } catch (err) {
+        lastInitError = err;
         logger.fatal({ err }, 'Lazy initialization failed');
-        // Do not throw here to allow the error handler middleware to catch issues
     }
 };
 
