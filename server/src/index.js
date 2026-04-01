@@ -2,169 +2,133 @@ const express = require('express');
 const app = express();
 
 /**
- * 🐦 CANARY HEALTH ROUTE
- * This route must stay at the VERY TOP to isolate crashes.
- * Check this at: https://project-0nl81.vercel.app/api/health
+ * 🛡️ ULTRA-ISOLATED BOOT (Emergency Mode)
+ * This is the ONLY thing that runs immediately at top-level.
+ * If this fails, then Vercel's environment is broken.
  */
 app.get('/api/health', (req, res) => {
   res.status(200).json({ 
     status: 'ok', 
-    environment: process.env.NODE_ENV,
+    isolated: true,
     vercel: !!process.env.VERCEL,
     timestamp: new Date().toISOString()
   });
 });
 
-// --- ALL OTHER IMPORTS AND LOGIC MUST START AFTER THIS LINE ---
+// --- NO OTHER TOP-LEVEL REQUIRES EXCEPT MINIMAL BOOTSTRAP ---
 
-const http = require('http');
-const cors = require('cors');
-const morgan = require('morgan');
-const helmet = require('helmet');
-const compression = require('compression');
-// const rateLimit = require('express-rate-limit'); // Disabled for Vercel production
-require('dotenv').config();
-const sequelize = require('./config/db.config');
-const models = require('./models');
-// const seedRoles = require('./utils/seeder');
-// const seedTestData = require('./utils/testSeeder');
-const { initializeSocket } = require('./sockets/videoSocket');
-const logger = require('./utils/logger');
-// const swaggerJsdoc = require('swagger-jsdoc'); // Disabled for Vercel production
-// const swaggerUi = require('swagger-ui-express'); // Disabled for Vercel production
-const { sanitizeInput } = require('./utils/sanitize');
-const checkSubscription = require('./middlewares/subscription.middleware');
-const authMiddleware = require('./middlewares/auth.middleware');
-const validateEnv = require('./utils/validateEnv');
-const { initializeDatabase } = require('./utils/migrationManager');
-
-const server = http.createServer(app);
-const PORT = process.env.PORT || 5001;
-
-// Global initialization state
-let isInitialized = false;
-let lastInitError = null;
+let isAppLoaded = false;
+let bootError = null;
 
 /**
- * Lazy initialization for Vercel Serverless
+ * Lazy Application Loader
+ * This drags in the rest of the universe (sequelize, models, routes) 
+ * ONLY when an actual API request comes in.
  */
-const connectDB = async () => {
-    if (isInitialized) return;
-    try {
-        validateEnv();
-        await sequelize.authenticate();
-        
-        // Skip roles seeding and heavy initialization on Vercel to optimize cold starts
-        if (!process.env.VERCEL) {
-            // await initializeDatabase();
-            // await seedRoles();
-            // initializeSocket(server); // Disabled for Vercel production
-        }
-        
-        isInitialized = true;
-        logger.info('🚀 Vercel Cold Start: Initialization successful');
-    } catch (err) {
-        lastInitError = err;
-        logger.fatal({ err }, 'Lazy initialization failed');
-    }
+const loadApp = async (req, res, next) => {
+  if (req.path === '/api/health') return next();
+
+  if (isAppLoaded) return next();
+  if (bootError) return res.status(500).json({ error: 'Critical Boot Failure', detail: bootError.message });
+
+  try {
+    console.log('🚀 [Vercel] Lazy-loading full application context...');
+    
+    // Dependencies
+    const cors = require('cors');
+    const morgan = require('morgan');
+    const helmet = require('helmet');
+    const compression = require('compression');
+    require('dotenv').config();
+    const sequelize = require('./config/db.config');
+    const logger = require('./utils/logger');
+    const { sanitizeInput } = require('./utils/sanitize');
+    const authMiddleware = require('./middlewares/auth.middleware');
+
+    // App Middleware Configuration
+    app.use(cors({ origin: true, credentials: true }));
+    app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+    app.use(express.json({ limit: '1mb' }));
+    app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+    app.use(morgan('dev'));
+    app.use(compression());
+    app.use(sanitizeInput);
+
+    // Database check
+    await sequelize.authenticate();
+
+    // Routes (Loaded on demand inside this function)
+    const routes = {
+      auth: require('./routes/auth.routes'),
+      exchange: require('./routes/exchange.routes'),
+      doctors: require('./routes/doctor.routes'),
+      patients: require('./routes/patient.routes'),
+      appointments: require('./routes/appointment.routes'),
+      medicalRecords: require('./routes/medicalRecord.routes'),
+      payments: require('./routes/payment.routes'),
+      inventory: require('./routes/inventory.routes'),
+      organizations: require('./routes/organization.routes'),
+      specialties: require('./routes/specialty.routes'),
+      departments: require('./routes/department.routes'),
+      staff: require('./routes/staff.routes'),
+      labs: require('./routes/lab.routes'),
+      drugs: require('./routes/drug.routes'),
+      nurses: require('./routes/nurse.routes'),
+      video: require('./routes/video.routes')
+    };
+
+    // Mount Routes
+    app.use('/api/auth', routes.auth);
+    app.use('/api/exchange', routes.exchange);
+    app.use('/api/doctors', authMiddleware, routes.doctors);
+    app.use('/api/patients', authMiddleware, routes.patients);
+    app.use('/api/appointments', authMiddleware, routes.appointments);
+    app.use('/api/medical-records', authMiddleware, routes.medicalRecords);
+    app.use('/api/payments', authMiddleware, routes.payments);
+    app.use('/api/inventory', authMiddleware, routes.inventory);
+    app.use('/api/organizations', authMiddleware, routes.organizations);
+    app.use('/api/specialties', authMiddleware, routes.specialties);
+    app.use('/api/departments', authMiddleware, routes.departments);
+    app.use('/api/staff', authMiddleware, routes.staff);
+    app.use('/api/labs', authMiddleware, routes.labs);
+    app.use('/api/drugs', authMiddleware, routes.drugs);
+    app.use('/api/nurses', authMiddleware, routes.nurses);
+    app.use('/api/video', authMiddleware, routes.video);
+
+    // 404 handler
+    app.use((req, res) => {
+      res.status(404).json({ message: 'Ruta no encontrada (Lazy Mode)' });
+    });
+
+    isAppLoaded = true;
+    console.log('✅ [Vercel] Full context loaded successfully.');
+    next();
+  } catch (err) {
+    bootError = err;
+    console.error('❌ [Vercel] FATAL BOOT ERROR:', err);
+    res.status(500).json({ error: 'Fatal Boot Error', detail: err.message });
+  }
 };
 
-// 1. CORS - Simplified for Production Diagnosis
-const corsOptions = {
-  origin: true, // Allow all for now
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
-};
-
-app.use(cors(corsOptions));
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
-
-// 3. Parser & Sanitization
-app.use(express.json({ limit: '50kb' })); 
-app.use(express.urlencoded({ extended: true, limit: '50kb' }));
-app.use(morgan('dev'));
-app.use(compression());
-app.use(sanitizeInput);
-
-// 4. Routes Lazy-Initialization Middleware
-app.use(async (req, res, next) => {
-    // Skip lazy-init for the canary health route
-    if (req.path === '/api/health' || req.path === '/health') return next();
-
-    if (process.env.VERCEL && !isInitialized) {
-        await connectDB();
-    }
-    next();
-});
-
-// Import routes AFTER definitions to minimize boot weight
-const authRoutes = require('./routes/auth.routes');
-const doctorRoutes = require('./routes/doctor.routes');
-const patientRoutes = require('./routes/patient.routes');
-const appointmentRoutes = require('./routes/appointment.routes');
-const medicalRecordRoutes = require('./routes/medicalRecord.routes');
-const paymentRoutes = require('./routes/payment.routes');
-const inventoryRoutes = require('./routes/inventory.routes');
-const organizationRoutes = require('./routes/organization.routes');
-const specialtyRoutes = require('./routes/specialty.routes');
-const departmentRoutes = require('./routes/department.routes');
-const staffRoutes = require('./routes/staff.routes');
-const labRoutes = require('./routes/lab.routes');
-const exchangeRoutes = require('./routes/exchange.routes');
-const drugRoutes = require('./routes/drug.routes');
-const nurseRoutes = require('./routes/nurse.routes');
-const videoRoutes = require('./routes/video.routes');
-
-// Mount routes
-app.use('/api/auth', authRoutes);
-app.use('/api/doctors', authMiddleware, doctorRoutes);
-app.use('/api/patients', authMiddleware, patientRoutes);
-app.use('/api/appointments', authMiddleware, appointmentRoutes);
-app.use('/api/medical-records', authMiddleware, medicalRecordRoutes);
-app.use('/api/payments', authMiddleware, paymentRoutes);
-app.use('/api/inventory', authMiddleware, inventoryRoutes);
-app.use('/api/organizations', authMiddleware, organizationRoutes);
-app.use('/api/specialties', authMiddleware, specialtyRoutes);
-app.use('/api/departments', authMiddleware, departmentRoutes);
-app.use('/api/staff', authMiddleware, staffRoutes);
-app.use('/api/labs', authMiddleware, labRoutes);
-app.use('/api/exchange', exchangeRoutes); 
-app.use('/api/drugs', authMiddleware, drugRoutes);
-app.use('/api/nurses', authMiddleware, nurseRoutes);
-app.use('/api/video', authMiddleware, videoRoutes);
-
-// Error Diagnostic Middleware
-app.use((req, res, next) => {
-    if (lastInitError) {
-        return res.status(500).json({
-            error: 'Database Connection Error during bootstrap',
-            details: lastInitError.message,
-            stack: process.env.NODE_ENV === 'development' ? lastInitError.stack : undefined,
-            diagnosis: 'Check Supabase Connection Strings and IP Whitelisting'
-        });
-    }
-    next();
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ message: 'Ruta no encontrada' });
-});
+// Apply Lazy loader to everything EXCEPT canary
+app.use(loadApp);
 
 // Final Error Handler
 app.use((err, req, res, next) => {
-  logger.error({ err, path: req.path }, 'Unhandled error');
   res.status(err.status || 500).json({
     message: err.message || 'Error interno del servidor',
     error: process.env.NODE_ENV === 'development' ? err : {}
   });
 });
 
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-  server.listen(PORT, () => {
-    logger.info(`Server running on port ${PORT}`);
+/**
+ * Local Server Boot (Only for development)
+ */
+if (!process.env.VERCEL) {
+  const http = require('http');
+  const server = http.createServer(app);
+  server.listen(process.env.PORT || 5001, () => {
+    console.log(`Server running on port ${process.env.PORT || 5001} (Dev)`);
   });
 }
 
