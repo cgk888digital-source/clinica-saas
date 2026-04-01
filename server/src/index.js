@@ -261,9 +261,14 @@ const connectDB = async () => {
     try {
         validateEnv();
         await sequelize.authenticate();
-        await initializeDatabase();
-        await seedRoles();
-        initializeSocket(server);
+        
+        // Skip roles seeding on Vercel to optimize cold starts
+        if (!process.env.VERCEL) {
+            await initializeDatabase();
+            await seedRoles();
+            initializeSocket(server);
+        }
+        
         isInitialized = true;
         logger.info('🚀 Vercel Cold Start: Initialization successful');
     } catch (err) {
