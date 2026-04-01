@@ -27,14 +27,17 @@ const getBaseUrl = (): string => {
       result = 'https://' + parts.join('.');
     }
     } else if (host.includes('nominusve.com')) {
-    if (host === 'clinicasaas.nominusve.com') {
-      result = 'https://clinicasaas-api.nominusve.com';
-    } else {
-      result = 'https://' + host.replace('Clinica SaaS.', 'clinicasaas-api.');
+      if (host === 'clinicasaas.nominusve.com') {
+        result = 'https://clinicasaas-api.nominusve.com';
+      } else {
+        result = 'https://' + host.replace('Clinica SaaS.', 'clinicasaas-api.');
+      }
+    } else if (host.includes('medicalcare-888.com')) {
+      result = 'https://api.medicalcare-888.com';
+    } else if (host.includes('vercel.app') || host.includes('clinica-888')) {
+      // Vercel deployment uses relative paths
+      result = ''; 
     }
-  } else if (host.includes('medicalcare-888.com')) {
-    result = 'https://api.medicalcare-888.com';
-  }
 
   if (!result) {
     console.warn('⚠️ No se detectó entorno de producción. Usando rutas relativas.');
