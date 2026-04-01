@@ -20,9 +20,7 @@ const authMiddleware = require('./middlewares/auth.middleware');
 const validateEnv = require('./utils/validateEnv');
 const { initializeDatabase } = require('./utils/migrationManager');
 
-// Validate Environment before anything else
-validateEnv();
-
+// 1. Initial configuration (NOT validating env yet to avoid early exit on serverless)
 const app = express();
 // Enable Trust Proxy for Easypanel/Nginx/Cloudflare/Supabase
 app.set('trust proxy', 1); 
@@ -181,10 +179,26 @@ app.get('/health', async (req, res) => {
 app.get('/', (req, res) => res.json({ message: 'Welcome to MedicalCare 888 API' }));
 
 // 4. Global Error Handler
+app.use(async (req, res, next) => {
+  try {
+    // If we're on Vercel, ensure initialization has at least been tried
+    if (process.env.VERCEL && !isInitialized) {
+      await connectDB();
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.use((err, req, res, next) => {
   logger.error({ err, path: req.path }, 'Global Error Handler');
+  
+  const isDbError = err.name?.includes('Sequelize') || err.message?.includes('Database');
+  
   res.status(err.status || 500).json({
     message: err.message || 'Internal Server Error',
+    ...(isDbError && { error: 'Database Connection Failed' }),
     ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
   });
 });
@@ -232,15 +246,21 @@ if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   startServer();
 }
 
-// Initializer for serverless environments (Verce)
+// Initializer for serverless environments (Vercel)
+let isInitialized = false;
 const connectDB = async () => {
+    if (isInitialized) return;
     try {
+        validateEnv(); // Validate now during cold start
         await sequelize.authenticate();
         await initializeDatabase();
         await seedRoles();
         initializeSocket(server);
+        isInitialized = true;
+        logger.info('🚀 Vercel Cold Start: Initialization successful');
     } catch (err) {
         logger.fatal({ err }, 'Lazy initialization failed');
+        // Do not throw here to allow the error handler middleware to catch issues
     }
 };
 
