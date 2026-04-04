@@ -75,6 +75,13 @@ Sistema completo de gestión para clínicas médicas desarrollado con Angular y 
 - ✅ **Gestión de Organización**
 - ✅ **SuperAdmin Bypass**: Acceso total sin restricciones de suscripción
 
+## 🆕 v2.2.1 (Production Cleanup & Rebranding - Abril 2026)
+
+- ✅ **Branding Médico**: Cambio de identidad completo a **MedicalCare 888**, asegurando consistencia en títulos y descripciones a nivel de código y documentación.
+- ✅ **Optimización de Configuración**: Mejora en la lógica de detección de API en `api-config.ts` para despliegues eficientes en Vercel y dominios personalizados, asegurando el uso de rutas relativas.
+- ✅ **Limpieza de Recursos**: Eliminación sistemática de más de 20 archivos obsoletos y scripts de depuración, garantizando un repositorio ligero y profesional de cara a auditorías.
+- ✅ **Sincronización Multi-Rama**: Auditoría completa y promoción de cambios a través de las ramas `develop`, `staging` y `master`.
+
 ## 🆕 v2.2.0 (Onboarding & Payment Experience - Abril 2026)
 
 - ✅ **Flujo de Pago Previo (Onboarding)**: Los nuevos usuarios ahora pueden pagar su suscripción antes de registrarse, facilitando la conversión y asegurando que el acceso premium se active inmediatamente tras el registro.
