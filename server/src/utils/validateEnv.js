@@ -18,17 +18,20 @@ const requiredVars = [
 
 const validateEnv = () => {
   const missing = requiredVars.filter(v => !process.env[v]);
-  
+
   if (missing.length > 0) {
     logger.error({ missing }, '❌ CRITICAL: Missing Environment Variables');
-    
-    // In production, we exit to prevent inconsistent state
+
     if (process.env.NODE_ENV === 'production') {
       console.error('\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-      console.error('!!  SHUTTING DOWN: Missing required variables   !!');
+      console.error('!!  WARNING: Missing required variables          !!');
       console.error(`!!  ${missing.join(', ')}`);
       console.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n');
-      process.exit(1);
+      // Do NOT call process.exit(1) in serverless environments (Vercel):
+      // it kills the function instance and causes cold-start 500s on every request.
+      if (!process.env.VERCEL) {
+        process.exit(1);
+      }
     } else {
       logger.warn('⚠️ Server starting with missing vars (Development mode)');
     }

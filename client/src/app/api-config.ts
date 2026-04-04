@@ -35,14 +35,14 @@ const getBaseUrl = (): string => {
     } else if (host.includes('medicalcare-888.com')) {
       result = 'https://api.medicalcare-888.com';
     } else if (host.includes('vercel.app') || host.includes('clinica-888')) {
-      // Vercel deployment uses relative paths
-      result = ''; 
+      // Vercel monorepo: frontend + backend en el mismo dominio, usar rutas relativas
+      result = '';
     }
 
-  if (!result) {
-    console.warn('⚠️ No se detectó entorno de producción. Usando rutas relativas.');
-  } else {
+  if (result) {
     console.log(`🚀 Clinica SaaS API detectada: ${result}`);
+  } else if (!host.includes('vercel.app') && !host.includes('clinica-888')) {
+    console.warn('⚠️ No se detectó entorno de producción. Usando rutas relativas.');
   }
 
   return result;

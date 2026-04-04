@@ -221,16 +221,8 @@ exports.register = async (req, res) => {
   }
 };
 
-const fs = require('fs');
-const path = require('path');
-const logFile = path.resolve(__dirname, '../../login_debug.log');
-
 const log = (msg) => {
-  try {
-    fs.appendFileSync(logFile, `${new Date().toISOString()} - ${msg}\n`);
-  } catch (e) {
-    console.error('LOGGING FAILED:', e);
-  }
+  console.log(`[AUTH] ${new Date().toISOString()} - ${msg}`);
 };
 
 exports.login = async (req, res) => {

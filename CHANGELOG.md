@@ -2,6 +2,33 @@
 
 Todas las modificaciones notables del proyecto serán documentadas en este archivo.
 
+## [2.2.3] - 2026-04-04
+
+### 🐛 Fix — Producción Vercel: Login 500 + Cold-Start Crash
+
+#### Server — `server/src/utils/validateEnv.js`
+
+- ✅ **Eliminado `process.exit(1)` en entornos Vercel**: en serverless, llamar `process.exit` mata la instancia y causa 500 en cada cold-start. Ahora solo loguea el error y continúa si `VERCEL=1`.
+
+#### Server — `server/src/config/db.config.js`
+
+- ✅ **Soporte para `DATABASE_URL`**: la variable de entorno `DATABASE_URL` (formato connection string) tiene prioridad sobre las variables individuales `DB_HOST/DB_NAME/DB_USER/DB_PASSWORD`. Compatibilidad con Supabase, Neon, Railway, Heroku y similares.
+
+#### Server — `server/src/index.js`
+
+- ✅ **Middleware `connectDB` movido antes de las rutas**: en Vercel serverless, el middleware estaba registrado *después* de todas las rutas, por lo que la BD nunca se inicializaba antes de que los handlers procesaran las requests. Ahora se ejecuta al inicio de cada request cuando `VERCEL=1`.
+- ✅ **Eliminado el middleware duplicado** al final del archivo.
+
+#### Server — `server/src/controllers/auth.controller.js`
+
+- ✅ **Eliminado `fs.appendFileSync` para logging**: el filesystem de Vercel es de solo lectura; la escritura a `login_debug.log` lanzaba una excepción silenciosa en cada request. Reemplazado por `console.log` compatible con el log de runtime de Vercel.
+
+#### Client — `client/src/app/api-config.ts`
+
+- ✅ **Warning falso suprimido**: el aviso "No se detectó entorno de producción" ya no se emite cuando el dominio es `*.vercel.app` o `*clinica-888*` — en esos casos, las rutas relativas son el comportamiento correcto e intencional.
+
+---
+
 ## [2.2.2] - 2026-04-03
 
 ### 🐛 Fix — Producción Vercel: BCV Rate 500 + SPA Routing 404

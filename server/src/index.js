@@ -144,6 +144,14 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
+// Vercel: initialize DB before routes on every request
+app.use(async (req, res, next) => {
+  if (process.env.VERCEL) {
+    await connectDB();
+  }
+  next();
+});
+
 // Routes registration
 app.use('/api/public', require('./routes/public.routes'));
 app.use('/api/auth', require('./routes/auth.routes'));
@@ -244,13 +252,6 @@ const connectDB = async () => {
     }
 };
 
-// Check connection on each request if needed
-app.use(async (req, res, next) => {
-    if (process.env.VERCEL) {
-        await connectDB();
-    }
-    next();
-});
 
 module.exports = app;
 
