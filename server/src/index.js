@@ -104,15 +104,19 @@ const loadApp = async (req, res, next) => {
       appointments: require('./routes/appointment.routes'),
       medicalRecords: require('./routes/medicalRecord.routes'),
       payments: require('./routes/payment.routes'),
-      inventory: require('./routes/inventory.routes'),
       organizations: require('./routes/organization.routes'),
       specialties: require('./routes/specialty.routes'),
-      departments: require('./routes/department.routes'),
       staff: require('./routes/staff.routes'),
-      labs: require('./routes/lab.routes'),
+      labCatalog: require('./routes/labCatalog.routes'),
+      labResults: require('./routes/labResult.routes'),
       drugs: require('./routes/drug.routes'),
       nurses: require('./routes/nurse.routes'),
-      video: require('./routes/video.routes')
+      video: require('./routes/videoConsultation.routes'),
+      stats: require('./routes/stats.routes'),
+      team: require('./routes/team.routes'),
+      prescriptions: require('./routes/prescription.routes'),
+      bulk: require('./routes/bulk.routes'),
+      public: require('./routes/public.routes'),
     };
 
     // Mount Routes
@@ -123,15 +127,19 @@ const loadApp = async (req, res, next) => {
     app.use('/api/appointments', authMiddleware, routes.appointments);
     app.use('/api/medical-records', authMiddleware, routes.medicalRecords);
     app.use('/api/payments', authMiddleware, routes.payments);
-    app.use('/api/inventory', authMiddleware, routes.inventory);
     app.use('/api/organizations', authMiddleware, routes.organizations);
     app.use('/api/specialties', authMiddleware, routes.specialties);
-    app.use('/api/departments', authMiddleware, routes.departments);
     app.use('/api/staff', authMiddleware, routes.staff);
-    app.use('/api/labs', authMiddleware, routes.labs);
+    app.use('/api/lab-catalog', authMiddleware, routes.labCatalog);
+    app.use('/api/lab-results', authMiddleware, routes.labResults);
     app.use('/api/drugs', authMiddleware, routes.drugs);
     app.use('/api/nurses', authMiddleware, routes.nurses);
-    app.use('/api/video', authMiddleware, routes.video);
+    app.use('/api/video-consultations', authMiddleware, routes.video);
+    app.use('/api/stats', authMiddleware, routes.stats);
+    app.use('/api/team', authMiddleware, routes.team);
+    app.use('/api/prescriptions', authMiddleware, routes.prescriptions);
+    app.use('/api/bulk', authMiddleware, routes.bulk);
+    app.use('/api/public', routes.public);
 
     // 404 handler
     app.use((req, res) => {
