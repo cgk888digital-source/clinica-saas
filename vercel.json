@@ -1,21 +1,16 @@
 {
   "version": 2,
-  "name": "clinica-888",
+  "name": "clinica-saas",
   "builds": [
     {
       "src": "server/src/index.js",
       "use": "@vercel/node",
       "config": {
         "includeFiles": [
-          "server/node_modules/pg/**",
-          "server/node_modules/pg-hstore/**",
-          "server/node_modules/pg-pool/**",
-          "server/node_modules/pg-types/**",
-          "server/node_modules/pg-int8/**",
-          "server/node_modules/postgres-array/**",
-          "server/node_modules/postgres-bytea/**",
-          "server/node_modules/postgres-date/**",
-          "server/node_modules/postgres-interval/**"
+          "server/**",
+          "node_modules/pg/**",
+          "node_modules/pg-hstore/**",
+          "node_modules/sequelize/**"
         ]
       }
     },
@@ -28,16 +23,8 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/server/src/index.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+    { "source": "/api/(.*)", "destination": "server/src/index.js" },
+    { "source": "/(.*\\.[^/]+)", "destination": "/client/$1" },
+    { "source": "/(.*)", "destination": "/client/index.html" }
+  ]
 }

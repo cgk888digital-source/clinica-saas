@@ -1,257 +1,181 @@
 const express = require('express');
-const http = require('http');
-const cors = require('cors');
-const morgan = require('morgan');
-const helmet = require('helmet');
-const compression = require('compression');
-const rateLimit = require('express-rate-limit');
-require('dotenv').config();
-const sequelize = require('./config/db.config');
-const models = require('./models');
-const seedRoles = require('./utils/seeder');
-const seedTestData = require('./utils/testSeeder');
-const { initializeSocket } = require('./sockets/videoSocket');
-const logger = require('./utils/logger');
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-const { sanitizeInput } = require('./utils/sanitize');
-const checkSubscription = require('./middlewares/subscription.middleware');
-const authMiddleware = require('./middlewares/auth.middleware');
-const validateEnv = require('./utils/validateEnv');
-const { initializeDatabase } = require('./utils/migrationManager');
-
-// Validate Environment before anything else
-validateEnv();
-
 const app = express();
-// Enable Trust Proxy for Easypanel/Nginx/Cloudflare/Supabase
-app.set('trust proxy', 1); 
-const server = http.createServer(app);
 
-// Swagger Configuration
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'MEDICALCARE 888 API',
-      version: '2.1.0',
-      description: 'Sistema integral de gestión clínica y hospitalaria profesional',
-      contact: {
-        name: 'CGK 888 Digital Ecosystem',
-        email: 'ecosystem@cgk888.com',
-      },
-    },
-    servers: [
-      {
-        url: process.env.API_URL || 'http://localhost:5000',
-        description: 'Production/Development API',
-      },
-    ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
-    },
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
-  },
-  apis: ['./src/routes/*.js'],
-};
-
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-
-// 1. CORS - Improved with medicalcare-888.com
-const corsOptions = {
-  origin: (origin, callback) => {
-    const allowedOrigins = [
-      process.env.CLIENT_URL,
-      /^https?:\/\/localhost(:\d+)?$/,
-      /^https?:\/\/127\.0\.0\.1(:\d+)?$/,
-      /medicalcare-888\.com$/, // NEW: Support for production domain
-      /easypanel\.host$/,
-      /nominusve\.com$/,
-      /vercel\.app$/ // NEW: Allow all Vercel deployments
-    ];
-
-    if (!origin) return callback(null, true);
-
-    const isAllowed = allowedOrigins.some(allowed => {
-      if (!allowed) return false;
-      if (allowed instanceof RegExp) return allowed.test(origin);
-      const sanitizedOrigin = origin.toLowerCase().trim().replace(/\/$/, '');
-      const sanitizedAllowed = allowed.toString().toLowerCase().trim().replace(/\/$/, '');
-      return sanitizedAllowed === sanitizedOrigin;
-    });
-
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      logger.warn({ blockedOrigin: origin }, 'CORS Blocked');
-      if (process.env.NODE_ENV !== 'production') return callback(null, true);
-      callback(new Error(`CORS Error: Origin ${origin} not allowed`));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-auth-token'],
-};
-
-app.use(cors(corsOptions));
-
-// 2. Performance & Security Middlewares
-app.use(compression()); // Gzip compression
-app.use(helmet({
-  contentSecurityPolicy: false,
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
-
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100, // Slightly more permissive for medical workflows
-  message: 'Demasiados intentos, intente en 15 minutos',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 300, 
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use('/api/auth/login', authLimiter);
-app.use('/api/auth/register', authLimiter);
-app.use('/api/', apiLimiter);
-
-// 3. Parser & Sanitization
-app.use(express.json({ limit: '50kb' })); // Increased limit for detailed medical records
-app.use(express.urlencoded({ extended: true, limit: '50kb' }));
-app.use(sanitizeInput);
-app.use('/uploads', express.static('uploads'));
-
-// Swagger UI
-if (process.env.NODE_ENV !== 'production') {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-    customSiteTitle: 'MedicalCare 888 API Docs',
-  }));
+// Ensure these are picked up by Vercel's NFT (Node File Trace)
+try {
+  require('pg');
+  require('pg-hstore');
+} catch (e) {
+  console.warn('⚠️ [Vercel] Pre-loading pg failed at root level.');
 }
 
-// Vercel: initialize DB before routes on every request
-app.use(async (req, res, next) => {
-  if (process.env.VERCEL) {
-    await connectDB();
-  }
-  next();
-});
-
-// Routes registration
-app.use('/api/public', require('./routes/public.routes'));
-app.use('/api/auth', require('./routes/auth.routes'));
-app.use('/api/organization', require('./routes/organization.routes'));
-
-// Protected Routes
-const routes = [
-  'appointment', 'patient', 'doctor', 'nurse', 'staff', 
-  'medicalRecord', 'labResult', 'stats', 'specialty', 
-  'videoConsultation', 'bulk', 'team', 'drug', 
-  'prescription', 'labCatalog', 'exchange'
-];
-
-routes.forEach(route => {
-  const routePath = `./routes/${route}.routes`;
-  const isProtected = !['payment', 'public', 'auth'].includes(route);
-  if (isProtected) {
-    app.use(`/api/${route.replace(/([A-Z])/g, '-$1').toLowerCase()}`, authMiddleware, checkSubscription, require(routePath));
-  }
-});
-
-// Explicitly handle payments (no subscription check needed for payments)
-app.use('/api/payments', authMiddleware, require('./routes/payment.routes'));
-
-// Health Check
-app.get('/health', async (req, res) => {
-  try {
-    await sequelize.authenticate();
-    res.status(200).json({ uptime: process.uptime(), database: 'connected', version: '2.1.0' });
-  } catch (error) {
-    res.status(503).json({ message: 'Database disconnected' });
-  }
-});
-
-app.get('/', (req, res) => res.json({ message: 'Welcome to MedicalCare 888 API' }));
-
-// 4. Global Error Handler
-app.use((err, req, res, next) => {
-  logger.error({ err, path: req.path }, 'Global Error Handler');
-  res.status(err.status || 500).json({
-    message: err.message || 'Internal Server Error',
-    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+/**
+ * 🛡️ ULTRA-ISOLATED BOOT (Emergency Mode)
+ * This is the ONLY thing that runs immediately at top-level.
+ * If this fails, then Vercel's environment is broken.
+ */
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    isolated: true,
+    vercel: !!process.env.VERCEL,
+    timestamp: new Date().toISOString()
   });
 });
 
-const PORT = parseInt(process.env.PORT || '5000');
+app.get('/api/debug-files', (req, res) => {
+  const fs = require('fs');
+  const path = require('path');
+  
+  function listFiles(dir, depth = 0) {
+    if (depth > 3) return [];
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      let result = [];
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          result.push({ name: entry.name, type: 'dir', children: listFiles(fullPath, depth + 1) });
+        } else {
+          result.push({ name: entry.name, type: 'file' });
+        }
+      }
+      return result;
+    } catch (e) {
+      return [{ error: e.message }];
+    }
+  }
 
-// Server Start Logic
-const startServer = async () => {
+  const root = path.resolve('.');
+  res.json({
+    root,
+    files: listFiles(root)
+  });
+});
+
+// --- NO OTHER TOP-LEVEL REQUIRES EXCEPT MINIMAL BOOTSTRAP ---
+
+let isAppLoaded = false;
+let bootError = null;
+
+/**
+ * Lazy Application Loader
+ * This drags in the rest of the universe (sequelize, models, routes) 
+ * ONLY when an actual API request comes in.
+ */
+const loadApp = async (req, res, next) => {
+  if (req.path === '/api/health' || req.path === '/api/debug-files') return next();
+
+  if (isAppLoaded) return next();
+  if (bootError) return res.status(500).json({ error: 'Critical Boot Failure', detail: bootError.message });
+
   try {
-    await initializeDatabase();
-    await seedRoles();
-    if (process.env.NODE_ENV !== 'production') await seedTestData();
+    console.log('🚀 [Vercel] Lazy-loading full application context...');
     
-    initializeSocket(server);
-    require('./utils/scheduler')();
+    // Dependencies
+    const cors = require('cors');
+    const morgan = require('morgan');
+    const helmet = require('helmet');
+    const compression = require('compression');
+    require('dotenv').config();
+    const sequelize = require('./config/db.config');
+    const logger = require('./utils/logger');
+    const { sanitizeInput } = require('./utils/sanitize');
+    const authMiddleware = require('./middlewares/auth.middleware');
 
-    server.listen(PORT, '0.0.0.0', () => {
-      logger.info(`🚀 Server live on port ${PORT} [${process.env.NODE_ENV || 'dev'}]`);
+    // App Middleware Configuration
+    app.use(cors({ origin: true, credentials: true }));
+    app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+    app.use(express.json({ limit: '1mb' }));
+    app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+    app.use(morgan('dev'));
+    app.use(compression());
+    app.use(sanitizeInput);
+
+    // Database check
+    await sequelize.authenticate();
+
+    // Routes (Loaded on demand inside this function)
+    const routes = {
+      auth: require('./routes/auth.routes'),
+      exchange: require('./routes/exchange.routes'),
+      doctors: require('./routes/doctor.routes'),
+      patients: require('./routes/patient.routes'),
+      appointments: require('./routes/appointment.routes'),
+      medicalRecords: require('./routes/medicalRecord.routes'),
+      payments: require('./routes/payment.routes'),
+      organizations: require('./routes/organization.routes'),
+      specialties: require('./routes/specialty.routes'),
+      staff: require('./routes/staff.routes'),
+      labCatalog: require('./routes/labCatalog.routes'),
+      labResults: require('./routes/labResult.routes'),
+      drugs: require('./routes/drug.routes'),
+      nurses: require('./routes/nurse.routes'),
+      video: require('./routes/videoConsultation.routes'),
+      stats: require('./routes/stats.routes'),
+      team: require('./routes/team.routes'),
+      prescriptions: require('./routes/prescription.routes'),
+      bulk: require('./routes/bulk.routes'),
+      public: require('./routes/public.routes'),
+    };
+
+    // Mount Routes
+    app.use('/api/auth', routes.auth);
+    app.use('/api/exchange', routes.exchange);
+    app.use('/api/doctors', authMiddleware, routes.doctors);
+    app.use('/api/patients', authMiddleware, routes.patients);
+    app.use('/api/appointments', authMiddleware, routes.appointments);
+    app.use('/api/medical-records', authMiddleware, routes.medicalRecords);
+    app.use('/api/payments', authMiddleware, routes.payments);
+    app.use('/api/organizations', authMiddleware, routes.organizations);
+    app.use('/api/specialties', authMiddleware, routes.specialties);
+    app.use('/api/staff', authMiddleware, routes.staff);
+    app.use('/api/lab-catalog', authMiddleware, routes.labCatalog);
+    app.use('/api/lab-results', authMiddleware, routes.labResults);
+    app.use('/api/drugs', authMiddleware, routes.drugs);
+    app.use('/api/nurses', authMiddleware, routes.nurses);
+    app.use('/api/video-consultations', authMiddleware, routes.video);
+    app.use('/api/stats', authMiddleware, routes.stats);
+    app.use('/api/team', authMiddleware, routes.team);
+    app.use('/api/prescriptions', authMiddleware, routes.prescriptions);
+    app.use('/api/bulk', authMiddleware, routes.bulk);
+    app.use('/api/public', routes.public);
+
+    // 404 handler
+    app.use((req, res) => {
+      res.status(404).json({ message: 'Ruta no encontrada (Lazy Mode)' });
     });
-  } catch (error) {
-    logger.fatal({ error }, 'Startup failed');
-    process.exit(1);
+
+    isAppLoaded = true;
+    console.log('✅ [Vercel] Full context loaded successfully.');
+    next();
+  } catch (err) {
+    bootError = err;
+    console.error('❌ [Vercel] FATAL BOOT ERROR:', err);
+    res.status(500).json({ error: 'Fatal Boot Error', detail: err.message });
   }
 };
 
-// 5. Graceful Shutdown
-const shutdown = async (signal) => {
-  logger.info(`${signal} received. Closing resources...`);
-  server.close(async () => {
-    try {
-      await sequelize.close();
-      logger.info('Database connections closed.');
-      process.exit(0);
-    } catch (err) {
-      logger.error({ err }, 'Error during shutdown');
-      process.exit(1);
-    }
+// Apply Lazy loader to everything EXCEPT canary
+app.use(loadApp);
+
+// Final Error Handler
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    message: err.message || 'Error interno del servidor',
+    error: process.env.NODE_ENV === 'development' ? err : {}
   });
-};
+});
 
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
-
-if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
-  startServer();
+/**
+ * Local Server Boot (Only for development)
+ */
+if (!process.env.VERCEL) {
+  const http = require('http');
+  const server = http.createServer(app);
+  server.listen(process.env.PORT || 5001, () => {
+    console.log(`Server running on port ${process.env.PORT || 5001} (Dev)`);
+  });
 }
-
-// Initializer for serverless environments (Verce)
-const connectDB = async () => {
-    try {
-        await sequelize.authenticate();
-        await initializeDatabase();
-        await seedRoles();
-        initializeSocket(server);
-    } catch (err) {
-        logger.fatal({ err }, 'Lazy initialization failed');
-    }
-};
-
 
 module.exports = app;
-
