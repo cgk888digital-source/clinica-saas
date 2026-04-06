@@ -31,15 +31,6 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Flatten Build Output (Bypass 404)
-        run: |
-          if [ -d ".vercel/output/static/browser" ]; then
-            cp -r .vercel/output/static/browser/* .vercel/output/static/
-            echo "Archivos movidos de /browser a la raíz con éxito."
-          else
-            echo "No se encontró carpeta /browser, continuando sin cambios."
-          fi
-
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt ${{ github.ref_name == 'master' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
         env:
