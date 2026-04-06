@@ -20,12 +20,14 @@
       "dest": "server/src/index.js"
     },
     {
-      "src": "/browser/(.*)",
-      "dest": "/browser/$1"
+      "src": "/(.*)",
+      "dest": "/$1",
+      "continue": true
     },
     {
       "src": "/(.*)",
-      "dest": "/browser/index.html"
+      "status": 200,
+      "dest": "/index.html"
     }
   ]
 }
