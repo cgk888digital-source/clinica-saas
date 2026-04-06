@@ -13,7 +13,7 @@ import { LanguageService } from '../../../services/language.service';
 })
 export class CallNotification {
   private videoService = inject(VideoConsultationService);
-  private langService = inject(LanguageService);
+  public langService = inject(LanguageService);
   private router = inject(Router);
   
   private audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
