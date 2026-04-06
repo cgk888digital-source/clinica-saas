@@ -11,8 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel
+      - name: Install dependencies (Monorepo)
+        run: |
+          npm install
+          cd server && npm install
+          cd ../client && npm install
+          npm install --global vercel
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=${{ github.ref_name == 'master' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
