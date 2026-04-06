@@ -83,6 +83,17 @@ export class VideoCallComponent implements OnInit, OnDestroy, AfterViewInit {
               next: () => {
                 this.startTime = new Date();
                 this.startDurationTimer();
+                
+                // Notificar al paciente de la llamada entrante
+                const patientId = (consultation as any).patientId;
+                if (patientId) {
+                  this.videoService.notifyPatient(
+                    patientId, 
+                    `${user.firstName} ${user.lastName}`, 
+                    consultation.roomId, 
+                    numericId
+                  );
+                }
               }
             });
           } else {

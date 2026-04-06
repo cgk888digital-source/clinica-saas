@@ -33,9 +33,21 @@ const getBaseUrl = (): string => {
   return '';
 };
 
+const getSocketUrl = (): string => {
+  if (typeof window === 'undefined') return 'http://localhost:5000';
+  
+  const baseUrl = getBaseUrl();
+  // Si BASE_URL es vacío (relativo), usamos el origen de la ventana actual
+  if (!baseUrl) {
+    return window.location.origin;
+  }
+  
+  return baseUrl;
+};
+
 export const BASE_URL = getBaseUrl();
 export const API_URL = `${BASE_URL}/api`;
-export const SOCKET_URL = BASE_URL || 'http://localhost:5000';
+export const SOCKET_URL = getSocketUrl();
 
 // Exponer para debug en consola
 if (typeof window !== 'undefined') {

@@ -184,9 +184,15 @@ app.use((err, req, res, next) => {
  */
 if (!process.env.VERCEL) {
   const http = require('http');
+  const { initializeSocket } = require('./sockets/videoSocket');
   const server = http.createServer(app);
+  
+  // Initialize Socket.io for Video Consultations
+  initializeSocket(server);
+
   server.listen(process.env.PORT || 5001, () => {
     console.log(`Server running on port ${process.env.PORT || 5001} (Dev)`);
+    console.log('🎥 Socket.io initialized for real-time video signaling');
   });
 }
 

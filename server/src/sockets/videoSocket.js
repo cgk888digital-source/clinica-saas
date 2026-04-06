@@ -2,6 +2,7 @@ const socketIO = require('socket.io');
 
 let io;
 const activeRooms = new Map(); // roomId -> { participants: [...] }
+const globalActiveUsers = new Map(); // userId -> socketId
 
 const initializeSocket = (server) => {
   io = socketIO(server, {
@@ -14,6 +15,29 @@ const initializeSocket = (server) => {
 
   io.on('connection', (socket) => {
     console.log('🔌 Usuario conectado al WebSocket:', socket.id);
+
+    // Registro global de usuario para notificaciones
+    socket.on('register-user', (userId) => {
+      if (userId) {
+        globalActiveUsers.set(userId.toString(), socket.id);
+        console.log(`📡 Usuario ${userId} registrado globalmente en socket ${socket.id}`);
+      }
+    });
+
+    // Notificar llamada entrante (Doctor -> Paciente)
+    socket.on('initiate-call', ({ toUserId, fromName, roomId, consultationId }) => {
+      const targetSocketId = globalActiveUsers.get(toUserId.toString());
+      if (targetSocketId) {
+        console.log(`📞 Notificando llamada de ${fromName} a usuario ${toUserId}`);
+        io.to(targetSocketId).emit('incoming-call', {
+          fromName,
+          roomId,
+          consultationId
+        });
+      } else {
+        console.log(`📵 Usuario ${toUserId} no está en línea para recibir la llamada`);
+      }
+    });
 
     // Usuario se une a una sala de videoconsulta
     socket.on('join-room', ({ roomId, userId, userType }) => {
@@ -76,6 +100,14 @@ const initializeSocket = (server) => {
     // Desconexión del socket
     socket.on('disconnect', () => {
       console.log('❌ Usuario desconectado:', socket.id);
+      
+      // Limpiar de la lista global de usuarios activos
+      globalActiveUsers.forEach((socketId, userId) => {
+        if (socketId === socket.id) {
+          globalActiveUsers.delete(userId);
+          console.log(`📤 Usuario ${userId} eliminado del registro global`);
+        }
+      });
       
       // Limpiar de todas las salas
       activeRooms.forEach((room, roomId) => {
