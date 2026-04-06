@@ -217,7 +217,11 @@ exports.register = async (req, res) => {
       });
     }
 
-    res.status(500).json({ message: 'No se pudo completar el registro. Error interno del servidor.' });
+    res.status(500).json({ 
+      message: 'No se pudo completar el registro. Error interno del servidor.',
+      debug_error: error.message,
+      stack: process.env.NODE_ENV !== 'production' ? error.stack : undefined
+    });
   }
 };
 
