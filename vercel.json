@@ -1,23 +1,22 @@
 {
   "version": 2,
-  "name": "clinica-saas",
   "builds": [
     {
-      "src": "server/package.json",
+      "src": "server/src/index.js",
       "use": "@vercel/node"
     },
     {
       "src": "client/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/client/browser"
+        "outputDirectory": "dist/client/browser"
       }
     }
   ],
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "server/src/index.js"
+      "destination": "/server/src/index.js"
     },
     {
       "source": "/(.*)",
