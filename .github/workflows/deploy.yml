@@ -26,6 +26,10 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
+      - name: Debug Build Output (List Files)
+        run: find .vercel/output -maxdepth 4
+        continue-on-error: true
+
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt ${{ github.ref_name == 'master' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
         env:
