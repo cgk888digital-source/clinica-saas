@@ -38,25 +38,25 @@
     </div>
   </div>
   <!-- Header -->
-  <div class="col-12">
-    <div class="d-flex justify-content-between align-items-center mb-1">
+  <div class="col-12 animate-reveal">
+    <div class="d-flex justify-content-between align-items-center mb-3">
       <div>
-        <h5 class="mb-0">{{ 'dashboard.controlPanel' | translate }}</h5>
+        <h5 class="mb-0 fw-bold">{{ 'dashboard.controlPanel' | translate }}</h5>
         <p class="text-muted x-small mb-0">
           {{ 'dashboard.welcome' | translate }},
-          <span class="fw-bold text-dark">
+          <span class="fw-bold text-primary">
             {{ getUserTitle() }} {{ authService.currentUser()?.firstName }}
           </span>
         </p>
       </div>
       <div class="d-flex gap-2">
         <button
-          class="btn glass-morphism border-0 px-3 py-1 rounded-3 shadow-sm btn-sm"
+          class="btn glass-morphism border-0 px-3 py-2 rounded-pill shadow-sm btn-sm fw-bold"
           (click)="downloadDailyReport()"
         >
           <i class="bi bi-download me-1"></i> {{ 'dashboard.reportBtn' | translate }}
         </button>
-        <button class="btn btn-primary-premium shadow-sm btn-sm" (click)="goToNewAppointment()">
+        <button class="btn btn-primary-premium shadow-sm btn-sm rounded-pill px-3" (click)="goToNewAppointment()">
           <i class="bi bi-plus-lg me-1"></i> {{ 'dashboard.newAppointment' | translate }}
         </button>
       </div>
@@ -68,104 +68,97 @@
   <!-- ======================== -->
   <ng-container *ngIf="!authService.hasRole(['PATIENT'])">
     <!-- Stats Row — 6 cards -->
-    <div class="col-md-2 col-6">
-      <div class="card-premium p-2 border-0 h-100">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted x-small fw-medium mb-0">
-              {{ 'dashboard.stats.appointments' | translate }}
-            </p>
-            <h5 class="mb-0">{{ stats().appointmentsToday }}</h5>
+    <div class="col-md-2 col-6 animate-reveal" style="animation-delay: 0.1s;">
+      <div class="card-premium-glass p-3 border-0 h-100">
+        <div class="d-flex flex-column h-100 justify-content-between">
+          <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-pill d-inline-block w-auto" style="width: fit-content !important;">
+            <i class="bi bi-calendar-check fs-5"></i>
           </div>
-          <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-3">
-            <i class="bi bi-calendar-check fs-6"></i>
+          <div class="mt-3">
+            <h3 class="stat-value mb-0 text-dark">{{ stats().appointmentsToday }}</h3>
+            <p class="text-muted x-small fw-bold mb-0 text-uppercase ls-1">
+              {{ 'dashboard.stats.today' | translate }}
+            </p>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-2 col-6">
-      <div class="card-premium p-2 border-0 h-100">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted x-small fw-medium mb-0">
+    <div class="col-md-2 col-6 animate-reveal" style="animation-delay: 0.2s;">
+      <div class="card-premium-glass p-3 border-0 h-100">
+        <div class="d-flex flex-column h-100 justify-content-between">
+          <div class="bg-success bg-opacity-10 text-success p-2 rounded-pill d-inline-block" style="width: fit-content !important;">
+            <i class="bi bi-person-plus fs-5"></i>
+          </div>
+          <div class="mt-3">
+            <h3 class="stat-value mb-0 text-dark">{{ stats().totalPatients }}</h3>
+            <p class="text-muted x-small fw-bold mb-0 text-uppercase ls-1">
               {{ 'dashboard.stats.totalPatients' | translate }}
             </p>
-            <h5 class="mb-0">{{ stats().totalPatients }}</h5>
-          </div>
-          <div class="bg-success bg-opacity-10 text-success p-2 rounded-3">
-            <i class="bi bi-person-plus fs-6"></i>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-2 col-6" *ngIf="!authService.hasRole(['NURSE'])">
-      <div class="card-premium p-2 border-0 h-100">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted x-small fw-medium mb-0">
-              {{ 'dashboard.stats.income' | translate }}
-            </p>
-            <div class="d-flex flex-column lh-1">
-              <span class="fw-bold text-dark h5 mb-0 d-block">
-                {{ formatCombined('month', 'USD') }}
-              </span>
-              <span class="text-success x-small fw-bold mt-1">
-                {{ formatCombined('month', 'VES') }}
-              </span>
-            </div>
+    <div class="col-md-2 col-12 animate-reveal" *ngIf="!authService.hasRole(['NURSE'])" style="animation-delay: 0.3s;">
+      <div class="card-premium p-3 border-0 h-100 gradient-card-primary">
+        <div class="d-flex flex-column h-100 justify-content-between">
+          <div class="bg-white bg-opacity-20 text-white p-2 rounded-pill d-inline-block" style="width: fit-content !important;">
+            <i class="bi bi-currency-dollar fs-5"></i>
           </div>
-          <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-3">
-            <i class="bi bi-currency-dollar fs-6"></i>
+          <div class="mt-3">
+            <h3 class="stat-value mb-0 text-white">{{ formatCombined('month', 'USD') }}</h3>
+            <span class="x-small fw-bold text-white text-opacity-75">
+               {{ formatCombined('month', 'VES') }}
+            </span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-2 col-6">
-      <div class="card-premium p-2 border-0 h-100">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted x-small fw-medium mb-0">
+    <div class="col-md-2 col-6 animate-reveal" style="animation-delay: 0.4s;">
+      <div class="card-premium-glass p-3 border-0 h-100">
+        <div class="d-flex flex-column h-100 justify-content-between">
+          <div class="bg-info bg-opacity-10 text-info p-2 rounded-pill d-inline-block" style="width: fit-content !important;">
+            <i class="bi bi-clock-history fs-5"></i>
+          </div>
+          <div class="mt-3">
+            <h3 class="stat-value mb-0 text-dark">{{ stats().pendingAppointments }}</h3>
+            <p class="text-muted x-small fw-bold mb-0 text-uppercase ls-1">
               {{ 'dashboard.stats.pending' | translate }}
             </p>
-            <h5 class="mb-0">{{ stats().pendingAppointments }}</h5>
-          </div>
-          <div class="bg-info bg-opacity-10 text-info p-2 rounded-3">
-            <i class="bi bi-clock-history fs-6"></i>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-2 col-6">
-      <div class="card-premium p-2 border-0 h-100">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted x-small fw-medium mb-0">
+    <div class="col-md-2 col-6 animate-reveal" style="animation-delay: 0.5s;">
+      <div class="card-premium-glass p-3 border-0 h-100">
+        <div class="d-flex flex-column h-100 justify-content-between">
+          <div class="bg-warning bg-opacity-10 text-warning p-2 rounded-pill d-inline-block" style="width: fit-content !important;">
+            <i class="bi bi-person-workspace fs-5"></i>
+          </div>
+          <div class="mt-3">
+            <h3 class="stat-value mb-0 text-dark">{{ stats().inPersonCount }}</h3>
+            <p class="text-muted x-small fw-bold mb-0 text-uppercase ls-1">
               {{ 'dashboard.stats.inPerson' | translate }}
             </p>
-            <h5 class="mb-0">{{ stats().inPersonCount }}</h5>
-          </div>
-          <div class="bg-primary bg-opacity-10 text-primary p-2 rounded-3">
-            <i class="bi bi-person-workspace fs-6"></i>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-2 col-6">
-      <div class="card-premium p-2 border-0 h-100">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted x-small fw-medium mb-0">
+    <div class="col-md-2 col-6 animate-reveal" style="animation-delay: 0.6s;">
+      <div class="card-premium-glass p-3 border-0 h-100">
+        <div class="d-flex flex-column h-100 justify-content-between">
+          <div class="bg-danger bg-opacity-10 text-danger p-2 rounded-pill d-inline-block" style="width: fit-content !important;">
+            <i class="bi bi-camera-video fs-5"></i>
+          </div>
+          <div class="mt-3">
+            <h3 class="stat-value mb-0 text-dark">{{ stats().videoCount }}</h3>
+            <p class="text-muted x-small fw-bold mb-0 text-uppercase ls-1">
               {{ 'dashboard.stats.videoCalls' | translate }}
             </p>
-            <h5 class="mb-0">{{ stats().videoCount }}</h5>
-          </div>
-          <div class="bg-info bg-opacity-10 text-info p-2 rounded-3">
-            <i class="bi bi-camera-video fs-6"></i>
           </div>
         </div>
       </div>

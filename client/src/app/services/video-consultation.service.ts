@@ -36,8 +36,49 @@ export class VideoConsultationService {
   isVideoOff = signal(false);
   isConnecting = signal(false);
   connectionError = signal<string | null>(null);
+  
+  // Signal para notificación de llamada entrante (Global)
+  incomingCall = signal<{ fromName: string, roomId: string, consultationId: number } | null>(null);
 
   constructor(private http: HttpClient) {}
+
+  /**
+   * Registro global del socket para recibir notificaciones (Llamar en app.component)
+   */
+  registerGlobalSocket() {
+    const userJson = localStorage.getItem('user');
+    if (!userJson) return;
+    
+    const user = JSON.parse(userJson);
+    if (!this.socket) {
+      this.socket = io(this.socketUrl, {
+        transports: ['websocket', 'polling'],
+        reconnection: true
+      });
+
+      this.socket.on('connect', () => {
+        console.log('📡 Socket global conectado para notificaciones');
+        this.socket?.emit('register-user', user.id);
+      });
+
+      this.socket.on('incoming-call', (data) => {
+        console.log('📞 Recibiendo llamada entrante:', data);
+        this.incomingCall.set(data);
+      });
+    } else {
+      this.socket.emit('register-user', user.id);
+    }
+  }
+
+  /**
+   * El doctor inicia la llamada para alertar al paciente
+   */
+  notifyPatient(toUserId: number, fromName: string, roomId: string, consultationId: number) {
+    if (this.socket) {
+      console.log(`📞 Solicitando alerta de llamada para usuario ${toUserId}`);
+      this.socket.emit('initiate-call', { toUserId, fromName, roomId, consultationId });
+    }
+  }
 
   // ==================== API REST ====================
 

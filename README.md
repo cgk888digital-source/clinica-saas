@@ -2,7 +2,7 @@
 
 Sistema completo de gestión para clínicas médicas desarrollado con Angular y Node.js.
 
-![Versión](https://img.shields.io/badge/versión-2.2.0-blue.svg)
+![Versión](https://img.shields.io/badge/versión-2.2.4-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Security](https://img.shields.io/badge/security-9%2F10-brightgreen.svg)
 ![Test Coverage](https://img.shields.io/badge/coverage-18%25-yellow.svg)
@@ -18,6 +18,13 @@ Sistema completo de gestión para clínicas médicas desarrollado con Angular y 
 - ✅ **Combos y Perfiles**: Creación de paquetes de exámenes (ej: Perfil 20) con precios especiales y gestión de inclusiones.
 - ✅ **Dualidad de Moneda Dinámica**: Visualización automática de precios en USD y VES basada en la tasa oficial.
 - ✅ **Control de Tasa BCV**: Interfaz para que personal autorizado actualice la tasa cambiaria del sistema en tiempo real.
+
+### 🎥 Telemedicina de Alto Nivel (WebRTC)
+
+- ✅ **Señalización en Tiempo Real**: Infraestructura robusta basada en `Socket.io` para coordinación P2P de videollamadas.
+- ✅ **Notificaciones Globales**: Alertas de llamada entrante en tiempo real que funcionan en cualquier sección de la plataforma.
+- ✅ **UX Premium**: Interfaz de llamada con **Glassmorphism**, animaciones de pulso y notificaciones sonoras sutiles.
+- ✅ **Control de Media Avanzado**: Gestión de audio/video reactiva mediante Angular Signals.
 
 ### 🌎 Soporte Bilingüe e Internacionalización (i18n)
 
