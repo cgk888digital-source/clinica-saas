@@ -4,21 +4,17 @@
     {
       "src": "api/server.js",
       "use": "@vercel/node",
-      "config": {
-        "includeFiles": "server/**"
-      }
+      "config": { "includeFiles": "server/**" }
     },
     {
       "src": "client/package.json",
       "use": "@vercel/static-build",
-      "config": {
-        "outputDirectory": "dist/client/browser"
-      }
+      "config": { "outputDirectory": "dist/client/browser" }
     }
   ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/:match*",
       "destination": "/api/server.js"
     },
     {
