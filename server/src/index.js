@@ -65,6 +65,39 @@ app.get('/api/debug-files', (req, res) => {
   });
 });
 
+/**
+ * 🛠️ EMERGENCY DATABASE INITIALIZER
+ * Access: /api/system/init-888?key=v888
+ * This creates tables and seeds mandatory roles.
+ */
+app.get('/api/system/init-888', async (req, res) => {
+  const { key } = req.query;
+  if (key !== 'v888') return res.status(403).json({ error: 'Unauthorized Access Key' });
+
+  try {
+    const sequelize = require('./config/db.config');
+    const seedRoles = require('./utils/seeder');
+    
+    console.log('🔄 Sincronizando esquema de base de datos (alter: true)...');
+    await sequelize.sync({ alter: true });
+    
+    console.log('🔄 Ejecutando seeders básicos (Roles)...');
+    await seedRoles();
+
+    res.status(200).json({ 
+      success: true, 
+      message: '✅ Base de datos inicializada y esquema sincronizado correctamente.',
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    console.error('❌ Database Initialization Failed:', err);
+    res.status(500).json({ 
+      error: 'Hubo un fallo al inicializar la base de datos.',
+      detail: err.message
+    });
+  }
+});
+
 // --- NO OTHER TOP-LEVEL REQUIRES EXCEPT MINIMAL BOOTSTRAP ---
 
 let isAppLoaded = false;
