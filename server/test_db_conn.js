@@ -1,28 +1,21 @@
 const { Client } = require('pg');
-require('dotenv').config({ path: './server/.env' });
-
-console.log('Loaded environment variables:', process.env);
+require('dotenv').config();
 
 console.log('DB Config:', {
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT
+  DATABASE_URL: process.env.DATABASE_URL ? 'PRESENT (hidden)' : 'MISSING'
 });
 
 const client = new Client({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT || 5432,
-  ssl: false // Explicitly disable SSL
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 async function testConnection() {
   try {
-    console.log(`Connecting to host: ${process.env.DB_HOST} as user ${process.env.DB_USER}...`);
+    const url = new URL(process.env.DATABASE_URL);
+    console.log(`Connecting to host: ${url.hostname} on port ${url.port} as user ${url.username}...`);
     await client.connect();
     console.log('Successfully connected to Postgres');
     const res = await client.query('SELECT current_database(), current_user, version();');
