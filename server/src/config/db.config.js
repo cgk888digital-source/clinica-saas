@@ -71,9 +71,16 @@ const sequelize = databaseUrl
         ssl: {
           require: true,
           rejectUnauthorized: false
-        }
+        },
+        keepAlive: true
       },
-      pool: { max: 5, min: 0, acquire: 30000, idle: 10000 }
+      pool: { 
+        max: 8, 
+        min: 0, 
+        acquire: 30000, 
+        idle: 10000,
+        evict: 1000 // Remove idle connections every second for serverless stability
+      }
     })
   : config.url
     ? new Sequelize(config.url, {
