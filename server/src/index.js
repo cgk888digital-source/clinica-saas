@@ -2,15 +2,32 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 
-// CORS configuration (Essential for local dev to work with localhost:4200)
 const corsOptions = {
-  origin: true, // Reflects the origin of the request (safe for dev)
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
 
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { error: 'Demasiadas solicitudes, intenta de nuevo en 15 minutos' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { error: 'Demasiados intentos de login, intenta de nuevo en 15 minutos' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+app.use(globalLimiter);
 app.use(cors(corsOptions));
 
 // Ensure these are picked up by Vercel's NFT
@@ -121,6 +138,8 @@ const loadApp = async (req, res, next) => {
     const morgan = require('morgan');
     const helmet = require('helmet');
     const compression = require('compression');
+    const swaggerUi = require('swagger-ui-express');
+    const swaggerSpec = require('./config/swagger.config');
     const sequelize = require('./config/db.config');
     const logger = require('./utils/logger');
     const { sanitizeInput } = require('./utils/sanitize');
@@ -165,7 +184,7 @@ const loadApp = async (req, res, next) => {
     };
 
     // Mount Routes
-    app.use('/api/auth', routes.auth);
+    app.use('/api/auth', authLimiter, routes.auth);
     app.use('/api/exchange', routes.exchange);
     app.use('/api/doctors', authMiddleware, routes.doctors);
     app.use('/api/patients', authMiddleware, routes.patients);
@@ -185,6 +204,13 @@ const loadApp = async (req, res, next) => {
     app.use('/api/prescriptions', authMiddleware, routes.prescriptions);
     app.use('/api/bulk', authMiddleware, routes.bulk);
     app.use('/api/public', routes.public);
+
+    // Swagger Documentation
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    app.get('/api-docs.json', (req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(swaggerSpec);
+    });
 
     // 404 handler
     app.use((req, res) => {

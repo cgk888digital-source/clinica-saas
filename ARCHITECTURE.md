@@ -89,7 +89,9 @@ server/src/
 │   ├── Appointment.js    # Citas médicas
 │   └── index.js          # Relaciones (Associations)
 ├── routes/               # Rutas de Express
-├── utils/                # scripts utilitarios (Seeds, Fixes)
+├── seeders/              # Scripts de carga inicial y seeders operativos
+├── utils/                # Scripts utilitarios remanentes
+│   └── legacy/           # Scripts antiguos archivados
 └── app.js                # Punto de entrada
 ```
 
@@ -308,4 +310,4 @@ Workflow de promoción de código entre entornos.
 
 ---
 
-_Documentación actualizada por Antigravity Agent - Marzo 2026 (v2.1.0)_
+_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.2.0)_

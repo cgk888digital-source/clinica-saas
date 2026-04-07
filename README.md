@@ -19,5 +19,10 @@ Para el correcto funcionamiento en producción, se deben configurar las siguient
 2. `staging`: Rama de pruebas y prepromoción.
 3. `master`: Rama de producción (Despliegue automático en Vercel).
 
+## 🆕 Novedades (Abril 2026)
+- **Videoconsultas Premium**: Integración de captura de audio de alta fidelidad y procesamiento FFmpeg.
+- **Refactorización de Backend**: Organización de seeders y utilitarios para mayor mantenibilidad.
+- **Seguridad**: Headers de seguridad robustecidos y protección contra fuerza bruta.
+
 ---
 © 2026 MedicalCare 888. Todos los derechos reservados.
