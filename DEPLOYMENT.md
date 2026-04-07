@@ -1,4 +1,4 @@
-# MedicalCare 888 - Guía de Despliegue v2.7.0 (Vercel + Supabase)
+# MedicalCare 888 - Guía de Despliegue v2.8.0 (Vercel + Supabase)
 
 Esta guía documenta la infraestructura profesionalizada para el monorepo de MedicalCare 888.
 
@@ -13,9 +13,20 @@ Esta guía documenta la infraestructura profesionalizada para el monorepo de Med
 
 - **Root Directory**: `.` (Raíz del proyecto)
 - **Settings**: "Include files outside the root directory in the Build Step" debe estar **HABILITADO**.
-- **Enrutamiento**: Controlado por `vercel.json` con rutas absolutas:
-  - `/api/*` -> `/api/server.js`
-  - `/*` -> `/client/dist/client/browser/$1`
+- **Enrutamiento**: Controlado por `vercel.json` optimizado para Angular SPA:
+  - `/api/*` -> `/api/server.js` (Serverless Bridge)
+  - Asset management para `.js`, `.css` y `/assets`
+  - Fallback universal a `index.html` para ruteo interno de Angular.
+
+## 🔑 Variables de Entorno Críticas (Vercel)
+
+| Variable | Valor / Formato |
+| :--- | :--- |
+| `DATABASE_URL` | `postgresql://user:pass@db.qgtjmesaicjnjtlsibbq.supabase.co:6543/postgres?pgbouncer=true` |
+| `NODE_ENV` | `production` |
+
+> [!IMPORTANT]
+> El ID de Supabase correcto es `qgtjmesaicjnjtlsibbq`. No omitir la 'j'.
 
 ## 🚀 Pipeline de CI/CD (GitHub Actions)
 
