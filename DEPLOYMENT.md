@@ -35,7 +35,7 @@ El despliegue es automático desde la rama **master**. Se utiliza el comando nat
 ## 🛠️ Inicialización de Base de Datos
 
 Una vez desplegado en producción, es obligatorio ejecutar la inyección del esquema visitando:
-`https://clinica-888.vercel.app/api/system/init-888?key=v888`
+`https://clinica-saas-client.vercel.app/api/system/init-888?key=v888`
 
 ---
 *Mantenido por el equipo de Arquitectura Elite MC888 - 2026*
