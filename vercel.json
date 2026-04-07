@@ -6,8 +6,16 @@
       "destination": "/api/server.js"
     },
     {
+      "source": "/assets/(.*)",
+      "destination": "/client/dist/client/browser/assets/$1"
+    },
+    {
+      "source": "/(.*)\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)",
+      "destination": "/client/dist/client/browser/$1.$2"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/client/dist/client/browser/$1"
+      "destination": "/client/dist/client/browser/index.html"
     }
   ]
 }
