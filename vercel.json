@@ -1,17 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/server.js",
-      "use": "@vercel/node",
-      "config": { "includeFiles": "server/**" }
-    },
-    {
-      "src": "client/package.json",
-      "use": "@vercel/static-build",
-      "config": { "outputDirectory": "dist/client/browser" }
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/:match*",
