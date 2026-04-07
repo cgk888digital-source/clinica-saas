@@ -308,6 +308,28 @@ Workflow de promoción de código entre entornos.
 - **CI/CD**: GitHub Actions para promoción automática.
 - **Easypanel**: Webhooks para auto-despliegue.
 
+## 🔐 13. Aislamiento Proactivo (v2.3.0+)
+
+Capa de seguridad proactiva para entornos SaaS multi-tenant que garantiza el aislamiento total de los datos.
+
+- **Tecnología**: `AsyncLocalStorage` (Node.js) + Sequelize Hooks.
+- **Funcionamiento**: Un middleware captura la identidad de la organización y la mantiene en un contexto asíncrono. Un hook global en Sequelize inyecta automáticamente el filtro `organizationId` en todas las consultas `finding`.
+- **Ventaja**: El aislamiento es gestionado por la infraestructura, eliminando el riesgo de errores humanos (olvido de filtros manuales).
+
 ---
 
-_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.2.0)_
+## 📋 14. Sistema de Auditoría (v2.3.0+)
+
+Registro inmutable de acciones críticas para cumplimiento médico y legal.
+
+- **Audit Trail**: Servicio centralizado que captura:
+  - Acción realizada (CREATE, UPDATE, DELETE).
+  - Recurso afectado y su ID.
+  - Usuario que realizó la acción.
+  - IP y User-Agent del cliente.
+  - Diferencia de datos (JSON Payload con valores anteriores y nuevos).
+- **Cobertura**: Implementado en Citas médicas, Historiales y Pagos.
+
+---
+
+_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.3.0)_

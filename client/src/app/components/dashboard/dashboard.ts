@@ -23,6 +23,7 @@ import { TranslatePipe } from '../../services/translate.pipe';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
+  loading = signal<boolean>(true);
 
 
   stats = signal<any>({
@@ -155,9 +156,11 @@ export class Dashboard implements OnInit {
       next: (data) => {
         console.log('Dashboard stats loaded:', data);
         this.stats.set(data);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error('Error loading stats:', err);
+        this.loading.set(false);
         
         let errorMessage = 'No se pudieron cargar las estadísticas';
         

@@ -2,6 +2,7 @@ const { Appointment, Patient, Doctor, User } = require('../models');
 const { Op } = require('sequelize');
 const whatsapp = require('../utils/whatsapp.service');
 const { validateAppointment } = require('../utils/appointmentValidator');
+const auditTrail = require('../utils/auditTrail');
 
 exports.createAppointment = async (req, res) => {
   try {
@@ -22,6 +23,15 @@ exports.createAppointment = async (req, res) => {
       reason,
       notes,
       status: 'Confirmed'
+    });
+
+    // AUDIT LOG
+    await auditTrail.log('Appointment', 'CREATE', {
+      entityId: appointment.id,
+      userId: req.user.id,
+      newValues: appointment.toJSON(),
+      ip: req.ip,
+      userAgent: req.get('user-agent')
     });
 
     // Fetch details for WhatsApp
@@ -131,8 +141,25 @@ exports.updateStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+    
+    // Get old data for audit
+    const oldAppointment = await Appointment.findByPk(id);
+    if (!oldAppointment) return res.status(404).json({ error: 'Cita no encontrada' });
+
     await Appointment.update({ status }, { where: { id } });
     
+    const updatedAppointment = await Appointment.findByPk(id);
+
+    // AUDIT LOG
+    await auditTrail.log('Appointment', 'UPDATE', {
+      entityId: id,
+      userId: req.user.id,
+      oldValues: oldAppointment.toJSON(),
+      newValues: updatedAppointment.toJSON(),
+      ip: req.ip,
+      userAgent: req.get('user-agent')
+    });
+
     // Handle specific status updates (like cancellation) if done via this generic endpoint
     if (status === 'Cancelled') {
         const appointment = await Appointment.findByPk(id, {
@@ -164,8 +191,19 @@ exports.cancelAppointment = async (req, res) => {
 
         if (!appointment) return res.status(404).json({ error: 'Cita no encontrada' });
 
+        const oldValues = appointment.toJSON();
         appointment.status = 'Cancelled';
         await appointment.save();
+
+        // AUDIT LOG
+        await auditTrail.log('Appointment', 'CANCEL', {
+          entityId: id,
+          userId: req.user.id,
+          oldValues,
+          newValues: appointment.toJSON(),
+          ip: req.ip,
+          userAgent: req.get('user-agent')
+        });
 
         const dateObj = new Date(appointment.date);
         
@@ -196,10 +234,21 @@ exports.rescheduleAppointment = async (req, res) => {
 
         if (!appointment) return res.status(404).json({ error: 'Cita no encontrada' });
 
+        const oldValues = appointment.toJSON();
         appointment.date = newDate;
         appointment.status = 'Confirmed'; // Re-confirm if it was cancelled
         appointment.reminderSent = false; // Reset reminder
         await appointment.save();
+
+        // AUDIT LOG
+        await auditTrail.log('Appointment', 'RESCHEDULE', {
+          entityId: id,
+          userId: req.user.id,
+          oldValues,
+          newValues: appointment.toJSON(),
+          ip: req.ip,
+          userAgent: req.get('user-agent')
+        });
 
         const patientName = `${appointment.Patient.User.firstName} ${appointment.Patient.User.lastName}`;
         const doctorName = `${appointment.Doctor.User.firstName} ${appointment.Doctor.User.lastName}`;

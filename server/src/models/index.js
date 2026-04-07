@@ -122,6 +122,38 @@ LabTest.belongsToMany(LabCombo, {
   as: 'combos'
 });
 
+// Global Aisolation Hook (SaaS Multi-tenant)
+const context = require('../utils/context');
+const logger = require('../utils/logger');
+
+/**
+ * Automatically inject organizationId filter into all queries
+ * Excludes SUPERADMIN or explicit unscoped queries
+ */
+sequelize.addHook('beforeFind', (options) => {
+  const orgId = context.getOrgId();
+  const role = context.getRole();
+
+  // Skip if no orgId in context or user is Super Admin
+  if (!orgId || role === 'SUPERADMIN' || role === 'SUPER_ADMIN') {
+    return;
+  }
+
+  // Ensure 'where' exists
+  options.where = options.where || {};
+
+  // If the model has an 'organizationId' attribute, inject it
+  const modelName = options.model?.name;
+  if (options.model?.rawAttributes?.organizationId) {
+    // Merge filters
+    if (typeof options.where.organizationId === 'undefined') {
+       options.where.organizationId = orgId;
+       logger.debug({ model: modelName, orgId }, 'Global Scope: Injected organizationId');
+    }
+  }
+});
+
+
 module.exports = {
   User,
   Role,

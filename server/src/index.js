@@ -115,6 +115,32 @@ app.get('/api/system/init-888', async (req, res) => {
   }
 });
 
+/**
+ * 🔍 ARCHITECTURAL INTEGRITY CHECK (Fail-Fast)
+ * Ensures critical assets and directories exist before operations.
+ */
+const fs = require('fs');
+const path = require('path');
+const criticalUtils = [
+  './utils/appointmentValidator.js',
+  './utils/logger.js',
+  './utils/whatsapp.service.js'
+];
+
+criticalUtils.forEach(relPath => {
+  const fullPath = path.resolve(__dirname, relPath);
+  if (!fs.existsSync(fullPath)) {
+    console.error(`❌ [Critical] Missing required module at ${fullPath}`);
+    process.exit(1);
+  }
+});
+
+// Ensure uploads directory exists for receipts
+const uploadDir = path.resolve(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 // --- NO OTHER TOP-LEVEL REQUIRES EXCEPT MINIMAL BOOTSTRAP ---
 
 let isAppLoaded = false;
@@ -144,11 +170,21 @@ const loadApp = async (req, res, next) => {
     const logger = require('./utils/logger');
     const { sanitizeInput } = require('./utils/sanitize');
     const authMiddleware = require('./middlewares/auth.middleware');
+    const contextMiddleware = require('./middlewares/context.middleware');
 
     // App Middleware Configuration
     app.use(helmet({ 
       crossOriginResourcePolicy: { policy: "cross-origin" },
-      contentSecurityPolicy: false // Disable CSP in dev to avoid blocking calls
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
+          styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+          fontSrc: ["'self'", "https://fonts.gstatic.com"],
+          imgSrc: ["'self'", "data:", "https:*"],
+          connectSrc: ["'self'", "https:*", "wss:*"]
+        }
+      }
     }));
     app.use(express.json({ limit: '1mb' }));
     app.use(express.urlencoded({ extended: true, limit: '1mb' }));
@@ -158,6 +194,8 @@ const loadApp = async (req, res, next) => {
 
     // Database check
     await sequelize.authenticate();
+
+    const protected = [authMiddleware, contextMiddleware];
 
     // Routes (Loaded on demand inside this function)
     const routes = {
@@ -186,23 +224,23 @@ const loadApp = async (req, res, next) => {
     // Mount Routes
     app.use('/api/auth', authLimiter, routes.auth);
     app.use('/api/exchange', routes.exchange);
-    app.use('/api/doctors', authMiddleware, routes.doctors);
-    app.use('/api/patients', authMiddleware, routes.patients);
-    app.use('/api/appointments', authMiddleware, routes.appointments);
-    app.use('/api/medical-records', authMiddleware, routes.medicalRecords);
-    app.use('/api/payments', authMiddleware, routes.payments);
-    app.use('/api/organizations', authMiddleware, routes.organizations);
-    app.use('/api/specialties', authMiddleware, routes.specialties);
-    app.use('/api/staff', authMiddleware, routes.staff);
-    app.use('/api/lab-catalog', authMiddleware, routes.labCatalog);
-    app.use('/api/lab-results', authMiddleware, routes.labResults);
-    app.use('/api/drugs', authMiddleware, routes.drugs);
-    app.use('/api/nurses', authMiddleware, routes.nurses);
-    app.use('/api/video-consultations', authMiddleware, routes.video);
-    app.use('/api/stats', authMiddleware, routes.stats);
-    app.use('/api/team', authMiddleware, routes.team);
-    app.use('/api/prescriptions', authMiddleware, routes.prescriptions);
-    app.use('/api/bulk', authMiddleware, routes.bulk);
+    app.use('/api/doctors', protected, routes.doctors);
+    app.use('/api/patients', protected, routes.patients);
+    app.use('/api/appointments', protected, routes.appointments);
+    app.use('/api/medical-records', protected, routes.medicalRecords);
+    app.use('/api/payments', protected, routes.payments);
+    app.use('/api/organizations', protected, routes.organizations);
+    app.use('/api/specialties', protected, routes.specialties);
+    app.use('/api/staff', protected, routes.staff);
+    app.use('/api/lab-catalog', protected, routes.labCatalog);
+    app.use('/api/lab-results', protected, routes.labResults);
+    app.use('/api/drugs', protected, routes.drugs);
+    app.use('/api/nurses', protected, routes.nurses);
+    app.use('/api/video-consultations', protected, routes.video);
+    app.use('/api/stats', protected, routes.stats);
+    app.use('/api/team', protected, routes.team);
+    app.use('/api/prescriptions', protected, routes.prescriptions);
+    app.use('/api/bulk', protected, routes.bulk);
     app.use('/api/public', routes.public);
 
     // Swagger Documentation

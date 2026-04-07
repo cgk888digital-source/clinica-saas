@@ -11,6 +11,9 @@ RUN npm install --only=production && \
 # Copy application source
 COPY . .
 
+# Copy .env file
+COPY .env .
+
 # Create uploads directory with correct permissions
 RUN mkdir -p uploads && \
     chown -R node:node /usr/src/app
@@ -21,6 +24,9 @@ USER node
 # Environment variables
 ENV NODE_ENV=production \
     PORT=5000
+
+# Load environment variables
+RUN export $(cat .env | xargs)
 
 # Expose port
 EXPOSE 5000
