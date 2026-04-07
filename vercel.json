@@ -1,6 +1,21 @@
 {
   "version": 2,
-  "public": false,
+  "builds": [
+    {
+      "src": "api/server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["server/src/**"]
+      }
+    },
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/client/browser"
+      }
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -8,7 +23,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/$1"
+      "destination": "/client/$1"
     }
   ]
 }
