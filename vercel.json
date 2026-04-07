@@ -14,8 +14,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/server.js",
-      "continue": true
+      "dest": "/api/server.js"
     },
     {
       "src": "/(.*)",
