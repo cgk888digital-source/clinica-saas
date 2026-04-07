@@ -20,16 +20,16 @@ jobs:
           npm install --global vercel
 
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=${{ github.ref_name == 'master' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=${{ github.ref_name == 'master' && 'production' || 'preview' }} --token=${{ secrets.token_vercel }}
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.teamID }}
+          VERCEL_PROJECT_ID: ${{ secrets.proejctID }}
 
       - name: Build Project Artifacts
-        run: vercel build ${{ github.ref_name == 'master' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build ${{ github.ref_name == 'master' && '--prod' || '' }} --token=${{ secrets.token_vercel }}
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.teamID }}
+          VERCEL_PROJECT_ID: ${{ secrets.proejctID }}
 
       - name: Flatten Build Output (Bypass 404)
         run: |
@@ -41,7 +41,7 @@ jobs:
           fi
 
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt ${{ github.ref_name == 'master' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt ${{ github.ref_name == 'master' && '--prod' || '' }} --token=${{ secrets.token_vercel }}
         env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.teamID }}
+          VERCEL_PROJECT_ID: ${{ secrets.proejctID }}
