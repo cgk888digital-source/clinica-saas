@@ -255,4 +255,4 @@ if (!process.env.VERCEL) {
   });
 }
 
-module.exports = app;
+module.exports = app; // Export the app for Vercel

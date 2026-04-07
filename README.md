@@ -24,5 +24,16 @@ Para el correcto funcionamiento en producción, se deben configurar las siguient
 - **Refactorización de Backend**: Organización de seeders y utilitarios para mayor mantenibilidad.
 - **Seguridad**: Headers de seguridad robustecidos y protección contra fuerza bruta.
 
+## Backend Deployment on Vercel
+
+### Changes Made
+1. Added a `vercel-build` script in `server/package.json` to start the backend.
+2. Modified `server/src/index.js` to export the Express app for Vercel compatibility.
+
+### Deployment Steps
+1. Ensure all dependencies are installed.
+2. Deploy the backend using Vercel CLI or the Vercel dashboard.
+3. Verify the deployment by accessing the provided Vercel URL.
+
 ---
 © 2026 MedicalCare 888. Todos los derechos reservados.
