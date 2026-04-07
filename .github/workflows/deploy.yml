@@ -1,32 +1,39 @@
-name: Continuous Deployment - Vercel
-# Revision: v1.1 - Force trigger
+name: Deploy to Vercel
 
 on:
   push:
     branches:
       - master
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
 
       - name: Install dependencies (Monorepo)
         run: |
-          npm install
-          cd server && npm install
-          cd ../client && npm install
+          npm install --force
+          cd server && npm install --force
+          cd ../client && npm install --force
           npm install --global vercel
 
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=${{ github.ref_name == 'master' && 'production' || 'preview' }} --token=${{ secrets.token_vercel }}
+        run: vercel pull --yes --environment=production --token=${{ secrets.token_vercel }}
         env:
           VERCEL_ORG_ID: ${{ secrets.teamID }}
           VERCEL_PROJECT_ID: ${{ secrets.proejctID }}
 
       - name: Build Project Artifacts
-        run: vercel build ${{ github.ref_name == 'master' && '--prod' || '' }} --token=${{ secrets.token_vercel }}
+        run: vercel build --prod --token=${{ secrets.token_vercel }}
         env:
           VERCEL_ORG_ID: ${{ secrets.teamID }}
           VERCEL_PROJECT_ID: ${{ secrets.proejctID }}
@@ -35,13 +42,13 @@ jobs:
         run: |
           if [ -d ".vercel/output/static/browser" ]; then
             cp -r .vercel/output/static/browser/* .vercel/output/static/
-            echo "Archivos movidos de /browser a la raíz con éxito."
+            echo "Archivos movidos con éxito."
           else
-            echo "No se encontró carpeta /browser, continuando sin cambios."
+            echo "La carpeta /browser no existe o ya está en la raíz."
           fi
 
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt ${{ github.ref_name == 'master' && '--prod' || '' }} --token=${{ secrets.token_vercel }}
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.token_vercel }}
         env:
           VERCEL_ORG_ID: ${{ secrets.teamID }}
           VERCEL_PROJECT_ID: ${{ secrets.proejctID }}
