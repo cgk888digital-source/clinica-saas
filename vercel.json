@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "outputDirectory": "public",
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
+  "outputDirectory": "deploy_ready",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "functions": {
     "api/server.js": {
       "runtime": "nodejs20.x",

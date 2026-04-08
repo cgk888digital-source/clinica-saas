@@ -1,0 +1,7 @@
+node_modules
+.git
+.github
+client
+.vercel
+*.log
+# Do NOT ignore api/ or server/ or deploy_ready/
