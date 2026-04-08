@@ -1,4 +1,4 @@
-const app = require('./src/index');
+const app = require('../server/src/index');
 const cors = require('cors');
 
 // Inyectar configuraciones básicas para entorno serverless
