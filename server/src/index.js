@@ -29,6 +29,8 @@ const authLimiter = rateLimit({
 
 app.use(globalLimiter);
 app.use(cors(corsOptions));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Ensure these are picked up by Vercel's NFT
 try {
@@ -151,7 +153,9 @@ try {
 // --- NO OTHER TOP-LEVEL REQUIRES EXCEPT MINIMAL BOOTSTRAP ---
 
 let isAppLoaded = false;
+let isAppLoading = false;
 let bootError = null;
+let loadingPromise = null;
 
 /**
  * Lazy Application Loader
@@ -159,117 +163,126 @@ let bootError = null;
  * ONLY when an actual API request comes in.
  */
 const loadApp = async (req, res, next) => {
-  if (req.path === '/api/health' || req.path === '/api/debug-files') return next();
+  if (req.path === '/api/health' || req.path === '/api/debug-files' || req.path.includes('/api/system/init')) return next();
 
   if (isAppLoaded) return next();
   if (bootError) return res.status(500).json({ error: 'Critical Boot Failure', detail: bootError.message });
 
-  try {
-    console.log('🚀 [Vercel] Lazy-loading full application context...');
-    
-    // Dependencies
-    const morgan = require('morgan');
-    const helmet = require('helmet');
-    const compression = require('compression');
-    const swaggerUi = require('swagger-ui-express');
-    const swaggerSpec = require('./config/swagger.config');
-    const sequelize = require('./config/db.config');
-    const logger = require('./utils/logger');
-    const { sanitizeInput } = require('./utils/sanitize');
-    const authMiddleware = require('./middlewares/auth.middleware');
-    const contextMiddleware = require('./middlewares/context.middleware');
-
-    // App Middleware Configuration
-    app.use(helmet({ 
-      crossOriginResourcePolicy: { policy: "cross-origin" },
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'"],
-          styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-          fontSrc: ["'self'", "https://fonts.gstatic.com"],
-          imgSrc: ["'self'", "data:", "https:*"],
-          connectSrc: ["'self'", "https:*", "wss:*"]
-        }
-      }
-    }));
-    app.use(express.json({ limit: '1mb' }));
-    app.use(express.urlencoded({ extended: true, limit: '1mb' }));
-    app.use(morgan('dev'));
-    app.use(compression());
-    app.use(sanitizeInput);
-
-    // Database check
-    await sequelize.authenticate();
-
-    const protected = [authMiddleware, contextMiddleware];
-
-    // Routes (Loaded on demand inside this function)
-    const routes = {
-      auth: require('./routes/auth.routes'),
-      exchange: require('./routes/exchange.routes'),
-      doctors: require('./routes/doctor.routes'),
-      patients: require('./routes/patient.routes'),
-      appointments: require('./routes/appointment.routes'),
-      medicalRecords: require('./routes/medicalRecord.routes'),
-      payments: require('./routes/payment.routes'),
-      organizations: require('./routes/organization.routes'),
-      specialties: require('./routes/specialty.routes'),
-      staff: require('./routes/staff.routes'),
-      labCatalog: require('./routes/labCatalog.routes'),
-      labResults: require('./routes/labResult.routes'),
-      drugs: require('./routes/drug.routes'),
-      nurses: require('./routes/nurse.routes'),
-      video: require('./routes/videoConsultation.routes'),
-      stats: require('./routes/stats.routes'),
-      team: require('./routes/team.routes'),
-      prescriptions: require('./routes/prescription.routes'),
-      bulk: require('./routes/bulk.routes'),
-      public: require('./routes/public.routes'),
-    };
-
-    // Mount Routes
-    app.use('/api/auth', authLimiter, routes.auth);
-    app.use('/api/exchange', routes.exchange);
-    app.use('/api/doctors', protected, routes.doctors);
-    app.use('/api/patients', protected, routes.patients);
-    app.use('/api/appointments', protected, routes.appointments);
-    app.use('/api/medical-records', protected, routes.medicalRecords);
-    app.use('/api/payments', protected, routes.payments);
-    app.use('/api/organizations', protected, routes.organizations);
-    app.use('/api/specialties', protected, routes.specialties);
-    app.use('/api/staff', protected, routes.staff);
-    app.use('/api/lab-catalog', protected, routes.labCatalog);
-    app.use('/api/lab-results', protected, routes.labResults);
-    app.use('/api/drugs', protected, routes.drugs);
-    app.use('/api/nurses', protected, routes.nurses);
-    app.use('/api/video-consultations', protected, routes.video);
-    app.use('/api/stats', protected, routes.stats);
-    app.use('/api/team', protected, routes.team);
-    app.use('/api/prescriptions', protected, routes.prescriptions);
-    app.use('/api/bulk', protected, routes.bulk);
-    app.use('/api/public', routes.public);
-
-    // Swagger Documentation
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-    app.get('/api-docs.json', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-      res.send(swaggerSpec);
-    });
-
-    // 404 handler
-    app.use((req, res) => {
-      res.status(404).json({ message: 'Ruta no encontrada (Lazy Mode)' });
-    });
-
-    isAppLoaded = true;
-    console.log('✅ [Vercel] Full context loaded successfully.');
-    next();
-  } catch (err) {
-    bootError = err;
-    console.error('❌ [Vercel] FATAL BOOT ERROR:', err);
-    res.status(500).json({ error: 'Fatal Boot Error', detail: err.message });
+  if (isAppLoading) {
+    if (loadingPromise) await loadingPromise;
+    return next();
   }
+
+  isAppLoading = true;
+  loadingPromise = (async () => {
+    try {
+      console.log('🚀 [Vercel] Lazy-loading full application context...');
+      
+      // Dependencies
+      const morgan = require('morgan');
+      const helmet = require('helmet');
+      const compression = require('compression');
+      const swaggerUi = require('swagger-ui-express');
+      const swaggerSpec = require('./config/swagger.config');
+      const sequelize = require('./config/db.config');
+      const logger = require('./utils/logger');
+      const { sanitizeInput } = require('./utils/sanitize');
+      const authMiddleware = require('./middlewares/auth.middleware');
+      const contextMiddleware = require('./middlewares/context.middleware');
+
+      // App Middleware Configuration
+      app.use(helmet({ 
+        crossOriginResourcePolicy: { policy: "cross-origin" },
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "https:*"],
+            connectSrc: ["'self'", "https:*", "wss:*"]
+          }
+        }
+      }));
+      app.use(morgan('dev'));
+      app.use(compression());
+      app.use(sanitizeInput);
+
+      // Database check
+      await sequelize.authenticate();
+
+      const protected = [authMiddleware, contextMiddleware];
+
+      // Routes (Loaded on demand inside this function)
+      const routes = {
+        auth: require('./routes/auth.routes'),
+        exchange: require('./routes/exchange.routes'),
+        doctors: require('./routes/doctor.routes'),
+        patients: require('./routes/patient.routes'),
+        appointments: require('./routes/appointment.routes'),
+        medicalRecords: require('./routes/medicalRecord.routes'),
+        payments: require('./routes/payment.routes'),
+        organizations: require('./routes/organization.routes'),
+        specialties: require('./routes/specialty.routes'),
+        staff: require('./routes/staff.routes'),
+        labCatalog: require('./routes/labCatalog.routes'),
+        labResults: require('./routes/labResult.routes'),
+        drugs: require('./routes/drug.routes'),
+        nurses: require('./routes/nurse.routes'),
+        video: require('./routes/videoConsultation.routes'),
+        stats: require('./routes/stats.routes'),
+        team: require('./routes/team.routes'),
+        prescriptions: require('./routes/prescription.routes'),
+        bulk: require('./routes/bulk.routes'),
+        public: require('./routes/public.routes'),
+      };
+
+      // Mount Routes
+      app.use('/api/auth', authLimiter, routes.auth);
+      app.use('/api/exchange', routes.exchange);
+      app.use('/api/doctors', protected, routes.doctors);
+      app.use('/api/patients', protected, routes.patients);
+      app.use('/api/appointments', protected, routes.appointments);
+      app.use('/api/medical-records', protected, routes.medicalRecords);
+      app.use('/api/payments', protected, routes.payments);
+      app.use('/api/organizations', protected, routes.organizations);
+      app.use('/api/specialties', protected, routes.specialties);
+      app.use('/api/staff', protected, routes.staff);
+      app.use('/api/lab-catalog', protected, routes.labCatalog);
+      app.use('/api/lab-results', protected, routes.labResults);
+      app.use('/api/drugs', protected, routes.drugs);
+      app.use('/api/nurses', protected, routes.nurses);
+      app.use('/api/video-consultations', protected, routes.video);
+      app.use('/api/stats', protected, routes.stats);
+      app.use('/api/team', protected, routes.team);
+      app.use('/api/prescriptions', protected, routes.prescriptions);
+      app.use('/api/bulk', protected, routes.bulk);
+      app.use('/api/public', routes.public);
+
+      // Swagger Documentation
+      app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+      app.get('/api-docs.json', (req, res) => {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(swaggerSpec);
+      });
+
+      // 404 handler
+      app.use((req, res) => {
+        res.status(404).json({ message: 'Ruta no encontrada (Lazy Mode)' });
+      });
+
+      isAppLoaded = true;
+      isAppLoading = false;
+      console.log('✅ [Vercel] Full context loaded successfully.');
+    } catch (err) {
+      bootError = err;
+      isAppLoading = false;
+      console.error('❌ [Vercel] FATAL BOOT ERROR:', err);
+    }
+  })();
+  
+  await loadingPromise;
+  next();
 };
 
 // Apply Lazy loader to everything EXCEPT canary
