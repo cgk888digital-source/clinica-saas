@@ -1,0 +1,80 @@
+<div class="container-fluid p-4 animate-fade-in">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Gestión Global de Plataforma</h2>
+      <p class="text-muted small">Administración de organizaciones y estados de suscripción</p>
+    </div>
+    <button class="btn btn-outline-primary btn-sm rounded-pill px-3" (click)="loadOrganizations()">
+      <i class="bi bi-arrow-clockwise me-1"></i> Actualizar
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div *ngIf="!loading && organizations.length > 0" class="row g-4">
+    <div class="col-12" *ngFor="let org of organizations">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+          <div class="d-flex flex-column flex-md-row">
+            <!-- Org Info -->
+            <div class="p-4 flex-grow-1 border-end border-light">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="org-icon p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
+                  <i class="bi bi-building fs-4"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-0">{{ org.name }}</h5>
+                  <span class="badge" [ngClass]="{
+                    'bg-success bg-opacity-10 text-success': org.subscriptionStatus === 'ACTIVE',
+                    'bg-warning bg-opacity-10 text-warning': org.subscriptionStatus === 'TRIAL',
+                    'bg-danger bg-opacity-10 text-danger': org.subscriptionStatus === 'PAST_DUE' || org.subscriptionStatus === 'CANCELLED'
+                  }">{{ org.subscriptionStatus }}</span>
+                </div>
+              </div>
+              <div class="row g-2 small">
+                <div class="col-6"><span class="text-muted">ID:</span> {{ org.id | slice:0:8 }}...</div>
+                <div class="col-6"><span class="text-muted">Tipo:</span> {{ org.type }}</div>
+                <div class="col-6"><span class="text-muted">Propietario:</span> {{ org.owner?.email || 'N/A' }}</div>
+                <div class="col-6"><span class="text-muted">Vence Trial:</span> {{ org.trialEndsAt ? (org.trialEndsAt | date:'shortDate') : 'N/A' }}</div>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="bg-light bg-opacity-50 p-4 d-flex flex-column justify-content-center gap-3 align-items-center min-w-250">
+              <div class="w-100">
+                <label class="x-small fw-bold text-muted mb-1 text-uppercase">Cambiar Estado</label>
+                <select class="form-select form-select-sm rounded-3" [(ngModel)]="org.subscriptionStatus">
+                  <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-sm w-100 rounded-3 shadow-sm" (click)="updateStatus(org)">
+                Aplicar Cambios
+              </button>
+              <button class="btn btn-dark btn-sm w-100 rounded-3" (click)="toggleUser(org.owner)" *ngIf="org.owner">
+                {{ org.owner.isActive ? 'Bloquear Dueño' : 'Activar Dueño' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && organizations.length === 0" class="text-center py-5 glass-morphism rounded-4 mt-4">
+    <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
+    <h5>No se encontraron organizaciones</h5>
+  </div>
+</div>
+
+<style>
+  .min-w-250 { min-width: 250px; }
+  .x-small { font-size: 0.7rem; }
+  .rounded-4 { border-radius: 1.25rem !important; }
+  .animate-fade-in { animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .org-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+  .card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important; }
+</style>

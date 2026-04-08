@@ -170,6 +170,13 @@ export const routes: Routes = [
     data: { roles: ['SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR'] },
     title: 'MedicalCare 888 - Imagen Corporativa'
   },
+  {
+    path: 'platform-admin',
+    loadComponent: () => import('./components/platform-admin/platform-admin').then(m => m.PlatformAdmin),
+    canActivate: [authGuard, roleGuard, firstLoginGuard],
+    data: { roles: ['SUPERADMIN'] },
+    title: 'MedicalCare 888 - Gestión Global'
+  },
 
 
   // Catch all - redirect to dashboard
