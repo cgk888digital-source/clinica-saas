@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "outputDirectory": "client/dist/client/browser",
+  "outputDirectory": "client/dist/browser",
   "functions": {
     "api/server.js": {
       "runtime": "nodejs20.x",
