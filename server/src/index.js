@@ -50,7 +50,28 @@ app.get('/api/system/init-888', async (req, res) => {
 
     res.status(200).json({ success: true, message: 'Database reset successfully' });
   } catch (err) {
-    res.status(500).json({ error: 'Initialiation failed', detail: err.message });
+    res.status(500).json({ error: 'Initialization failed', detail: err.message });
+  }
+});
+
+app.get('/api/system/init-prod', async (req, res) => {
+  const { key } = req.query;
+  if (key !== 'v888') return res.status(403).json({ error: 'Unauthorized Access Key' });
+
+  try {
+    const sequelize = require('./config/db.config');
+    const seedCleanData = require('./utils/cleanSeeder');
+    
+    await sequelize.authenticate();
+    await sequelize.sync({ force: true });
+    await seedCleanData();
+
+    res.status(200).json({ 
+      success: true, 
+      message: '✅ Base de datos LIMPIA e INICIALIZADA (Sin datos de prueba).' 
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Production Initialization failed', detail: err.message });
   }
 });
 
@@ -95,6 +116,7 @@ const getRouter = () => {
     gameRouter.use('/prescriptions', protected, require('./routes/prescription.routes'));
     gameRouter.use('/bulk', protected, require('./routes/bulk.routes'));
     gameRouter.use('/public', require('./routes/public.routes'));
+    gameRouter.use('/admin', require('./routes/admin.routes'));
 
     router = gameRouter;
     return router;
