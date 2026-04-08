@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "outputDirectory": "deploy_ready",
+  "outputDirectory": "client/dist",
   "functions": {
     "api/server.js": {
       "runtime": "nodejs20.x",
