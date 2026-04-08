@@ -1,8 +1,5 @@
 {
   "version": 2,
-  "outputDirectory": "deploy_ready",
-  "cleanUrls": true,
-  "trailingSlash": false,
   "functions": {
     "api/server.js": {
       "runtime": "nodejs20.x",

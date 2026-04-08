@@ -17,15 +17,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Monorepo Dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Build Unified Monorepo (Local Build)
-        run: npm run build
-        env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
-
-      - name: Deploy Local Content to Vercel
+      - name: Deploy to Vercel (Remote Cloud Build)
         run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
