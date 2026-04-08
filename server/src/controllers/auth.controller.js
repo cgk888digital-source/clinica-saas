@@ -204,8 +204,7 @@ exports.register = async (req, res) => {
         gender: user.gender,
         mustChangePassword: true
       },
-      // En modo desarrollo se expone la contraseña temporal para facilitar las pruebas
-      ...(process.env.NODE_ENV !== 'production' && { temporaryPassword: finalPassword })
+      temporaryPassword: finalPassword
     });
   } catch (error) {
     await t.rollback();
