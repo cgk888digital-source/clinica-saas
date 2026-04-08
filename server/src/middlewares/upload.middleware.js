@@ -4,12 +4,26 @@ const fs = require('fs');
 
 // Ensure upload folders exist
 const ensureDir = (dir) => {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  try {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      console.log(`Directory created: ${dir}`);
+    }
+  } catch (err) {
+    console.warn(`⚠️ [Vercel] Could not create directory ${dir}:`, err.message);
+    // In Vercel, this is expected for everything except /tmp
+  }
 };
 
 // Factory to create multer instance with options
 const createUpload = (options = {}) => {
-  const dest = options.dest || 'uploads/';
+  let dest = options.dest || 'uploads/';
+  
+  // En Vercel, redirigir todo a /tmp para evitar errores de solo lectura
+  if (process.env.VERCEL) {
+    dest = path.join('/tmp', dest);
+  }
+  
   ensureDir(dest);
 
   const storage = multer.diskStorage({
