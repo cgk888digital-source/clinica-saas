@@ -332,4 +332,18 @@ Registro inmutable de acciones críticas para cumplimiento médico y legal.
 
 ---
 
-_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.3.0)_
+## 🌐 15. Arquitectura de Despliegue en Vercel (v2.8.0+)
+
+El sistema utiliza una arquitectura de desplegue de alto rendimiento diseñada para la plataforma Vercel, optimizada para monorepos híbridos (Angular + Node.js).
+
+- **Estructura Monorepo**: El código del cliente (`/client`) y del servidor (`/server`) coexisten en un mismo repositorio, facilitando la atomicidad de los despliegues.
+- **Serverless Bridge (`/api/server.js`)**: Implementación de un puente de ejecución perezosa (Lazy Loading) que carga el contexto completo de Express.js únicamente cuando se recibe una petición, optimizando los tiempos de arranque (cold starts) y el consumo de recursos en entornos serverless.
+- **Ruteo Unificado (`vercel.json`)**:
+  - Prioridad absoluta para los endpoints de la API (`/api/*`).
+  - Mapeo inteligente de archivos estáticos generados por el nuevo builder de Angular 21 (`dist/client/browser`).
+  - Fallback universal a `index.html` para soportar el ruteo interno de la SPA (Single Page Application).
+- **Persistencia con Supabase**: Integración mediante el **Supavisor Transaction Pooler** (Puerto 6543) para garantizar la estabilidad de las conexiones desde funciones sin estado (serverless).
+
+---
+
+_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.8.0)_
