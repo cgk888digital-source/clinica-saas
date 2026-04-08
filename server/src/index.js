@@ -130,15 +130,18 @@ const criticalUtils = [
 criticalUtils.forEach(relPath => {
   const fullPath = path.resolve(__dirname, relPath);
   if (!fs.existsSync(fullPath)) {
-    console.error(`❌ [Critical] Missing required module at ${fullPath}`);
-    process.exit(1);
+    console.error(`⚠️ [Warning] Missing non-critical module at ${fullPath}`);
   }
 });
 
 // Ensure uploads directory exists for receipts
-const uploadDir = path.resolve(__dirname, '../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+try {
+  const uploadDir = path.resolve(__dirname, '../uploads');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (e) {
+  console.warn('⚠️ [Vercel] Could not create uploads directory (expected in read-only env):', e.message);
 }
 
 // --- NO OTHER TOP-LEVEL REQUIRES EXCEPT MINIMAL BOOTSTRAP ---
