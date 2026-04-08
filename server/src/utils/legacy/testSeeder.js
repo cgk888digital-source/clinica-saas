@@ -1,4 +1,4 @@
-const { Role, User, Patient, Doctor, Nurse, Staff, Specialty, Department, Organization } = require('../models');
+const { Role, User, Patient, Doctor, Nurse, Staff, Specialty, Department, Organization } = require('../../models');
 
 /**
  * Seed test users for ALL environments (dev + production).

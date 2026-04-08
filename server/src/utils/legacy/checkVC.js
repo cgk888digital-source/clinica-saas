@@ -1,4 +1,4 @@
-const { VideoConsultation, Appointment } = require('../models');
+const { VideoConsultation, Appointment } = require('../../models');
 
 const checkDB = async () => {
   try {
@@ -9,7 +9,7 @@ const checkDB = async () => {
     });
 
     // Verify ALL IDs
-    const { User, Appointment } = require('../models');
+    const { User, Appointment } = require('../../models');
     
     for (const verificationId of [1, 2, 3]) {
         console.log(`\n🔍 Verifying VC ID ${verificationId}...`);

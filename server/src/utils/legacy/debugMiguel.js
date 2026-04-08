@@ -1,4 +1,4 @@
-const { User, Doctor } = require('../models');
+const { User, Doctor } = require('../../models');
 const sequelize = require('../config/db.config');
 
 const checkUser = async () => {

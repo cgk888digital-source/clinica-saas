@@ -1,4 +1,4 @@
-const { Doctor, Specialty } = require('../models');
+const { Doctor, Specialty } = require('../../models');
 
 async function fixDoctorSpecialties() {
   try {

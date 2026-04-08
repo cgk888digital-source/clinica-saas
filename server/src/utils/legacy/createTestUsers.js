@@ -1,4 +1,4 @@
-const { User, Role, Doctor, Nurse, Staff, Patient, Specialty } = require('../models');
+const { User, Role, Doctor, Nurse, Staff, Patient, Specialty } = require('../../models');
 const bcrypt = require('bcryptjs');
 
 const TEST_PASSWORD = process.env.TEST_PASSWORD || 'ClinicaSaaS123'; // Dev fallback

@@ -1,4 +1,4 @@
-const { User, Role } = require('../models');
+const { User, Role } = require('../../models');
 const bcrypt = require('bcryptjs');
 
 async function fixPatientPassword() {

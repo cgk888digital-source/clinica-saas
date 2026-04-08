@@ -1,4 +1,4 @@
-const { Patient } = require('../models');
+const { Patient } = require('../../models');
 
 async function updatePatientsWithPhone() {
   try {
