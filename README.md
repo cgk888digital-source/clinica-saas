@@ -11,10 +11,20 @@ Sistema integral para la gestión de clínicas y videoconsultas médicas.
 Para evitar errores de conectividad en entornos serverless (IPv6/IPv4), la `DATABASE_URL` **DEBE** usar el Transaction Pooler de Supabase:
 `postgresql://postgres.[PROYECTO]:[PASSWORD]@aws-1-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true`
 
-### 🛠️ Inicialización del Sistema
-Tras un nuevo despliegue o reset de base de datos, ejecutar la ruta de emergencia:
-`https://clinica-888.vercel.app/api/system/init-888?key=v888`
-*Esto recrea el esquema (`force: true`) y carga los usuarios administradores de prueba.*
+### 🛠️ Inicialización del Sistema (Reset)
+
+Existen dos tipos de inicialización disponibles mediante URL (requieren `key=v888`):
+
+1. **Modo Producción (LIMPIO)**: Borra todo y deja solo tu cuenta maestra.
+   `https://clinica-888.vercel.app/api/system/init-prod?key=v888`
+   - *Credenciales:* `edwarvilchez1977@gmail.com` / `ClinicaSaaS123` (Pide cambio obligatorio).
+
+2. **Modo Demo (CON DATOS)**: Borra todo y carga pacientes/doctores de prueba.
+   `https://clinica-888.vercel.app/api/system/init-888?key=v888`
+
+## 🛡️ Módulo de Gestión Global (Super Admin)
+El sistema incluye una consola de administración para el dueño de la plataforma accesible en `/platform-admin`.
+- **Funciones:** Gestión de organizaciones, bloqueo de usuarios, control de estados de suscripción (`ACTIVE`, `TRIAL`, `PAST_DUE`, `CANCELLED`).
 
 ## 📦 Gestión de Ramas (Git Flow)
 1. **`develop`**: Desarrollo y correcciones.
@@ -22,5 +32,4 @@ Tras un nuevo despliegue o reset de base de datos, ejecutar la ruta de emergenci
 3. **`master`**: Rama productiva sincronizada con Vercel.
 
 ---
-© 2026 MedicalCare 888. Todos los derechos reservados.
-
+© 2026 MedicalCare 888. Desarrollado por CGK888Digital.
