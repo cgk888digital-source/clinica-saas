@@ -1,7 +1,6 @@
 node_modules
 .git
 .github
-client
 .vercel
 *.log
-# Do NOT ignore api/ or server/ or deploy_ready/
+# Hemos quitado 'client' y 'server' de aquí para evitar el error de "Directorio no existe"
