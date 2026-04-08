@@ -330,14 +330,15 @@ Registro inmutable de acciones críticas para cumplimiento médico y legal.
   - Diferencia de datos (JSON Payload con valores anteriores y nuevos).
 - **Cobertura**: Implementado en Citas médicas, Historiales y Pagos.
 
-## 🌐 15. Arquitectura Universal Public (v2.9.5+)
+## 🌐 15. Arquitectura Nativa Convergente (v4.2.0+)
 
-El sistema utiliza el estándar de ruteo físico de Vercel mediante una carpeta de salida unificada.
+El sistema utiliza la configuración nativa de Vercel Cloud Build mediante el alineamiento de rutas estándar.
 
-- **Build Centralizado**: El comando de build en la raíz del monorepo compila los activos de Angular 21 y los exporta a una carpeta física llamada **`public`** en la raíz absoluta.
-- **Servidor Estático Nativo**: Se utiliza `outputDirectory: public` en `vercel.json`. Al usar el nombre estándar "public", se evita cualquier conflicto con la detección automática de frameworks de Vercel (evitando errores de tipo "No Output Directory found").
-- **Aislamiento de API**: El backend Express.js se sirve de forma independiente mediante funciones serverless en la carpeta `api/`, permitiendo el funcionamiento Fullstack real.
+- **Detección Automática**: El Dashboard de Vercel está configurado con el Preset de **Angular**, eliminando la necesidad de comandos de copia manuales o aplanamiento de carpetas.
+- **Ruta Estándar de Salida**: El `Output Directory` en el Dashboard se establece en **`client/dist/browser`**. Esto garantiza que el compilador nativo de Vercel encuentre los activos estáticos sin conflictos.
+- **Root Contextual**: Se utiliza `Root Directory: .` (punto) para que las funciones serverless de la carpeta `api/` y el código del frontend en `client/` convivan en el mismo ecosistema de despliegue.
+- **Despliegue Determinista**: Todo el flujo de CI/CD en GitHub Actions delega la compilación a la nube de Vercel, garantizando compatibilidad total con los entornos de ejecución modernos.
 
 ---
 
-_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.9.5)_
+_Documentación actualizada por Antigravity Agent - Abril 2026 (v4.2.0)_
