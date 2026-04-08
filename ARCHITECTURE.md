@@ -332,15 +332,14 @@ Registro inmutable de acciones críticas para cumplimiento médico y legal.
 
 ---
 
-## 🌐 15. Arquitectura de Despliegue en Vercel (v2.8.5+)
+## 🌐 15. Arquitectura de Despliegue Flat (v2.8.7+)
 
-El sistema utiliza una arquitectura de desplegue de alto rendimiento optimizada para la plataforma Vercel mediante el uso de **outputDirectory** nativo.
+El sistema utiliza una arquitectura de desplegue de tipo **Flat Output** para garantizar la compatibilidad universal con Vercel.
 
-- **Estructura Monorepo**: El código del cliente (`/client`) y del servidor (`/server`) coexisten en un mismo repositorio.
-- **Directorio de Salida Nativo**: Se utiliza la propiedad `outputDirectory: client/dist/client/browser` en `vercel.json`. Esto permite que Vercel sirva el bundle de Angular 21 (generado con `esbuild`) como la raíz del servidor web, eliminando la necesidad de reescrituras complejas y garantizando la entrega inmediata de activos estáticos.
-- **Serverless Bridge (`/api/server.js`)**: Un puente de ejecución perezosa que carga el contexto de Express.js bajo demanda. Esta función reside en el directorio `api/` de la raíz, lo que permite que Vercel la detecte automáticamente como una función sin estado independiente de los archivos estáticos.
-- **Persistencia Optimizada**: Conexión a Supabase mediante el Transaction Pooler (Puerto 6543) para evitar el agotamiento de sockets en entornos serverless.
+- **Build Consolidado**: El comando de build en la raíz del monorepo compila la aplicación Angular y exporta automáticamente el bundle a una carpeta `deploy_ready` en el nivel superior.
+- **Directorio de Salida Plano**: Se configura `outputDirectory: deploy_ready` en `vercel.json`. Esto elimina cualquier dependencia de rutas internas de compiladores y permite despliegues deterministas e independientes de la plataforma.
+- **Serverless Host**: La carpeta `api/` se mantiene en la raíz del proyecto, lo que permite el ruteo automático de funciones sin estado.
 
 ---
 
-_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.8.5)_
+_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.8.7)_
