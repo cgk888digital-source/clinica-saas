@@ -1,27 +1,16 @@
 {
   "version": 2,
+  "outputDirectory": "client/dist/client/browser",
   "functions": {
     "api/server.js": {
       "runtime": "nodejs20.x",
-      "maxDuration": 20
+      "maxDuration": 30
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/server.js"
-    },
-    {
-      "source": "/(.*)\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)",
-      "destination": "/client/dist/client/browser/$1.$2"
-    },
-    {
-      "source": "/assets/(.*)",
-      "destination": "/client/dist/client/browser/assets/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/client/dist/client/browser/index.html"
     }
   ]
 }
