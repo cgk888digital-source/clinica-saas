@@ -38,7 +38,7 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "build": "cd client && npm install && npx ng build",
+    "build": "cd client && npm run build -- --output-path=dist/client",
     "start": "node server/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 0"
   },

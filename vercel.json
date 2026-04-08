@@ -1,9 +1,15 @@
 {
   "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "client/dist/client/browser",
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/server.js"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
