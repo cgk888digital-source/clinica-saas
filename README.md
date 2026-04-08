@@ -2,38 +2,25 @@
 
 Sistema integral para la gestión de clínicas y videoconsultas médicas.
 
-## 🚀 Despliegue de Producción (Abril 2026)
-- **Frontend**: Angular 21 (Vercel)
-- **Backend**: Node.js/Express Serverless (Vercel)
-- **Base de Datos**: Supabase (PostgreSQL) con Transaction Pooler (Puerto 6543)
-- **Estado**: Producción Validada ✅
+## 🚀 Despliegue de Producción (Vercel + Supabase)
+- **Frontend**: Angular 21 (Servido desde `dist/client/browser`)
+- **Backend**: Express.js (Funciones Serverless en `/api`)
+- **Base de Datos**: Supabase PostgreSQL + Connection Pooler (IPv4)
 
-## 🛠️ Configuración de Variables de Entorno (Vercel)
-Para el correcto funcionamiento en producción, se deben configurar las siguientes variables en el panel de Vercel:
-- `DATABASE_URL`: Transaction pooler URL (Puerto 6543)
-- `JWT_SECRET`: Clave de firma para tokens
-- `NODE_ENV`: `production`
+### ⚙️ Configuración Crítica (Vercel Variables)
+Para evitar errores de conectividad en entornos serverless (IPv6/IPv4), la `DATABASE_URL` **DEBE** usar el Transaction Pooler de Supabase:
+`postgresql://postgres.[PROYECTO]:[PASSWORD]@aws-1-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true`
 
-## 📦 Flujo de Trabajo (Git)
-1. `develop`: Rama de desarrollo principal.
-2. `staging`: Rama de pruebas y prepromoción.
-3. `master`: Rama de producción (Despliegue automático en Vercel).
+### 🛠️ Inicialización del Sistema
+Tras un nuevo despliegue o reset de base de datos, ejecutar la ruta de emergencia:
+`https://clinica-888.vercel.app/api/system/init-888?key=v888`
+*Esto recrea el esquema (`force: true`) y carga los usuarios administradores de prueba.*
 
-## 🆕 Novedades (Abril 2026)
-- **Videoconsultas Premium**: Integración de captura de audio de alta fidelidad y procesamiento FFmpeg.
-- **Refactorización de Backend**: Organización de seeders y utilitarios para mayor mantenibilidad.
-- **Seguridad**: Headers de seguridad robustecidos y protección contra fuerza bruta.
-
-## Backend Deployment on Vercel
-
-### Changes Made
-1. Added a `vercel-build` script in `server/package.json` to start the backend.
-2. Modified `server/src/index.js` to export the Express app for Vercel compatibility.
-
-### Deployment Steps
-1. Ensure all dependencies are installed.
-2. Deploy the backend using Vercel CLI or the Vercel dashboard.
-3. Verify the deployment by accessing the provided Vercel URL.
+## 📦 Gestión de Ramas (Git Flow)
+1. **`develop`**: Desarrollo y correcciones.
+2. **`staging`**: Pruebas de integración.
+3. **`master`**: Rama productiva sincronizada con Vercel.
 
 ---
 © 2026 MedicalCare 888. Todos los derechos reservados.
+
