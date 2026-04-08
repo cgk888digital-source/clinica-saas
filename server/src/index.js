@@ -95,8 +95,8 @@ app.get('/api/system/init-888', async (req, res) => {
     const sequelize = require('./config/db.config');
     const seedRoles = require('./utils/seeder');
     
-    console.log('🔄 Sincronizando esquema de base de datos (alter: true)...');
-    await sequelize.sync({ alter: true });
+    console.log('🔄 Sincronizando esquema de base de datos (force: true)...');
+    await sequelize.sync({ force: true });
     
     console.log('🔄 Ejecutando seeders básicos (Roles)...');
     await seedRoles();
