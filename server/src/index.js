@@ -100,6 +100,10 @@ app.get('/api/system/init-888', async (req, res) => {
     
     console.log('🔄 Ejecutando seeders básicos (Roles)...');
     await seedRoles();
+    
+    console.log('🔄 Cargando datos de prueba (Usuarios)...');
+    const seedTestData = require('./utils/legacy/testSeeder');
+    await seedTestData();
 
     res.status(200).json({ 
       success: true, 
