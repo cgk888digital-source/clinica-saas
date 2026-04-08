@@ -38,7 +38,7 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "build": "cd client && npm install && npm run build && cp -r dist/browser/* dist/",
+    "build": "cd client && npm install && npm run build && mkdir -p ../public && cp -r dist/browser/* ../public/",
     "start": "node server/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 0"
   },

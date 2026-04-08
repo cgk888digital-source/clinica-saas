@@ -330,14 +330,14 @@ Registro inmutable de acciones críticas para cumplimiento médico y legal.
   - Diferencia de datos (JSON Payload con valores anteriores y nuevos).
 - **Cobertura**: Implementado en Citas médicas, Historiales y Pagos.
 
-## 🌐 15. Arquitectura de Despliegue In-Scope (v2.9.0+)
+## 🌐 15. Arquitectura Universal Public (v2.9.5+)
 
-El sistema utiliza una arquitectura de desplegue de tipo **In-Scope Flat Output** para garantizar el éxito en entornos de build restringidos.
+El sistema utiliza el estándar de ruteo físico de Vercel mediante una carpeta de salida unificada.
 
-- **Fusión de Salida Local**: El comando de build compila Angular y fusiona el contenido de la carpeta `browser` en la raíz de `dist` dentro de la zona segura de Vercel.
-- **Directorio de Salida Visible**: Se configura `outputDirectory: client/dist` en `vercel.json` para facilitar la detección nativa por parte de los agentes de despliegue.
-- **API Micro-Bridge**: Se mantiene la independencia del servidor de API mediante el ruteo serverless global.
+- **Build Centralizado**: El comando de build en la raíz del monorepo compila los activos de Angular 21 y los exporta a una carpeta física llamada **`public`** en la raíz absoluta.
+- **Servidor Estático Nativo**: Se utiliza `outputDirectory: public` en `vercel.json`. Al usar el nombre estándar "public", se evita cualquier conflicto con la detección automática de frameworks de Vercel (evitando errores de tipo "No Output Directory found").
+- **Aislamiento de API**: El backend Express.js se sirve de forma independiente mediante funciones serverless en la carpeta `api/`, permitiendo el funcionamiento Fullstack real.
 
 ---
 
-_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.9.0)_
+_Documentación actualizada por Antigravity Agent - Abril 2026 (v2.9.5)_
