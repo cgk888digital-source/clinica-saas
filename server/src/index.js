@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -14,14 +15,29 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
 
-app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+// Rate Limiters
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  message: { error: 'Demasiadas solicitudes, intenta de nuevo en 15 minutos' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { error: 'Demasiados intentos de login, intenta de nuevo en 15 minutos' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+// Root Level Middlewares (Safe for any env)
+app.use(globalLimiter);
 app.use(cors(corsOptions));
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true, limit: '1mb' }));
-app.use(morgan('dev'));
 app.use(compression());
 
-// Boot diagnostics
+// Boot diagnostics (Canary routes)
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
@@ -48,105 +64,139 @@ app.get('/api/system/init-888', async (req, res) => {
     await seedRoles();
     await seedTestData();
 
-    res.status(200).json({ success: true, message: 'Database reset successfully' });
+    res.status(200).json({ success: true, message: 'Database reset successfully (Dev Mode)' });
   } catch (err) {
     res.status(500).json({ error: 'Initialization failed', detail: err.message });
   }
 });
 
-app.get('/api/system/init-prod', async (req, res) => {
-  const { key } = req.query;
-  if (key !== 'v888') return res.status(403).json({ error: 'Unauthorized Access Key' });
+/**
+ * 🔍 ARCHITECTURAL INTEGRITY CHECK (Fail-Fast)
+ */
+const fs = require('fs');
+const path = require('path');
+const uploadDir = path.resolve(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
-  try {
-    const sequelize = require('./config/db.config');
-    const seedCleanData = require('./utils/cleanSeeder');
-    
-    await sequelize.authenticate();
-    await sequelize.sync({ force: true });
-    await seedCleanData();
+// --- LAZY LOADING CONTEXT (Performance & Compatibility) ---
 
-    res.status(200).json({ 
-      success: true, 
-      message: '✅ Base de datos LIMPIA e INICIALIZADA (Sin datos de prueba).' 
-    });
-  } catch (err) {
-    res.status(500).json({ error: 'Production Initialization failed', detail: err.message });
-  }
-});
-
-// Lazy Loader to ensure Vercel boots instantly and only loads heavy stuff on demand
-let router = null;
+let isAppLoaded = false;
 let bootError = null;
 
-const getRouter = () => {
-  if (bootError) throw bootError;
-  if (router) return router;
+const loadFullApp = async (req, res, next) => {
+  // Skip for canary routes
+  if (req.path === '/api/health' || req.path.startsWith('/api/system')) return next();
+  
+  if (isAppLoaded) return next();
+  if (bootError) return res.status(500).json({ error: 'Critical Boot Failure', detail: bootError.message });
 
   try {
-    const { Router } = require('express');
-    const gameRouter = Router();
+    console.log('🚀 [Server] Loading full application context...');
 
-    // Load dependencies synchronously now that we are inside the first request
+    // Load heavy dependencies
     const { sanitizeInput } = require('./utils/sanitize');
     const authMiddleware = require('./middlewares/auth.middleware');
     const contextMiddleware = require('./middlewares/context.middleware');
+    const roleMiddleware = require('./middlewares/role.middleware');
+    const sequelize = require('./config/db.config');
     const protected = [authMiddleware, contextMiddleware];
 
-    gameRouter.use(sanitizeInput);
+    // Security Hardening (Helmet + CSP)
+    app.use(helmet({ 
+      crossOriginResourcePolicy: { policy: "cross-origin" },
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
+          styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+          fontSrc: ["'self'", "https://fonts.gstatic.com"],
+          imgSrc: ["'self'", "data:", "https:*"],
+          connectSrc: ["'self'", "https:*", "wss:*"]
+        }
+      }
+    }));
 
-    // Mount Routes
-    gameRouter.use('/auth', require('./routes/auth.routes'));
-    gameRouter.use('/exchange', require('./routes/exchange.routes'));
-    gameRouter.use('/doctors', protected, require('./routes/doctor.routes'));
-    gameRouter.use('/patients', protected, require('./routes/patient.routes'));
-    gameRouter.use('/appointments', protected, require('./routes/appointment.routes'));
-    gameRouter.use('/medical-records', protected, require('./routes/medicalRecord.routes'));
-    gameRouter.use('/payments', protected, require('./routes/payment.routes'));
-    gameRouter.use('/organizations', protected, require('./routes/organization.routes'));
-    gameRouter.use('/specialties', protected, require('./routes/specialty.routes'));
-    gameRouter.use('/staff', protected, require('./routes/staff.routes'));
-    gameRouter.use('/lab-catalog', protected, require('./routes/labCatalog.routes'));
-    gameRouter.use('/lab-results', protected, require('./routes/labResult.routes'));
-    gameRouter.use('/drugs', protected, require('./routes/drug.routes'));
-    gameRouter.use('/nurses', protected, require('./routes/nurse.routes'));
-    gameRouter.use('/video-consultations', protected, require('./routes/videoConsultation.routes'));
-    gameRouter.use('/stats', protected, require('./routes/stats.routes'));
-    gameRouter.use('/team', protected, require('./routes/team.routes'));
-    gameRouter.use('/prescriptions', protected, require('./routes/prescription.routes'));
-    gameRouter.use('/bulk', protected, require('./routes/bulk.routes'));
-    gameRouter.use('/public', require('./routes/public.routes'));
-    gameRouter.use('/admin', require('./routes/admin.routes'));
+    app.use(express.json({ limit: '1mb' }));
+    app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+    app.use(morgan('dev'));
+    app.use(sanitizeInput);
 
-    router = gameRouter;
-    return router;
+    // Verify DB Connection
+    await sequelize.authenticate();
+
+    // Mount API Routes
+    app.use('/api/auth', authLimiter, require('./routes/auth.routes'));
+    app.use('/api/exchange', require('./routes/exchange.routes'));
+    app.use('/api/doctors', protected, require('./routes/doctor.routes'));
+    app.use('/api/patients', protected, require('./routes/patient.routes'));
+    app.use('/api/appointments', protected, require('./routes/appointment.routes'));
+    app.use('/api/medical-records', protected, require('./routes/medicalRecord.routes'));
+    app.use('/api/payments', protected, require('./routes/payment.routes'));
+    app.use('/api/organizations', protected, require('./routes/organization.routes'));
+    app.use('/api/specialties', protected, require('./routes/specialty.routes'));
+    app.use('/api/staff', protected, require('./routes/staff.routes'));
+    app.use('/api/lab-catalog', protected, require('./routes/labCatalog.routes'));
+    app.use('/api/lab-results', protected, require('./routes/labResult.routes'));
+    app.use('/api/drugs', protected, require('./routes/drug.routes'));
+    app.use('/api/nurses', protected, require('./routes/nurse.routes'));
+    app.use('/api/video-consultations', protected, require('./routes/videoConsultation.routes'));
+    app.use('/api/stats', protected, require('./routes/stats.routes'));
+    app.use('/api/team', protected, require('./routes/team.routes'));
+    app.use('/api/prescriptions', protected, require('./routes/prescription.routes'));
+    app.use('/api/bulk', protected, require('./routes/bulk.routes'));
+    app.use('/api/public', require('./routes/public.routes'));
+    app.use('/api/admin', [...protected, roleMiddleware(['SUPERADMIN'])], require('./routes/admin.routes'));
+
+    // Final 404 handler for API
+    app.use('/api/*', (req, res) => {
+        res.status(404).json({ message: 'Ruta API no encontrada' });
+    });
+
+    isAppLoaded = true;
+    console.log('✅ [Server] Full context loaded successfully.');
+    next();
   } catch (err) {
     bootError = err;
-    console.error('❌ BOOT FAILURE:', err);
-    throw err;
+    console.error('❌ [Server] FATAL BOOT ERROR:', err);
+    res.status(500).json({ error: 'Fatal Boot Error', detail: err.message });
   }
 };
 
-// Dispatch all /api requests (except health/init) to the lazy-loaded router
-app.use('/api', (req, res, next) => {
-  try {
-    const r = getRouter();
-    r(req, res, next);
-  } catch (err) {
-    res.status(500).json({ 
-      error: 'Backend Boot Failure', 
-      message: err.message,
-      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-    });
-  }
-});
+// Dispatch all requests through the loader
+app.use(loadFullApp);
 
-// Final Error Handler
+// Global Error Handler
 app.use((err, req, res, next) => {
   console.error('[Global Error]', err);
   res.status(err.status || 500).json({
-    message: err.message || 'Error interno del servidor'
+    message: err.message || 'Error interno del servidor',
+    error: process.env.NODE_ENV === 'development' ? err : {}
   });
 });
+
+/**
+ * 🛰️ LOCAL BOOT (Socket.io Signaling)
+ * Only runs if NOT on Vercel
+ */
+if (!process.env.VERCEL) {
+  const http = require('http');
+  const server = http.createServer(app);
+  
+  try {
+    const { initializeSocket } = require('./sockets/videoSocket');
+    initializeSocket(server);
+    console.log('🎥 Socket.io initialized for real-time signaling');
+  } catch (e) {
+    console.warn('⚠️ Video signaling socket could not be initialized:', e.message);
+  }
+
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => {
+    console.log(`\n🚀 Server running on port ${PORT} (Unified Mode)`);
+    console.log(`🏥 MedicalCare 888 Backend - v4.2.0\n`);
+  });
+}
 
 module.exports = app;

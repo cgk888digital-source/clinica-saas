@@ -37,7 +37,7 @@ exports.createRecord = async (req, res) => {
         ...p,
         medicalRecordId: record.id
       }));
-      await Prescription.bulkCreate(prescriptionsData);
+      await Prescription.bulkCreate(prescriptionsData, { individualHooks: true });
     }
 
     res.status(201).json(record);

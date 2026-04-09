@@ -1,6 +1,5 @@
 const { Payment, Patient, User, Appointment, Doctor, Organization } = require('../models');
 const sendEmail = require('../utils/sendEmail');
-const AuditTrail = require('../utils/auditTrail');
 
 exports.createPayment = async (req, res) => {
   try {
@@ -27,18 +26,6 @@ exports.createPayment = async (req, res) => {
     console.log('[DEBUG] Creating payment with body:', JSON.stringify(req.body, null, 2));
 
     const payment = await Payment.create(req.body);
-
-    // AUDIT TRAIL: Payment Created
-    await AuditTrail.log({
-      userId: req.user.id,
-      action: 'CREATE',
-      resource: 'Payment',
-      resourceId: payment.id,
-      organizationId: req.user.organizationId,
-      details: { amount: payment.amount, concept: payment.concept, paymentType: payment.paymentType },
-      ip: req.ip,
-      userAgent: req.get('user-agent')
-    });
 
     res.status(201).json(payment);
   } catch (error) {
@@ -145,33 +132,9 @@ exports.collectPayment = async (req, res) => {
     payment.status = 'Paid';
     await payment.save();
 
-    // AUDIT TRAIL: Payment Collected (Paid)
-    await AuditTrail.log({
-        userId: req.user.id,
-        action: 'UPDATE',
-        resource: 'Payment',
-        resourceId: payment.id,
-        organizationId: req.user.organizationId,
-        details: { oldStatus, newStatus: 'Paid', amount: payment.amount },
-        ip: req.ip,
-        userAgent: req.get('user-agent')
-    });
-
     // Confirm appointment automatically if linked
     if (payment.appointmentId) {
         await Appointment.update({ status: 'Confirmed' }, { where: { id: payment.appointmentId } });
-        
-        // AUDIT TRAIL: Appointment auto-confirmed via payment
-        await AuditTrail.log({
-            userId: req.user.id,
-            action: 'UPDATE',
-            resource: 'Appointment',
-            resourceId: payment.appointmentId,
-            organizationId: req.user.organizationId,
-            details: { status: 'Confirmed', trigger: 'payment_collected' },
-            ip: req.ip,
-            userAgent: req.get('user-agent')
-        });
     }
 
     // Handle Subscription Upgrade
@@ -234,18 +197,6 @@ exports.deletePayment = async (req, res) => {
 
     const paymentData = payment.toJSON();
     await payment.destroy();
-
-    // AUDIT TRAIL: Payment Deleted
-    await AuditTrail.log({
-        userId: req.user.id,
-        action: 'DELETE',
-        resource: 'Payment',
-        resourceId: id,
-        organizationId: req.user.organizationId,
-        details: paymentData,
-        ip: req.ip,
-        userAgent: req.get('user-agent')
-    });
 
     res.json({ message: 'Payment deleted successfully' });
   } catch (error) {

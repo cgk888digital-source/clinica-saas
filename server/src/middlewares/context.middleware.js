@@ -9,7 +9,9 @@ const contextMiddleware = (req, res, next) => {
     userId: req.user?.id || null,
     organizationId: req.user?.organizationId || null,
     role: req.user?.role || null,
-    requestId: req.get('x-request-id') || null
+    requestId: req.get('x-request-id') || null,
+    ip: req.ip,
+    userAgent: req.get('user-agent') || 'system'
   };
 
   context.storage.run(data, () => {

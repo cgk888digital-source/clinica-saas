@@ -316,29 +316,31 @@ Capa de seguridad proactiva para entornos SaaS multi-tenant que garantiza el ais
 - **Funcionamiento**: Un middleware captura la identidad de la organización y la mantiene en un contexto asíncrono. Un hook global en Sequelize inyecta automáticamente el filtro `organizationId` en todas las consultas `finding`.
 - **Ventaja**: El aislamiento es gestionado por la infraestructura, eliminando el riesgo de errores humanos (olvido de filtros manuales).
 
----
+## 📋 14. Sistema de Auditoría AUTOMATIZADO (v4.3.0+)
 
-## 📋 14. Sistema de Auditoría (v2.3.0+)
+Registro inmutable y automático de acciones críticas para cumplimiento legal y estándares **ISO 27001**.
 
-Registro inmutable de acciones críticas para cumplimiento médico y legal.
+- **Automatización mediante Hooks**: El sistema ya no depende de llamadas manuales en controladores. Se utilizan ganchos globales de Sequelize (`afterCreate`, `afterUpdate`, `afterDestroy`) para capturar cada cambio en la base de datos de forma garantizada.
+- **Audit Trail Inteligente**: El servicio captura automáticamente:
+  - **Acción**: `CREATE`, `UPDATE`, `DELETE`.
+  - **Diferencial de Datos**: Payload JSON con valores anteriores, nuevos y el detalle de los campos modificados.
+  - **Metadatos de Contexto**: Usuario, Organización, IP y User-Agent extraídos mediante `AsyncLocalStorage`.
+- **Cobertura Total**: Implementado automáticamente para Usuarios, Pacientes, Doctores, Citas, Historiales, Pagos y Organizaciones.
 
-- **Audit Trail**: Servicio centralizado que captura:
-  - Acción realizada (CREATE, UPDATE, DELETE).
-  - Recurso afectado y su ID.
-  - Usuario que realizó la acción.
-  - IP y User-Agent del cliente.
-  - Diferencia de datos (JSON Payload con valores anteriores y nuevos).
-- **Cobertura**: Implementado en Citas médicas, Historiales y Pagos.
+## 🌐 15. Arquitectura Unificada y Convergente (v4.3.0+)
 
-## 🌐 15. Arquitectura Nativa Convergente (v4.2.0+)
+El sistema utiliza una estructura de fuente única para entornos de desarrollo local y despliegues en Vercel.
 
-El sistema utiliza la configuración nativa de Vercel Cloud Build mediante el alineamiento de rutas estándar.
-
-- **Detección Automática**: El Dashboard de Vercel está configurado con el Preset de **Angular**, eliminando la necesidad de comandos de copia manuales o aplanamiento de carpetas.
+- **Single Source of Truth**: Se eliminó la duplicidad de código entre `api/src` y `server/src`. Todo el núcleo lógico reside en **`server/src`**.
+- **Entrada Nativa Serverless**: El archivo `api/server.js` actúa como el puente oficial hacia el núcleo unificado, garantizando que las configuraciones de seguridad sean idénticas en todos los niveles.
+- **Seguridad End-to-End**: El servidor unificado incluye:
+  - **Rate Limiting Heredado**: Protección global y por endpoints sensibles (Auth).
+  - **Helmet & CSP Estricto**: Cabeceras de seguridad optimizadas para evitar XSS e inyecciones.
+  - **Lazy Loading Contextual**: Inicialización bajo demanda para optimizar los recursos en la nube.
 - **Ruta Estándar de Salida**: El `Output Directory` en el Dashboard se establece en **`client/dist/browser`**. Esto garantiza que el compilador nativo de Vercel encuentre los activos estáticos sin conflictos.
 - **Root Contextual**: Se utiliza `Root Directory: .` (punto) para que las funciones serverless de la carpeta `api/` y el código del frontend en `client/` convivan en el mismo ecosistema de despliegue.
 - **Despliegue Determinista**: Todo el flujo de CI/CD en GitHub Actions delega la compilación a la nube de Vercel, garantizando compatibilidad total con los entornos de ejecución modernos.
 
 ---
 
-_Documentación actualizada por Antigravity Agent - Abril 2026 (v4.2.0)_
+_Documentación actualizada por Antigravity Agent - Abril 2026 (v4.3.0)_

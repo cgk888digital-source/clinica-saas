@@ -18,20 +18,24 @@ class AuditTrail {
   async log(entity, action, data) {
     try {
       const { AuditLog } = require('../models');
+      const context = require('./context');
+      const ctx = context.get() || {};
       
       await AuditLog.create({
         entity,
         action,
-        entityId: data.entityId,
-        userId: data.userId,
+        entityId: data.entityId || data.resourceId,
+        userId: data.userId || ctx.userId,
+        organizationId: data.organizationId || ctx.organizationId,
         oldValues: data.oldValues || null,
         newValues: data.newValues || null,
-        ip: data.ip,
-        userAgent: data.userAgent,
+        ip: data.ip || ctx.ip,
+        userAgent: data.userAgent || ctx.userAgent,
+        details: data.details || null,
         timestamp: new Date()
       });
 
-      logger.debug({ entity, action, entityId: data.entityId }, 'Audit trail logged');
+      logger.debug({ entity, action, entityId: data.entityId || data.resourceId }, 'Audit trail logged');
     } catch (error) {
       logger.error({ error, entity, action }, 'Failed to log audit trail');
     }

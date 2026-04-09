@@ -27,7 +27,13 @@ El sistema incluye una consola de administración avanzada para el dueño de la 
 - **Gestión de Organizaciones:** Visualización de todos los clientes, con capacidad para cambiar estados de suscripción (`ACTIVE`, `TRIAL`, `PAST_DUE`, `CANCELLED`).
 - **Control de Usuarios:** Listado global de todos los usuarios registrados con opción de bloqueo inmediato (bypass de acceso).
 - **Delegación Administrativa:** Los SuperAdmins pueden crear otras cuentas con privilegios de SuperAdmin para el equipo operativo.
-- **Auditoría:** Todas las operaciones globales están protegidas y restringidas al rol `SUPERADMIN`.
+- **Auditoría Inmutable (v4.3.0):** Implementación automática de registros para cumplimiento **ISO 27001**, capturando cada creación, edición o borrado de datos médicos y financieros.
+
+## 🏗️ Arquitectura Unificada
+Desde la v4.3.0, el sistema utiliza un **Núcleo de Fuente Única**:
+- **Consolidación:** Desaparición de la carpeta `api/src` a favor de un `server/src` optimizado y compartido.
+- **Seguridad Nativa:** Rate limiting y CSP integrados directamente en el servidor central.
+- **Despliegue Serverless:** Puente nativo via `api/server.js` para máxima compatibilidad con Vercel.
 
 ## 📦 Gestión de Ramas (Git Flow)
 1. **`develop`**: Desarrollo y correcciones.
