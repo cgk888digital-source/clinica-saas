@@ -9,7 +9,17 @@ const compression = require('compression');
 
 // Core config
 const corsOptions = {
-  origin: true,
+  origin: function (origin, callback) {
+    const allowedOrigins = process.env.ALLOWED_ORIGINS 
+      ? process.env.ALLOWED_ORIGINS.split(',') 
+      : ['http://localhost:4200', 'localhost:5000'];
+    
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
@@ -32,7 +42,7 @@ const authLimiter = rateLimit({
   legacyHeaders: false
 });
 
-// Root Level Middlewares (Safe for any env)
+const INIT_SECRET = process.env.INIT_SECRET || 'v888-dev';
 app.use(globalLimiter);
 app.use(cors(corsOptions));
 app.use(compression());
@@ -49,56 +59,57 @@ app.get('/api/health', (req, res) => {
 
 /**
  * 🛠️ EMERGENCY DATABASE INITIALIZER (Standalone)
+ * SOLO disponible en desarrollo - DESHABILITADO en producción
  */
-app.get('/api/system/init-888', async (req, res) => {
-  const { key } = req.query;
-  if (key !== 'v888') return res.status(403).json({ error: 'Unauthorized Access Key' });
+const isDevMode = process.env.NODE_ENV !== 'production' && !process.env.VERCEL;
+const allowReset = process.env.ALLOW_DB_RESET === 'true' && isDevMode;
 
-  try {
-    const sequelize = require('./config/db.config');
-    const seedRoles = require('./utils/seeder');
-    const seedTestData = require('./utils/legacy/testSeeder');
-    
-    await sequelize.authenticate();
-    await sequelize.sync({ force: true });
-    await seedRoles();
-    await seedTestData();
+if (allowReset) {
+  app.get('/api/system/init-888', async (req, res) => {
+    const { key } = req.query;
+    if (key !== INIT_SECRET) return res.status(403).json({ error: 'Unauthorized Access Key' });
 
-    res.status(200).json({ success: true, message: 'Database reset successfully (Dev Mode)' });
-  } catch (err) {
-    res.status(500).json({ error: 'Initialization failed', detail: err.message });
-  }
-});
+    try {
+      const sequelize = require('./config/db.config');
+      const seedRoles = require('./utils/seeder');
+      const seedTestData = require('./utils/legacy/testSeeder');
+      
+      await sequelize.authenticate();
+      await sequelize.sync({ force: true });
+      await seedRoles();
+      await seedTestData();
+
+      res.status(200).json({ success: true, message: 'Database reset successfully (Dev Mode)' });
+    } catch (err) {
+      res.status(500).json({ error: 'Initialization failed', detail: err.message });
+    }
+  });
+
+  /**
+   * 💎 CLEAN PRODUCTION INITIALIZER (DEV ONLY)
+   */
+  app.get('/api/system/init-prod', async (req, res) => {
+    const { key } = req.query;
+    if (key !== INIT_SECRET) return res.status(403).json({ error: 'Unauthorized Access Key' });
+
+    try {
+      const sequelize = require('./config/db.config');
+      const seedProductionData = require('./utils/prodSeeder');
+      
+      await sequelize.authenticate();
+      await sequelize.sync({ force: true });
+      await seedProductionData();
+
+      res.status(200).json({ success: true, message: 'Production database initialized successfully (CLEAN)' });
+    } catch (err) {
+      res.status(500).json({ error: 'Production Initialization failed', detail: err.message });
+    }
+  });
+}
 
 /**
- * 💎 CLEAN PRODUCTION INITIALIZER
+ * ENVIRONMENT & INTEGRITY CHECKS
  */
-app.get('/api/system/init-prod', async (req, res) => {
-  const { key } = req.query;
-  if (key !== 'v888') return res.status(403).json({ error: 'Unauthorized Access Key' });
-
-  try {
-    const sequelize = require('./config/db.config');
-    const seedProductionData = require('./utils/prodSeeder');
-    
-    await sequelize.authenticate();
-    await sequelize.sync({ force: true });
-    await seedProductionData();
-
-    res.status(200).json({ 
-      success: true, 
-      message: 'Production database initialized successfully (CLEAN)',
-      access: {
-        email: 'edwarvilchez1977@gmail.com',
-        note: 'Password is set via INITIAL_ADMIN_PASSWORD env var'
-      }
-    });
-  } catch (err) {
-    res.status(500).json({ error: 'Production Initialization failed', detail: err.message });
-  }
-});
-
-// --- ENVIRONMENT & INTEGRITY CHECKS ---
 const fs = require('fs');
 const path = require('path');
 
