@@ -1,0 +1,75 @@
+# Changelog — MedicalCare 888
+
+All notable changes to this project will be documented in this file.
+Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+---
+
+## [4.3.2] — 2026-04-09
+
+### ✨ New Features
+
+- **Manual Digital Interactivo** (`/.docs/manual-digital.html`):  
+  Documentación embebida en HTML con imagen corporativa de MedicalCare 888, navegación lateral por módulos y botón de exportación a PDF integrado.
+
+### 🎨 Branding & Corporate Identity
+
+- **Email Templates** (`server/src/utils/emailTemplates.js`):
+  - Color de cabecera actualizado de azul oscuro CGK (`#0f172a`) al **verde esmeralda corporativo** (`#10b981`).
+  - Imagen alternativa del logo actualizada a `MedicalCare 888`.
+  - Pie de página ahora bilingüe: *"Todos los derechos reservados / All rights reserved"*.
+  - Nombre de la plataforma actualizado de `"CGK 888 Digital Ecosystem"` a `"MedicalCare 888 Health System"`.
+
+- **Email Bienvenida** (`getWelcomeEmail`):
+  - Saludo bilingüe: *"¡Bienvenido / Welcome!"*.
+  - Labels del formulario de credenciales bilingüe: *"Usuario / User"*, *"Contraseña / Password"*.
+  - Alerta de seguridad ahora en español e inglés.
+
+### 📄 PDF Reports — Bilingual Support
+
+- **Reportes de Laboratorio** (`client/src/app/services/lab-pdf.service.ts`):
+  - Color de franja superior y separadores actualizado a verde esmeralda `RGB(16, 185, 129)`.
+  - Eliminadas referencias a "Clinica SaaS Blue".
+  - Soporte completo bilingüe en headers de tablas (ES/EN).
+
+- **Reportes de Exportación General** (`client/src/app/services/export.service.ts`):
+  - Header de PDF actualizado a verde esmeralda `RGB(16, 185, 129)`.
+  - Labels bilingüe: *"EMITIDO POR / ISSUED BY"*, *"FECHA / DATE"*, *"UBICACIÓN / LOCATION"*.
+  - Cuadro de certificación final bilingüe: *"DOCUMENTO CERTIFICADO / CERTIFIED"*.
+  - Sello de verificación actualizado y ajuste de layout para evitar recortes de texto.
+
+- **Reporte de Videoconsultas** (`client/src/app/components/video-history/video-history.ts`):
+  - Color de header PDF actualizado de azul (`#4a90e2`) a verde esmeralda (`#10b981`).
+  - Pie de página bilingüe: *"Generado / Generated"*.
+  - Dominio actualizado a `MedicalCare888.com`.
+
+### 🐛 Bug Fixes
+
+- **`[object Object]` en botón exportar Pacientes** (`patients.html`):  
+  La clave de traducción `'dashboard.report'` devolvía un objeto completo en lugar de un string.  
+  Corregida a `'dashboard.reportBtn'` que devuelve correctamente `"Descargar Reporte"`.
+
+- **Ícono roto en tab "Combos y Perfiles"** (`lab-catalog.html`):  
+  La clase Bootstrap Icons `bi-grid-36-gap` no existe en la librería.  
+  Reemplazada por `bi-grid-3x3-gap` ✅.
+
+---
+
+## [4.3.1] — 2026-04-08
+
+### Platform Stabilization
+- Production SuperAdmin initialization endpoint secured.
+- Frontend build issues resolved for Vercel deployment.
+- Multi-tenant `organizationId` isolation hook validated.
+- ISO 27001 Audit Trail hooks confirmed operational.
+
+---
+
+## [4.3.0] — 2026-04-07
+
+### Core Release
+- WebRTC Telemedicine module (video-call, video-history).
+- Bancamiga payment gateway integration (USD 3DS + Pago Móvil).
+- Lab Catalog with CSV bulk import.
+- Pharmaceutical guide (Vademécum).
+- Platform Admin console for SaaS management.

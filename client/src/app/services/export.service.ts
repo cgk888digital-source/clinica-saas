@@ -111,7 +111,7 @@ export class ExportService {
     const brand = { ...this.defaultBranding, ...branding };
 
     // --- PREMIUM HEADER ---
-    doc.setFillColor(14, 165, 233); 
+    doc.setFillColor(16, 185, 129); // MedicalCare Emerald Green
     doc.rect(0, 0, pageWidth, 40, 'F');
 
     // Logo Text / Clinic Name
@@ -125,7 +125,7 @@ export class ExportService {
     const tagline = brand.tagline || 'PLATAFORMA MÉDICA INTEGRAL';
     doc.text(tagline.toUpperCase(), 15, 24);
 
-    // --- Clinica SaaS BRANDING (Small corner) ---
+    // --- MedicalCare 888 BRANDING (Small corner) ---
     doc.setFontSize(7);
     doc.setFont('helvetica', 'bold');
     doc.text('POWERED BY MedicalCare 888', 15, 35);
@@ -146,19 +146,19 @@ export class ExportService {
     doc.setFontSize(8);
     
     doc.setFont('helvetica', 'bold');
-    doc.text('EMITIDO POR:', 22, 54);
+    doc.text('EMITIDO POR / ISSUED BY:', 22, 54);
     doc.setFont('helvetica', 'normal');
-    doc.text(brand.professional ? `Dr(a). ${brand.professional}` : brand.name, 45, 54);
+    doc.text(brand.professional ? `Dr(a). ${brand.professional}` : brand.name, 55, 54);
 
     doc.setFont('helvetica', 'bold');
-    doc.text('FECHA:', 22, 60);
+    doc.text('FECHA / DATE:', 22, 60);
     doc.setFont('helvetica', 'normal');
-    doc.text(new Date().toLocaleString(), 35, 60);
+    doc.text(new Date().toLocaleString(), 45, 60);
 
     doc.setFont('helvetica', 'bold');
-    doc.text('UBICACIÓN:', 22, 66);
+    doc.text('UBICACIÓN / LOCATION:', 22, 66);
     doc.setFont('helvetica', 'normal');
-    doc.text(brand.address || 'N/A', 43, 66);
+    doc.text(brand.address || 'N/A', 55, 66);
 
     // --- MAIN CONTENT TABLE ---
     autoTable(doc, {
@@ -204,17 +204,17 @@ export class ExportService {
 
     const finalY = (doc as any).lastAutoTable.finalY + 15;
     if (finalY < pageHeight - 40) {
-        doc.setDrawColor(14, 165, 233, 0.4);
+        doc.setDrawColor(16, 185, 129, 0.4);
         doc.setLineWidth(0.5);
-        doc.rect(pageWidth - 75, finalY, 60, 18);
-        doc.setTextColor(14, 165, 233);
+        doc.rect(pageWidth - 85, finalY, 70, 18);
+        doc.setTextColor(16, 185, 129);
         doc.setFontSize(8);
         doc.setFont('helvetica', 'bold');
-        doc.text('DOCUMENTO CERTIFICADO', pageWidth - 45, finalY + 7, { align: 'center' });
+        doc.text('DOCUMENTO CERTIFICADO / CERTIFIED', pageWidth - 50, finalY + 7, { align: 'center' });
         doc.setFont('helvetica', 'normal');
-        doc.text(brand.name.toUpperCase(), pageWidth - 45, finalY + 11, { align: 'center' });
+        doc.text(brand.name.toUpperCase(), pageWidth - 50, finalY + 11, { align: 'center' });
         doc.setFontSize(7);
-        doc.text('ID VERIFICACIÓN: SFX-' + Math.random().toString(36).substring(7).toUpperCase(), pageWidth - 45, finalY + 15, { align: 'center' });
+        doc.text('VERIF: SFX-' + Math.random().toString(36).substring(7).toUpperCase(), pageWidth - 50, finalY + 15, { align: 'center' });
     }
 
     doc.save(`${filename}.pdf`);

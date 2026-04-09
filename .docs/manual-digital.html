@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Digital - MedicalCare 888</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #64748b;
+            --accent: #f59e0b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 2rem 1rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--secondary);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: #ecfdf5;
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 3rem;
+            max-width: 1000px;
+        }
+
+        .header {
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .section-card h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item i {
+            color: var(--primary);
+            margin-top: 4px;
+        }
+
+        /* Buttons */
+        .btn-print {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            z-index: 200;
+        }
+
+        .btn-print:hover {
+            transform: scale(1.05);
+            background: var(--primary-dark);
+        }
+
+        /* Print Styles */
+        @media print {
+            .sidebar, .btn-print {
+                display: none !important;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+            .section-card {
+                box-shadow: none;
+                border: 1px solid #eee;
+                page-break-inside: avoid;
+            }
+            body {
+                background: white;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="bi bi-hospital"></i>
+            MedicalCare 888
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item"><a href="#intro" class="nav-link"><i class="bi bi-info-circle"></i> Introducción</a></li>
+            <li class="nav-item"><a href="#auth" class="nav-link"><i class="bi bi-shield-lock"></i> Acceso y Seguridad</a></li>
+            <li class="nav-item"><a href="#dashboard" class="nav-link"><i class="bi bi-grid-1x2"></i> Panel Principal</a></li>
+            <li class="nav-item"><a href="#patients" class="nav-link"><i class="bi bi-people"></i> Pacientes</a></li>
+            <li class="nav-item"><a href="#appointments" class="nav-link"><i class="bi bi-calendar-check"></i> Agenda y Citas</a></li>
+            <li class="nav-item"><a href="#telemedicine" class="nav-link"><i class="bi bi-camera-video"></i> Telemedicina</a></li>
+            <li class="nav-item"><a href="#health" class="nav-link"><i class="bi bi-file-medical"></i> Historia Médica</a></li>
+            <li class="nav-item"><a href="#lab" class="nav-link"><i class="bi bi-beaker"></i> Laboratorio</a></li>
+            <li class="nav-item"><a href="#payments" class="nav-link"><i class="bi bi-credit-card"></i> Pagos y Factura</a></li>
+            <li class="nav-item"><a href="#branding" class="nav-link"><i class="bi bi-palette"></i> Personalización</a></li>
+            <li class="nav-item"><a href="#saas" class="nav-link"><i class="bi bi-globe"></i> Gestión Global</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <span class="badge">V2026 OFFICIAL DOCUMENT</span>
+            <h1>Manual Digital de Capacitación</h1>
+            <p>Todo lo que necesitas saber para dominar el ecosistema <strong>MedicalCare 888</strong> de forma profesional.</p>
+        </header>
+
+        <section id="intro" class="section-card">
+            <h2><i class="bi bi-info-circle"></i> Bienvenido al Futuro Médico</h2>
+            <p>MedicalCare 888 es una solución SaaS diseñada para optimizar cada interacción en tu clínica. Este manual digital te guiará a través de todos los módulos interactivos.</p>
+            <div style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 8px; border-left: 4px solid var(--primary);">
+                <strong>Nota:</strong> Este documento está optimizado para su consulta en móviles, tablets o para ser exportado a PDF.
+            </div>
+        </section>
+
+        <section id="auth" class="section-card">
+            <h2><i class="bi bi-shield-lock"></i> Acceso y Seguridad</h2>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-check-circle"></i> <strong>Autenticación Blindada:</strong> Acceso seguro mediante correo y contraseña encriptada.</li>
+                <li class="feature-item"><i class="bi bi-check-circle"></i> <strong>Primer Ingreso:</strong> Obligatoriedad de cambio de contraseña para nuevos usuarios.</li>
+                <li class="feature-item"><i class="bi bi-check-circle"></i> <strong>Recuperación:</strong> Proceso de "Olvidé mi contraseña" 100% automatizado.</li>
+            </ul>
+        </section>
+
+        <section id="dashboard" class="section-card">
+            <h2><i class="bi bi-grid-1x2"></i> Panel Principal (Dashboard)</h2>
+            <p>Tu centro de control diario. Incluye:</p>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-graph-up"></i> Estadísticas en tiempo real de pacientes y citas.</li>
+                <li class="feature-item"><i class="bi bi-clock-history"></i> Lista de actividades próximas y alertas de retrasos.</li>
+                <li class="feature-item"><i class="bi bi-bell"></i> Notificaciones de resultados de laboratorio listos.</li>
+            </ul>
+        </section>
+
+        <section id="patients" class="section-card">
+            <h2><i class="bi bi-people"></i> Gestión de Pacientes</h2>
+            <p>Centralizamos toda la información del paciente en un solo perfil accesible desde cualquier lugar.</p>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-person-plus"></i> Registro rápido de nuevos pacientes con validación de identidad.</li>
+                <li class="feature-item"><i class="bi bi-files"></i> Repositorio de documentos digitales (Carnets, Seguros, IDs).</li>
+                <li class="feature-item"><i class="bi bi-search"></i> Motor de búsqueda optimizado para localizar pacientes en milisegundos.</li>
+            </ul>
+        </section>
+
+        <section id="appointments" class="section-card">
+            <h2><i class="bi bi-calendar-check"></i> Agenda y Citas</h2>
+            <p>El motor operativo de la clínica. Permite gestionar el flujo de personas.</p>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-calendar3"></i> Vistas filtradas por Doctor, Consultorio o Especialidad.</li>
+                <li class="feature-item"><i class="bi bi-qr-code-scan"></i> Link de agendamiento público para redes sociales o WhatsApp.</li>
+                <li class="feature-item"><i class="bi bi-trash"></i> Gestión de cancelaciones y re-agendamientos automáticos.</li>
+            </ul>
+        </section>
+
+        <section id="telemedicine" class="section-card">
+            <h2><i class="bi bi-camera-video"></i> Telemedicina y Videoconsultas</h2>
+            <p>Tecnología de punta para atención a distancia sin apps externas.</p>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-broadcast"></i> Conexión encriptada punto a punto (WebRTC).</li>
+                <li class="feature-item"><i class="bi bi-chat-dots"></i> Chat interno para envío de órdenes médicas durante la llamada.</li>
+                <li class="feature-item"><i class="bi bi-collection-play"></i> Historial detallado de duración de conexión.</li>
+            </ul>
+        </section>
+
+        <section id="health" class="section-card">
+            <h2><i class="bi bi-file-medical"></i> Historia Médica Digital</h2>
+            <p>El cumplimiento clínico es nuestra prioridad.</p>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-pencil-square"></i> Notas de evolución con plantillas personalizables.</li>
+                <li class="feature-item"><i class="bi bi-prescription2"></i> Generador de recetas PDF con firma digital opcional.</li>
+                <li class="feature-item"><i class="bi bi-images"></i> Carga de estudios por imagen (DICOM, JPG, PNG).</li>
+            </ul>
+        </section>
+
+        <section id="lab" class="section-card">
+            <h2><i class="bi bi-beaker"></i> Laboratorio y Resultados</h2>
+            <p>Integra el flujo clínico con el diagnóstico.</p>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-list-task"></i> Catálogo completo de pruebas y combos de laboratorio.</li>
+                <li class="feature-item"><i class="bi bi-cloud-upload"></i> Carga masiva de resultados para consulta del paciente.</li>
+            </ul>
+        </section>
+
+        <section id="payments" class="section-card">
+            <h2><i class="bi bi-credit-card"></i> Pagos y Facturación</h2>
+            <p>Control total de tus finanzas.</p>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-bank"></i> Integración nativa con Bancamiga para Pago Móvil y Tarjetas.</li>
+                <li class="feature-item"><i class="bi bi-file-earmark-spreadsheet"></i> Reportes mensuales de ingresos y egresos.</li>
+                <li class="feature-item"><i class="bi bi-receipt"></i> Emisión automática de recibos para pacientes.</li>
+            </ul>
+        </section>
+
+        <section id="branding" class="section-card">
+            <h2><i class="bi bi-palette"></i> Personalización (Branding)</h2>
+            <p>Asegura que la plataforma se sienta como parte de tu clínica.</p>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-image"></i> Carga de logos para reportes y dashboard.</li>
+                <li class="feature-item"><i class="bi bi-eyedropper"></i> Configuración de colores primarios y secundarios.</li>
+            </ul>
+        </section>
+
+        <section id="saas" class="section-card">
+            <h2><i class="bi bi-globe"></i> Gestión Global (SaaS)</h2>
+            <p>Exclusivo para administradores de la red.</p>
+            <ul class="feature-list">
+                <li class="feature-item"><i class="bi bi-building-add"></i> Creación instantánea de nuevas organizaciones/clínicas.</li>
+                <li class="feature-item"><i class="bi bi-lock"></i> Auditoría de transacciones bajo estandares ISO 27001.</li>
+            </ul>
+        </section>
+
+        <footer style="margin-top: 4rem; text-align: center; color: var(--secondary); font-size: 0.9rem;">
+            © 2026 MedicalCare 888 - Sistema de Gestión Clínica Avanzada.<br>
+            Documento de uso confidencial.
+        </footer>
+    </main>
+
+    <button class="btn-print" onclick="window.print()">
+        <i class="bi bi-file-earmark-pdf"></i> Exportar a PDF
+    </button>
+
+    <script>
+        // Simple active link tracker
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        window.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navLinks.forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href").includes(current)) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
