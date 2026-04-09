@@ -14,11 +14,17 @@ Para evitar errores de conectividad en entornos serverless (IPv6/IPv4), la `DATA
 ### Variables de Entorno Requeridas
 | Variable | Descripción | Ejemplo |
 |----------|-------------|---------|
-| `DATABASE_URL` | Connection string de Supabase | `postgresql://...` |
-| `JWT_SECRET` | Secret para tokens JWT | Generar string aleatorio |
+| `DATABASE_URL` | Connection string de Supabase (Transaction Pooler) | `postgresql://...pooler.supabase.com:6543/...` |
+| `JWT_SECRET` | Secret para tokens JWT | Generar string aleatorio seguro |
 | `INIT_SECRET` | Secret para endpoints de reset | Solo desarrollo |
 | `ALLOWED_ORIGINS` | Dominios permitidos (comma-separated) | `https://tu-dominio.vercel.app` |
-| `ALLOW_DB_RESET` | Habilitar reset de BD | `true` solo en local |
+| `ALLOW_DB_RESET` | Habilitar reset de BD | `false` en producción |
+| `INITIAL_ADMIN_PASSWORD` | Password inicial del SuperAdmin | `ClinicaSaaS2026!` |
+
+### 🛡️ Seguridad de Contraseñas
+- **Cambio obligatorio**: Los nuevos usuarios deben cambiar su contraseña en el primer inicio de sesión (`mustChangePassword: true`)
+- **Hash seguro**: Las contraseñas se almacenan con bcrypt (salt rounds: 10)
+- **Políticas**: Mínimo 6 caracteres, debe contener mayúscula, minúscula y número
 
 ### 🛠️ Inicialización del Sistema
 ⚠️ **DESHABILITADO en producción** - Los endpoints de reset solo funcionan en desarrollo local.
