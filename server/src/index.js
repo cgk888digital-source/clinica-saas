@@ -225,7 +225,7 @@ if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;
   server.listen(PORT, () => {
     console.log(`\n🚀 Server running on port ${PORT} (Unified Mode)`);
-    console.log(`🏥 MedicalCare 888 Backend - v4.2.0\n`);
+    console.log(`🏥 MedicalCare 888 Backend - v4.3.1\n`);
   });
 }
 

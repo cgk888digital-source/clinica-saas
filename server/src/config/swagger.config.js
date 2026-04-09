@@ -5,7 +5,7 @@ const options = {
     openapi: '3.0.0',
     info: {
       title: 'MedicalCare 888 API',
-      version: '2.2.3',
+      version: '4.3.1',
       description: 'API REST para sistema de gestión de clínica SaaS',
       contact: {
         name: 'MedicalCare 888',
