@@ -142,7 +142,7 @@ const loadFullApp = async (req, res, next) => {
     const contextMiddleware = require('./middlewares/context.middleware');
     const roleMiddleware = require('./middlewares/role.middleware');
     const sequelize = require('./config/db.config');
-    const protected = [authMiddleware, contextMiddleware];
+    const protectedRoutes = [authMiddleware, contextMiddleware];
 
     // Security Hardening (Helmet + CSP)
     app.use(helmet({ 
@@ -170,25 +170,25 @@ const loadFullApp = async (req, res, next) => {
     // Mount API Routes
     app.use('/api/auth', authLimiter, require('./routes/auth.routes'));
     app.use('/api/exchange', require('./routes/exchange.routes'));
-    app.use('/api/doctors', protected, require('./routes/doctor.routes'));
-    app.use('/api/patients', protected, require('./routes/patient.routes'));
-    app.use('/api/appointments', protected, require('./routes/appointment.routes'));
-    app.use('/api/medical-records', protected, require('./routes/medicalRecord.routes'));
-    app.use('/api/payments', protected, require('./routes/payment.routes'));
-    app.use('/api/organizations', protected, require('./routes/organization.routes'));
-    app.use('/api/specialties', protected, require('./routes/specialty.routes'));
-    app.use('/api/staff', protected, require('./routes/staff.routes'));
-    app.use('/api/lab-catalog', protected, require('./routes/labCatalog.routes'));
-    app.use('/api/lab-results', protected, require('./routes/labResult.routes'));
-    app.use('/api/drugs', protected, require('./routes/drug.routes'));
-    app.use('/api/nurses', protected, require('./routes/nurse.routes'));
-    app.use('/api/video-consultations', protected, require('./routes/videoConsultation.routes'));
-    app.use('/api/stats', protected, require('./routes/stats.routes'));
-    app.use('/api/team', protected, require('./routes/team.routes'));
-    app.use('/api/prescriptions', protected, require('./routes/prescription.routes'));
-    app.use('/api/bulk', protected, require('./routes/bulk.routes'));
+    app.use('/api/doctors', protectedRoutes, require('./routes/doctor.routes'));
+    app.use('/api/patients', protectedRoutes, require('./routes/patient.routes'));
+    app.use('/api/appointments', protectedRoutes, require('./routes/appointment.routes'));
+    app.use('/api/medical-records', protectedRoutes, require('./routes/medicalRecord.routes'));
+    app.use('/api/payments', protectedRoutes, require('./routes/payment.routes'));
+    app.use('/api/organizations', protectedRoutes, require('./routes/organization.routes'));
+    app.use('/api/specialties', protectedRoutes, require('./routes/specialty.routes'));
+    app.use('/api/staff', protectedRoutes, require('./routes/staff.routes'));
+    app.use('/api/lab-catalog', protectedRoutes, require('./routes/labCatalog.routes'));
+    app.use('/api/lab-results', protectedRoutes, require('./routes/labResult.routes'));
+    app.use('/api/drugs', protectedRoutes, require('./routes/drug.routes'));
+    app.use('/api/nurses', protectedRoutes, require('./routes/nurse.routes'));
+    app.use('/api/video-consultations', protectedRoutes, require('./routes/videoConsultation.routes'));
+    app.use('/api/stats', protectedRoutes, require('./routes/stats.routes'));
+    app.use('/api/team', protectedRoutes, require('./routes/team.routes'));
+    app.use('/api/prescriptions', protectedRoutes, require('./routes/prescription.routes'));
+    app.use('/api/bulk', protectedRoutes, require('./routes/bulk.routes'));
     app.use('/api/public', require('./routes/public.routes'));
-    app.use('/api/admin', [...protected, roleMiddleware(['SUPERADMIN'])], require('./routes/admin.routes'));
+    app.use('/api/admin', [...protectedRoutes, roleMiddleware(['SUPERADMIN'])], require('./routes/admin.routes'));
 
     // Final 404 handler for API
     app.use('/api/*', (req, res) => {
@@ -221,7 +221,7 @@ app.use((err, req, res, next) => {
  * 🛰️ LOCAL BOOT (Socket.io Signaling)
  * Only runs if NOT on Vercel
  */
-if (!process.env.VERCEL) {
+if (!process.env.VERCEL && process.env.NODE_ENV !== 'test') {
   const http = require('http');
   const server = http.createServer(app);
   
