@@ -11,16 +11,28 @@ Sistema integral para la gestión de clínicas y videoconsultas médicas.
 Para evitar errores de conectividad en entornos serverless (IPv6/IPv4), la `DATABASE_URL` **DEBE** usar el Transaction Pooler de Supabase:
 `postgresql://postgres.[PROYECTO]:[PASSWORD]@aws-1-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true`
 
-### 🛠️ Inicialización del Sistema (Reset)
+### Variables de Entorno Requeridas
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `DATABASE_URL` | Connection string de Supabase | `postgresql://...` |
+| `JWT_SECRET` | Secret para tokens JWT | Generar string aleatorio |
+| `INIT_SECRET` | Secret para endpoints de reset | Solo desarrollo |
+| `ALLOWED_ORIGINS` | Dominios permitidos (comma-separated) | `https://tu-dominio.vercel.app` |
+| `ALLOW_DB_RESET` | Habilitar reset de BD | `true` solo en local |
 
-Existen dos tipos de inicialización disponibles mediante URL (requieren `key=v888`):
+### 🛠️ Inicialización del Sistema
+⚠️ **DESHABILITADO en producción** - Los endpoints de reset solo funcionan en desarrollo local.
 
-1. **Modo Producción (LIMPIO)**: Borra todo y deja solo tu cuenta maestra.
-   `https://clinica-888.vercel.app/api/system/init-prod?key=v888`
-   - *Credenciales:* `edwarvilchez1977@gmail.com` / `ClinicaSaaS123` (Pide cambio obligatorio).
+Para desarrollo local, agrega en `.env`:
+```
+ALLOW_DB_RESET=true
+NODE_ENV=development
+INIT_SECRET=tu_secret
+```
 
-2. **Modo Demo (CON DATOS)**: Borra todo y carga pacientes/doctores de prueba.
-   `https://clinica-888.vercel.app/api/system/init-888?key=v888`
+Endpoints disponibles (solo local):
+- `/api/system/init-888?key=INIT_SECRET` - Modo Demo (con datos de prueba)
+- `/api/system/init-prod?key=INIT_SECRET` - Modo Producción (limpio)
 
 ## 🛡️ Consola Maestro (Gestión Global)
 El sistema incluye una consola de administración avanzada para el dueño de la plataforma y su equipo de ventas, accesible en `/platform-admin`.
