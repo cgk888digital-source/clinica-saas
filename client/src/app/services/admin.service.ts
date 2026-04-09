@@ -14,11 +14,19 @@ export class AdminService {
     return this.http.get<any[]>(`${this.apiUrl}/organizations`);
   }
 
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/users`);
+  }
+
   updateOrganizationStatus(id: string, subscriptionStatus: string, trialEndsAt?: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/organizations/${id}/status`, { subscriptionStatus, trialEndsAt });
   }
 
   toggleUserStatus(id: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/users/${id}/toggle-status`, {});
+  }
+
+  createSuperAdmin(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/super-admins`, data);
   }
 }

@@ -22,9 +22,12 @@ Existen dos tipos de inicialización disponibles mediante URL (requieren `key=v8
 2. **Modo Demo (CON DATOS)**: Borra todo y carga pacientes/doctores de prueba.
    `https://clinica-888.vercel.app/api/system/init-888?key=v888`
 
-## 🛡️ Módulo de Gestión Global (Super Admin)
-El sistema incluye una consola de administración para el dueño de la plataforma accesible en `/platform-admin`.
-- **Funciones:** Gestión de organizaciones, bloqueo de usuarios, control de estados de suscripción (`ACTIVE`, `TRIAL`, `PAST_DUE`, `CANCELLED`).
+## 🛡️ Consola Maestro (Gestión Global)
+El sistema incluye una consola de administración avanzada para el dueño de la plataforma y su equipo de ventas, accesible en `/platform-admin`.
+- **Gestión de Organizaciones:** Visualización de todos los clientes, con capacidad para cambiar estados de suscripción (`ACTIVE`, `TRIAL`, `PAST_DUE`, `CANCELLED`).
+- **Control de Usuarios:** Listado global de todos los usuarios registrados con opción de bloqueo inmediato (bypass de acceso).
+- **Delegación Administrativa:** Los SuperAdmins pueden crear otras cuentas con privilegios de SuperAdmin para el equipo operativo.
+- **Auditoría:** Todas las operaciones globales están protegidas y restringidas al rol `SUPERADMIN`.
 
 ## 📦 Gestión de Ramas (Git Flow)
 1. **`develop`**: Desarrollo y correcciones.

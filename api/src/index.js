@@ -219,6 +219,7 @@ const loadApp = async (req, res, next) => {
       prescriptions: require('./routes/prescription.routes'),
       bulk: require('./routes/bulk.routes'),
       public: require('./routes/public.routes'),
+      admin: require('./routes/admin.routes'),
     };
 
     // Mount Routes
@@ -242,6 +243,10 @@ const loadApp = async (req, res, next) => {
     app.use('/api/prescriptions', protected, routes.prescriptions);
     app.use('/api/bulk', protected, routes.bulk);
     app.use('/api/public', routes.public);
+    
+    // Platform Admin Only
+    const roleMiddleware = require('./middlewares/role.middleware');
+    app.use('/api/admin', [...protected, roleMiddleware(['SUPERADMIN'])], routes.admin);
 
     // Swagger Documentation
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
