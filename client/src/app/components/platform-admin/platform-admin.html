@@ -1,13 +1,13 @@
 <div class="container-fluid p-4 animate-fade-in">
   <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
     <div>
-      <h2 class="fw-bold mb-1 text-primary-premium">Consola Maestro (Sales & Ops)</h2>
-      <p class="text-muted small mb-0">Gestión global de la infraestructura SaaS MedicalCare 888</p>
+      <h2 class="fw-bold mb-1 text-primary-premium">{{ 'platform_admin.title' | translate }}</h2>
+      <p class="text-muted small mb-0">{{ 'platform_admin.subtitle' | translate }}</p>
     </div>
     
     <div class="d-flex gap-2">
       <input type="text" class="form-control form-control-sm rounded-pill px-3" 
-             placeholder="Buscar por ID, Email o Nombre..." [(ngModel)]="searchTerm" style="min-width: 250px;">
+             [placeholder]="'platform_admin.searchPlaceholder' | translate" [(ngModel)]="searchTerm" style="min-width: 250px;">
       <button class="btn btn-primary-premium btn-sm rounded-pill px-3 shadow-sm" (click)="loadOrganizations(); loadUsers()">
         <i class="bi bi-arrow-clockwise me-1"></i>
       </button>
@@ -18,24 +18,24 @@
   <ul class="nav nav-pills custom-pills mb-4 gap-2">
     <li class="nav-item">
       <button class="nav-link" [class.active]="activeTab === 'orgs'" (click)="setTab('orgs')">
-        <i class="bi bi-building me-2"></i>Organizaciones
+        <i class="bi bi-building me-2"></i>{{ 'platform_admin.tabs.orgs' | translate }}
       </button>
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="activeTab === 'users'" (click)="setTab('users')">
-        <i class="bi bi-people me-2"></i>Usuarios Globales
+        <i class="bi bi-people me-2"></i>{{ 'platform_admin.tabs.users' | translate }}
       </button>
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="activeTab === 'admins'" (click)="setTab('admins')">
-        <i class="bi bi-shield-lock me-2"></i>Nuevo Administrador
+        <i class="bi bi-shield-lock me-2"></i>{{ 'platform_admin.tabs.admins' | translate }}
       </button>
     </li>
   </ul>
 
   <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Consultando nube...</p>
+    <p class="mt-2 text-muted">{{ 'platform_admin.loadingCloud' | translate }}</p>
   </div>
 
   <!-- TAB: ORGANIZATIONS -->
@@ -63,22 +63,22 @@
               </div>
               <div class="row g-3 small">
                 <div class="col-md-6 text-truncate"><span class="text-muted fw-bold">ID:</span> {{ org.id }}</div>
-                <div class="col-md-6 text-truncate"><span class="text-muted fw-bold">Dueño:</span> {{ org.owner?.email || 'Desconocido' }}</div>
-                <div class="col-md-6"><span class="text-muted fw-bold">Creado:</span> {{ org.createdAt | date:'mediumDate' }}</div>
-                <div class="col-md-6"><span class="text-muted fw-bold">Vence:</span> {{ org.trialEndsAt ? (org.trialEndsAt | date:'mediumDate') : 'Indefinido' }}</div>
+                <div class="col-md-6 text-truncate"><span class="text-muted fw-bold">{{ 'platform_admin.orgCard.owner' | translate }}:</span> {{ org.owner?.email || 'Desconocido' }}</div>
+                <div class="col-md-6"><span class="text-muted fw-bold">{{ 'platform_admin.orgCard.created' | translate }}:</span> {{ org.createdAt | date:'mediumDate' }}</div>
+                <div class="col-md-6"><span class="text-muted fw-bold">{{ 'platform_admin.orgCard.expires' | translate }}:</span> {{ org.trialEndsAt ? (org.trialEndsAt | date:'mediumDate') : ('platform_admin.orgCard.indefinite' | translate) }}</div>
               </div>
             </div>
 
             <div class="bg-light bg-opacity-25 p-4 border-start d-flex flex-column justify-content-center gap-2 min-w-250">
-              <label class="x-small fw-bold text-muted text-uppercase">Control de Suscripción</label>
+              <label class="x-small fw-bold text-muted text-uppercase">{{ 'platform_admin.orgCard.statusControl' | translate }}</label>
               <select class="form-select form-select-sm rounded-pill" [(ngModel)]="org.subscriptionStatus">
                 <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
               </select>
               <button class="btn btn-primary-premium btn-sm rounded-pill mt-1" (click)="updateStatus(org)">
-                Guardar Cambios
+                {{ 'platform_admin.orgCard.save' | translate }}
               </button>
               <button class="btn btn-outline-dark btn-sm rounded-pill" (click)="toggleUser(org.owner)" *ngIf="org.owner">
-                {{ org.owner.isActive ? 'Cerrar Accesos' : 'Restaurar Accesos' }}
+                {{ org.owner.isActive ? ('platform_admin.orgCard.closeAccess' | translate) : ('platform_admin.orgCard.restoreAccess' | translate) }}
               </button>
             </div>
           </div>
@@ -94,12 +94,12 @@
         <table class="table table-hover align-middle mb-0">
           <thead class="bg-light">
             <tr>
-              <th class="ps-4">Usuario</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Empresa</th>
-              <th>Estado</th>
-              <th class="text-end pe-4">Acciones</th>
+              <th class="ps-4">{{ 'platform_admin.usersTable.user' | translate }}</th>
+              <th>{{ 'platform_admin.usersTable.email' | translate }}</th>
+              <th>{{ 'platform_admin.usersTable.role' | translate }}</th>
+              <th>{{ 'platform_admin.usersTable.company' | translate }}</th>
+              <th>{{ 'platform_admin.usersTable.status' | translate }}</th>
+              <th class="text-end pe-4">{{ 'platform_admin.usersTable.actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -113,12 +113,12 @@
               <td>{{ u.Organization?.name || '---' }}</td>
               <td>
                 <span class="badge rounded-pill" [class.bg-success]="u.isActive" [class.bg-danger]="!u.isActive">
-                  {{ u.isActive ? 'Activo' : 'Bloqueado' }}
+                  {{ u.isActive ? ('dashboard.active' | translate) : ('platform_admin.usersTable.block' | translate) }}
                 </span>
               </td>
               <td class="text-end pe-4">
                 <button class="btn btn-sm btn-light rounded-pill px-3" (click)="toggleUser(u)">
-                  {{ u.isActive ? 'Bloquear' : 'Desbloquear' }}
+                  {{ u.isActive ? ('platform_admin.usersTable.block' | translate) : ('platform_admin.usersTable.unblock' | translate) }}
                 </button>
               </td>
             </tr>
@@ -136,32 +136,32 @@
             <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-2">
                 <i class="bi bi-shield-check fs-2 text-primary"></i>
             </div>
-            <h5 class="fw-bold">Nuevo Administrador de Plataforma</h5>
-            <p class="text-muted small">El usuario tendrá permisos totales sobre el sistema y organizaciones.</p>
+            <h5 class="fw-bold">{{ 'platform_admin.newAdmin.title' | translate }}</h5>
+            <p class="text-muted small">{{ 'platform_admin.newAdmin.description' | translate }}</p>
         </div>
         
         <form (ngSubmit)="onCreateSuperAdmin()" #adminForm="ngForm">
           <div class="row g-3">
             <div class="col-md-6">
-              <label class="form-label small fw-bold">Nombre</label>
+              <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.firstName' | translate }}</label>
               <input type="text" class="form-control rounded-3" [(ngModel)]="newAdmin.firstName" name="fname" required>
             </div>
             <div class="col-md-6">
-              <label class="form-label small fw-bold">Apellido</label>
+              <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.lastName' | translate }}</label>
               <input type="text" class="form-control rounded-3" [(ngModel)]="newAdmin.lastName" name="lname" required>
             </div>
             <div class="col-12">
-              <label class="form-label small fw-bold">Correo Corporativo</label>
+              <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.email' | translate }}</label>
               <input type="email" class="form-control rounded-3" [(ngModel)]="newAdmin.email" name="email" required>
             </div>
             <div class="col-12">
-              <label class="form-label small fw-bold">Contraseña Deseada</label>
+              <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.password' | translate }}</label>
               <input type="text" class="form-control rounded-3" [(ngModel)]="newAdmin.password" name="pass" 
-                     placeholder="Si se deja vacío, será: ClinicaSaaS123">
+                     [placeholder]="'platform_admin.newAdmin.passwordPlaceholder' | translate">
             </div>
             <div class="col-12 mt-4">
               <button type="submit" class="btn btn-primary-premium w-100 py-2 rounded-3" [disabled]="!adminForm.valid">
-                <i class="bi bi-person-plus me-2"></i>Crear Super Administrador
+                <i class="bi bi-person-plus me-2"></i>{{ 'platform_admin.newAdmin.createBtn' | translate }}
               </button>
             </div>
           </div>

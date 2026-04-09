@@ -70,6 +70,34 @@ app.get('/api/system/init-888', async (req, res) => {
   }
 });
 
+/**
+ * 💎 CLEAN PRODUCTION INITIALIZER
+ */
+app.get('/api/system/init-prod', async (req, res) => {
+  const { key } = req.query;
+  if (key !== 'v888') return res.status(403).json({ error: 'Unauthorized Access Key' });
+
+  try {
+    const sequelize = require('./config/db.config');
+    const seedProductionData = require('./utils/prodSeeder');
+    
+    await sequelize.authenticate();
+    await sequelize.sync({ force: true });
+    await seedProductionData();
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Production database initialized successfully (CLEAN)',
+      access: {
+        email: 'edwarvilchez1977@gmail.com',
+        note: 'Password is set via INITIAL_ADMIN_PASSWORD env var'
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Production Initialization failed', detail: err.message });
+  }
+});
+
 // --- ENVIRONMENT & INTEGRITY CHECKS ---
 const fs = require('fs');
 const path = require('path');

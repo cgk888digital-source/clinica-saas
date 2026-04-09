@@ -51,7 +51,7 @@ export class PlatformAdmin implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        Swal.fire('Error', 'No se pudieron cargar las organizaciones', 'error');
+        Swal.fire(this.langService.translate('common.error'), this.langService.translate('platform_admin.messages.loadError'), 'error');
         this.loading = false;
       }
     });
@@ -65,7 +65,7 @@ export class PlatformAdmin implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        Swal.fire('Error', 'No se pudieron cargar los usuarios', 'error');
+        Swal.fire(this.langService.translate('common.error'), this.langService.translate('platform_admin.messages.loadErrorUsers'), 'error');
         this.loading = false;
       }
     });
@@ -73,19 +73,19 @@ export class PlatformAdmin implements OnInit {
 
   updateStatus(org: any) {
     Swal.fire({
-      title: '¿Actualizar estado?',
-      text: `Se cambiará el estado de la organización a ${org.subscriptionStatus}`,
+      title: this.langService.translate('platform_admin.messages.updateConfirm'),
+      text: this.langService.translate('platform_admin.messages.updateConfirmText', { status: org.subscriptionStatus }),
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Sí, aplicar',
-      cancelButtonText: 'Cancelar'
+      confirmButtonText: this.langService.translate('common.confirm'),
+      cancelButtonText: this.langService.translate('common.cancel')
     }).then((result) => {
       if (result.isConfirmed) {
         this.adminService.updateOrganizationStatus(org.id, org.subscriptionStatus, org.trialEndsAt).subscribe({
           next: () => {
-            Swal.fire('Éxito', 'Estado actualizado correctamente', 'success');
+            Swal.fire(this.langService.translate('common.success'), this.langService.translate('platform_admin.messages.updateSuccess'), 'success');
           },
-          error: (err) => Swal.fire('Error', err.error?.message || 'Error al actualizar', 'error')
+          error: (err) => Swal.fire(this.langService.translate('common.error'), err.error?.message || 'Error', 'error')
         });
       }
     });
@@ -123,11 +123,11 @@ export class PlatformAdmin implements OnInit {
 
     this.adminService.createSuperAdmin(this.newAdmin).subscribe({
       next: () => {
-        Swal.fire('¡Éxito!', 'Nuevo Super Administrador creado. Se enviará un correo con sus credenciales.', 'success');
+        Swal.fire(this.langService.translate('common.success'), this.langService.translate('platform_admin.messages.createSuccess'), 'success');
         this.newAdmin = { firstName: '', lastName: '', email: '', password: '' };
         this.setTab('users');
       },
-      error: (err) => Swal.fire('Error', err.error?.message || 'Error al crear administrador', 'error')
+      error: (err) => Swal.fire(this.langService.translate('common.error'), err.error?.message || 'Error', 'error')
     });
   }
 

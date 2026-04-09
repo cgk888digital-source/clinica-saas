@@ -92,7 +92,7 @@
                   type="email"
                   formControlName="email"
                   class="form-control form-control-sm bg-transparent border-0 py-2 shadow-none"
-                  placeholder="nombre@ejemplo.com"
+                  [placeholder]="'auth.emailPlaceholder' | translate"
                 />
               </div>
             </div>
@@ -116,7 +116,7 @@
                   [type]="showPassword() ? 'text' : 'password'"
                   formControlName="password"
                   class="form-control form-control-sm bg-transparent border-0 py-2 shadow-none"
-                  placeholder="••••••••"
+                  [placeholder]="'auth.passwordPlaceholder' | translate"
                 />
                 <span
                   class="input-group-text bg-transparent border-0 py-2 cursor-pointer"

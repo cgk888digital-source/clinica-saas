@@ -41,7 +41,20 @@ export const EN_DICT = {
     logoutCancel: 'Cancel',
     welcome: 'Welcome!',
     email: 'Email',
-    password: 'Password'
+    password: 'Password',
+    emailPlaceholder: 'name@example.com',
+    passwordPlaceholder: '••••••••'
+  },
+  forgot_password: {
+    title: 'Recover Access',
+    subtitle: 'Enter your email to continue',
+    emailLabel: 'Registered Email',
+    emailPlaceholder: 'example@email.com',
+    invalidEmail: 'Invalid email',
+    sendInstructions: 'Send Instructions',
+    processing: 'Processing...',
+    backToLogin: 'Back to login',
+    successMsg: 'Instructions sent to your email.'
   },
   video_history: {
     sidebar: 'Video Consultations',
@@ -220,7 +233,8 @@ export const EN_DICT = {
     billing: 'My Subscription',
     dashboard: 'Main Dashboard',
     labCatalog: 'Lab Catalog',
-    branding: 'Corporate Brand'
+    branding: 'Corporate Brand',
+    globalManagement: 'GLOBAL MANAGEMENT'
   },
   navbar: {
     updateInfo: 'Update Information',
@@ -363,13 +377,21 @@ export const EN_DICT = {
     trial: {
       daysRemaining: 'Your free trial ends in {{days}} days',
       trialDesc: 'Full access to all premium features enabled.',
-      upgradePlan: 'Upgrade Plan Now'
+      upgradePlan: 'Upgrade Plan Now',
+      expiredTitle: 'Trial Expired!',
+      expiredDesc: 'Your free trial period has ended. Please upgrade your plan to continue using the platform.',
+      upgradeNow: 'Upgrade Now'
     },
     confirmed: 'Confirmed',
     reminderSent: 'Reminder Sent',
     active: 'Active',
     inactive: 'Inactive',
-    noUpcoming: 'No upcoming appointments scheduled'
+    noUpcoming: 'No upcoming appointments scheduled',
+    medicalCitas: 'My Medical Appointments',
+    newAptDesc: 'Schedule your next online consultation quickly and easily.',
+    bookNow: 'Book Now',
+    myResults: 'My Results',
+    recentExams: 'Check your recent exams'
   },
   appointments_list: {
     title: 'Appointment Scheduling',
@@ -728,7 +750,68 @@ export const EN_DICT = {
     professionalDesc: 'Manage your practice and patients.',
     clinicDesc: 'Manage your full clinic operations.',
     hospitalDesc: 'Centralized hospital management.',
-    error: 'Registration error'
+    error: 'Registration error',
+    placeholders: {
+      username: 'user123',
+      firstName: 'First Name',
+      lastName: 'Last Name',
+      documentId: 'ID-12345678',
+      phone: '+1 555-1234567',
+      address: 'Full address',
+      allergies: 'None'
+    }
+  },
+  platform_admin: {
+    title: 'Master Console (Sales & Ops)',
+    subtitle: 'Global management of MedicalCare 888 SaaS infrastructure',
+    searchPlaceholder: 'Search by ID, Email or Name...',
+    loadingCloud: 'Querying cloud...',
+    tabs: {
+      orgs: 'Organizations',
+      users: 'Global Users',
+      admins: 'New Administrator'
+    },
+    orgCard: {
+      owner: 'Owner',
+      created: 'Created',
+      expires: 'Expires',
+      indefinite: 'Indefinite',
+      statusControl: 'Subscription Control',
+      save: 'Save Changes',
+      closeAccess: 'Close Access',
+      restoreAccess: 'Restore Access'
+    },
+    usersTable: {
+      user: 'User',
+      email: 'Email',
+      role: 'Role',
+      company: 'Company',
+      status: 'Status',
+      actions: 'Actions',
+      block: 'Block',
+      unblock: 'Unblock'
+    },
+    newAdmin: {
+      title: 'New Platform Administrator',
+      description: 'The user will have total permissions over the system and organizations.',
+      firstName: 'First Name',
+      lastName: 'Last Name',
+      email: 'Corporate Email',
+      password: 'Desired Password',
+      passwordPlaceholder: 'If left empty, it will be: ClinicaSaaS123',
+      createBtn: 'Create Super Administrator'
+    },
+    messages: {
+      updateConfirm: 'Update status?',
+      updateConfirmText: 'The organization status will be changed to {{status}}',
+      updateSuccess: 'Status updated successfully',
+      loadError: 'Could not load organizations',
+      loadErrorUsers: 'Could not load users',
+      toggleUserTitle: '{{action}} user?',
+      toggleUserText: 'User {{email}} will be {{status}}.',
+      toggleSuccess: 'User {{status}} successfully',
+      createSuccess: 'Success! New Super Administrator created.'
+    }
   },
   public_booking: {
     title: 'Book Medical Appointment',

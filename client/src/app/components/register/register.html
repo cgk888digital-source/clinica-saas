@@ -179,7 +179,7 @@
                   type="text"
                   class="form-control form-control-sm glass-morphism border rounded-2"
                   formControlName="username"
-                  placeholder="usuario123"
+                  [placeholder]="'register.placeholders.username' | translate"
                 />
                 <small
                   class="text-danger x-small"
@@ -199,7 +199,7 @@
                   type="email"
                   class="form-control form-control-sm glass-morphism border rounded-2"
                   formControlName="email"
-                  placeholder="correo@ejemplo.com"
+                  [placeholder]="'auth.emailPlaceholder' | translate"
                 />
                 <small
                   class="text-danger x-small"
@@ -239,7 +239,7 @@
                   type="text"
                   class="form-control form-control-sm glass-morphism border rounded-2"
                   formControlName="firstName"
-                  placeholder="Nombre"
+                  [placeholder]="'register.placeholders.firstName' | translate"
                 />
               </div>
 
@@ -251,7 +251,7 @@
                   type="text"
                   class="form-control form-control-sm glass-morphism border rounded-2"
                   formControlName="lastName"
-                  placeholder="Apellido"
+                  [placeholder]="'register.placeholders.lastName' | translate"
                 />
               </div>
 
@@ -265,7 +265,7 @@
                     type="text"
                     class="form-control form-control-sm glass-morphism border rounded-2"
                     formControlName="documentId"
-                    placeholder="V-12345678"
+                    [placeholder]="'register.placeholders.documentId' | translate"
                   />
                 </div>
 
@@ -277,7 +277,7 @@
                     type="tel"
                     class="form-control form-control-sm glass-morphism border rounded-2"
                     formControlName="phone"
-                    placeholder="+58 424-1234567"
+                    [placeholder]="'register.placeholders.phone' | translate"
                   />
                 </div>
 
@@ -355,7 +355,7 @@
                   type="text"
                   class="form-control form-control-sm glass-morphism border rounded-2"
                   formControlName="address"
-                  placeholder="Dirección completa"
+                  [placeholder]="'register.placeholders.address' | translate"
                 />
               </div>
 
@@ -385,7 +385,7 @@
                     type="text"
                     class="form-control form-control-sm glass-morphism border rounded-2"
                     formControlName="allergies"
-                    placeholder="Ninguna"
+                    [placeholder]="'register.placeholders.allergies' | translate"
                   />
                 </div>
               </ng-container>

@@ -41,7 +41,20 @@ export const ES_DICT = {
     logoutCancel: 'Cancelar',
     welcome: '¡Bienvenido!',
     email: 'Correo Electrónico',
-    password: 'Contraseña'
+    password: 'Contraseña',
+    emailPlaceholder: 'nombre@ejemplo.com',
+    passwordPlaceholder: '••••••••'
+  },
+  forgot_password: {
+    title: 'Recuperar Acceso',
+    subtitle: 'Introduce tu email para continuar',
+    emailLabel: 'Email Registrado',
+    emailPlaceholder: 'ejemplo@correo.com',
+    invalidEmail: 'Email inválido',
+    sendInstructions: 'Enviar Instrucciones',
+    processing: 'Procesando...',
+    backToLogin: 'Volver al inicio',
+    successMsg: 'Instrucciones enviadas a su correo.'
   },
   video_history: {
     sidebar: 'Videoconsultas',
@@ -220,7 +233,8 @@ export const ES_DICT = {
     billing: 'Mi Suscripción',
     dashboard: 'Panel de Control',
     labCatalog: 'Catálogo Lab',
-    branding: 'Marca Corporativa'
+    branding: 'Marca Corporativa',
+    globalManagement: 'GESTIÓN GLOBAL'
   },
   navbar: {
     updateInfo: 'Actualizar Información',
@@ -363,13 +377,21 @@ export const ES_DICT = {
     trial: {
       daysRemaining: 'Tu prueba gratuita vence en {{days}} días',
       trialDesc: 'Acceso total a todas las funciones premium activado.',
-      upgradePlan: 'Actualizar Plan Ahora'
+      upgradePlan: 'Actualizar Plan Ahora',
+      expiredTitle: '¡Prueba Expirada!',
+      expiredDesc: 'Su periodo de prueba gratuito ha finalizado. Actualice su plan para continuar disfrutando de todas las funciones.',
+      upgradeNow: 'Actualizar Ahora'
     },
     confirmed: 'Confirmada',
     reminderSent: 'Recordatorio Enviado',
     active: 'Activo',
     inactive: 'Inactivo',
-    noUpcoming: 'Sin citas próximas programadas'
+    noUpcoming: 'Sin citas próximas programadas',
+    medicalCitas: 'Mis Citas Médicas',
+    newAptDesc: 'Agende su próxima consulta en línea rápida y fácilmente.',
+    bookNow: 'Agendar Ahora',
+    myResults: 'Mis Resultados',
+    recentExams: 'Consulte sus exámenes recientes'
   },
   appointments_list: {
     title: 'Agendamiento de Citas',
@@ -728,7 +750,68 @@ export const ES_DICT = {
     professionalDesc: 'Gestiona tu consulta y pacientes.',
     clinicDesc: 'Administra toda la clínica.',
     hospitalDesc: 'Gestión hospitalaria centralizada.',
-    error: 'Error al registrarse'
+    error: 'Error al registrarse',
+    placeholders: {
+      username: 'usuario123',
+      firstName: 'Nombre',
+      lastName: 'Apellido',
+      documentId: 'V-12345678',
+      phone: '+58 424-1234567',
+      address: 'Dirección completa',
+      allergies: 'Ninguna'
+    }
+  },
+  platform_admin: {
+    title: 'Consola Maestro (Sales & Ops)',
+    subtitle: 'Gestión global de la infraestructura SaaS MedicalCare 888',
+    searchPlaceholder: 'Buscar por ID, Email o Nombre...',
+    loadingCloud: 'Consultando nube...',
+    tabs: {
+      orgs: 'Organizaciones',
+      users: 'Usuarios Globales',
+      admins: 'Nuevo Administrador'
+    },
+    orgCard: {
+      owner: 'Dueño',
+      created: 'Creado',
+      expires: 'Vence',
+      indefinite: 'Indefinido',
+      statusControl: 'Control de Suscripción',
+      save: 'Guardar Cambios',
+      closeAccess: 'Cerrar Accesos',
+      restoreAccess: 'Restaurar Accesos'
+    },
+    usersTable: {
+      user: 'Usuario',
+      email: 'Email',
+      role: 'Rol',
+      company: 'Empresa',
+      status: 'Estado',
+      actions: 'Acciones',
+      block: 'Bloquear',
+      unblock: 'Desbloquear'
+    },
+    newAdmin: {
+      title: 'Nuevo Administrador de Plataforma',
+      description: 'El usuario tendrá permisos totales sobre el sistema y organizaciones.',
+      firstName: 'Nombre',
+      lastName: 'Apellido',
+      email: 'Correo Corporativo',
+      password: 'Contraseña Deseada',
+      passwordPlaceholder: 'Si se deja vacío, será: ClinicaSaaS123',
+      createBtn: 'Crear Super Administrador'
+    },
+    messages: {
+      updateConfirm: '¿Actualizar estado?',
+      updateConfirmText: 'Se cambiará el estado de la organización a {{status}}',
+      updateSuccess: 'Estado actualizado correctamente',
+      loadError: 'No se pudieron cargar las organizaciones',
+      loadErrorUsers: 'No se pudieron cargar los usuarios',
+      toggleUserTitle: '¿{{action}} usuario?',
+      toggleUserText: 'El usuario {{email}} será {{status}}.',
+      toggleSuccess: 'Usuario {{status}} correctamente',
+      createSuccess: '¡Éxito! Nuevo Super Administrador creado.'
+    }
   },
   public_booking: {
     title: 'Agendar Cita Médica',
