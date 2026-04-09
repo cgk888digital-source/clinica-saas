@@ -343,4 +343,4 @@ El sistema utiliza una estructura de fuente única para entornos de desarrollo l
 
 ---
 
-_Documentación actualizada por Antigravity Agent - Abril 2026 (v4.3.1)_
+_Documentación actualizada por Antigravity Agent - Abril 2026 (v4.3.2)_
