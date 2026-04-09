@@ -40,7 +40,7 @@ app.use(compression());
 // Boot diagnostics (Canary routes)
 app.get('/api/health', (req, res) => {
   res.json({ 
-    status: 'ok', 
+    status: 'ok v4.3.1', 
     env: process.env.NODE_ENV,
     vercel: !!process.env.VERCEL,
     time: new Date().toISOString() 
