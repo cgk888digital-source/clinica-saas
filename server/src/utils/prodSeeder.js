@@ -42,7 +42,8 @@ const seedProductionData = async () => {
         lastName: 'Vilchez',
         roleId: rolesMap['SUPERADMIN'].id,
         accountType: 'HOSPITAL',
-        isActive: true
+        isActive: true,
+        mustChangePassword: true  // Force password change on first login
       }
     });
 
