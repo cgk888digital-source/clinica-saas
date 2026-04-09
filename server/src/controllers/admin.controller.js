@@ -1,4 +1,4 @@
-const { Organization, User } = require('../models');
+const { Organization, User, Role } = require('../models');
 
 /**
  * Super Admin Controller for Platform Management
@@ -11,13 +11,26 @@ exports.getAllOrganizations = async (req, res) => {
       include: [
         { 
           model: User, 
-          as: 'owner', // Assuming we have or add an association
+          as: 'owner',
           attributes: ['id', 'email', 'firstName', 'lastName'] 
         }
       ],
       order: [['createdAt', 'DESC']]
     });
     res.json(orgs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// List ALL users in the platform
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      include: [Role, Organization],
+      order: [['createdAt', 'DESC']]
+    });
+    res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -60,4 +73,32 @@ exports.toggleUserStatus = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+};
+
+// Create a new SuperAdmin
+exports.createSuperAdmin = async (req, res) => {
+    try {
+        const { firstName, lastName, email, password } = req.body;
+        
+        const superRole = await Role.findOne({ where: { name: 'SUPERADMIN' } });
+        if (!superRole) return res.status(500).json({ message: 'Rol SUPERADMIN no encontrado' });
+
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) return res.status(400).json({ message: 'El correo electrónico ya está registrado' });
+
+        const user = await User.create({
+            firstName,
+            lastName,
+            email,
+            password,
+            username: email,
+            roleId: superRole.id,
+            accountType: 'HOSPITAL',
+            isActive: true
+        });
+
+        res.status(201).json({ message: 'SuperAdministrador creado con éxito', user });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };

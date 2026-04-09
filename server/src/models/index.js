@@ -35,28 +35,24 @@ Doctor.belongsTo(Specialty, { foreignKey: 'specialtyId' });
 User.hasOne(Doctor, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Doctor.belongsTo(User, { foreignKey: 'userId' });
 
-// Doctor belongs to Organization
 Organization.hasMany(Doctor, { foreignKey: 'organizationId' });
 Doctor.belongsTo(Organization, { foreignKey: 'organizationId' });
 
 User.hasOne(Nurse, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Nurse.belongsTo(User, { foreignKey: 'userId' });
 
-// Nurse belongs to Organization
 Organization.hasMany(Nurse, { foreignKey: 'organizationId' });
 Nurse.belongsTo(Organization, { foreignKey: 'organizationId' });
 
 User.hasOne(Staff, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Staff.belongsTo(User, { foreignKey: 'userId' });
 
-// Staff belongs to Organization
 Organization.hasMany(Staff, { foreignKey: 'organizationId' });
 Staff.belongsTo(Organization, { foreignKey: 'organizationId' });
 
 User.hasOne(Patient, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Patient.belongsTo(User, { foreignKey: 'userId' });
 
-// Patient belongs to Organization (multi-tenant)
 Organization.hasMany(Patient, { foreignKey: 'organizationId' });
 Patient.belongsTo(Organization, { foreignKey: 'organizationId' });
 
@@ -122,9 +118,8 @@ LabTest.belongsToMany(LabCombo, {
   as: 'combos'
 });
 
-// Global Aisolation Hook (SaaS Multi-tenant)
+// Global Isolation Hook (SaaS Multi-tenant)
 const context = require('../utils/context');
-const logger = require('../utils/logger');
 const AuditTrail = require('../utils/auditTrail');
 
 /**
@@ -132,25 +127,26 @@ const AuditTrail = require('../utils/auditTrail');
  * Excludes SUPERADMIN or explicit unscoped queries
  */
 sequelize.addHook('beforeFind', (options) => {
-  const orgId = context.getOrgId();
-  const role = context.getRole();
+  try {
+    const orgId = context.getOrgId();
+    const role = context.getRole();
 
-  // Skip if no orgId in context or user is Super Admin
-  if (!orgId || role === 'SUPERADMIN' || role === 'SUPER_ADMIN') {
-    return;
-  }
-
-  // Ensure 'where' exists
-  options.where = options.where || {};
-
-  // If the model has an 'organizationId' attribute, inject it
-  const modelName = options.model?.name;
-  if (options.model?.rawAttributes?.organizationId) {
-    // Merge filters
-    if (typeof options.where.organizationId === 'undefined') {
-       options.where.organizationId = orgId;
-       logger.debug({ model: modelName, orgId }, 'Global Scope: Injected organizationId');
+    // Skip if no orgId in context or user is a Super Admin
+    if (!orgId || role === 'SUPERADMIN' || role === 'SUPER_ADMIN') {
+      return;
     }
+
+    // Ensure 'where' exists
+    options.where = options.where || {};
+
+    // If the model has an 'organizationId' attribute, inject it
+    if (options.model?.rawAttributes?.organizationId) {
+      if (typeof options.where.organizationId === 'undefined') {
+         options.where.organizationId = orgId;
+      }
+    }
+  } catch (err) {
+    console.error('Sequelize beforeFind Hook Error:', err);
   }
 });
 
@@ -197,7 +193,6 @@ modelsToAudit.forEach(modelName => {
     });
   });
 });
-
 
 module.exports = {
   User,
