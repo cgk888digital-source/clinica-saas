@@ -70,14 +70,16 @@ app.get('/api/system/init-888', async (req, res) => {
   }
 });
 
-/**
- * 🔍 ARCHITECTURAL INTEGRITY CHECK (Fail-Fast)
- */
+// --- ENVIRONMENT & INTEGRITY CHECKS ---
 const fs = require('fs');
 const path = require('path');
-const uploadDir = path.resolve(__dirname, '../uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+
+if (!process.env.VERCEL) {
+  const uploadDir = path.resolve(__dirname, '../uploads');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+    console.log('📁 Local upload directory ensured.');
+  }
 }
 
 // --- LAZY LOADING CONTEXT (Performance & Compatibility) ---
