@@ -1,3 +1,9 @@
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { API_URL, APP_VERSION } from '../../api-config';
 import { TranslatePipe } from '../../services/translate.pipe';
 
 @Component({
