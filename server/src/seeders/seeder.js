@@ -3,6 +3,7 @@ const { Role } = require('../models');
 const seedRoles = async () => {
   const roles = [
     { name: 'SUPERADMIN', description: 'Acceso total al sistema' },
+    { name: 'PLATFORM_ADMIN', description: 'Administrador de plataforma (vendedor) con acceso a gestión global, sin permisos de eliminar usuarios ni crear superadmins' },
     { name: 'DOCTOR', description: 'Médicos con acceso a historial y consultas' },
     { name: 'NURSE', description: 'Enfermería con acceso a signos vitales e indicaciones' },
     { name: 'RECEPTIONIST', description: 'Gestión de citas y facturación' },

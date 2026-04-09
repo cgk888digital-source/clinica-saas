@@ -4,15 +4,21 @@ const { Organization, User, Role } = require('../models');
  * Super Admin Controller for Platform Management
  */
 
+// Emails autorizados para crear nuevos SUPERADMIN
+const SUPERADMIN_AUTHORIZED_EMAILS = [
+  'edwarvilchez1977@gmail.com',
+  'cgk888digital@gmail.com'
+];
+
 // List ALL organizations in the platform
 exports.getAllOrganizations = async (req, res) => {
   try {
     const orgs = await Organization.findAll({
       include: [
-        { 
-          model: User, 
+        {
+          model: User,
           as: 'owner',
-          attributes: ['id', 'email', 'firstName', 'lastName'] 
+          attributes: ['id', 'email', 'firstName', 'lastName']
         }
       ],
       order: [['createdAt', 'DESC']]
@@ -63,7 +69,7 @@ exports.toggleUserStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findByPk(id);
-    
+
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
@@ -75,11 +81,16 @@ exports.toggleUserStatus = async (req, res) => {
   }
 };
 
-// Create a new SuperAdmin
+// Create a new SuperAdmin — solo permitido para los emails autorizados
 exports.createSuperAdmin = async (req, res) => {
     try {
+        const requestingUser = await User.findByPk(req.user.id, { attributes: ['email'] });
+        if (!requestingUser || !SUPERADMIN_AUTHORIZED_EMAILS.includes(requestingUser.email)) {
+            return res.status(403).json({ message: 'Solo los administradores maestros pueden crear nuevos SuperAdmins.' });
+        }
+
         const { firstName, lastName, email, password } = req.body;
-        
+
         const superRole = await Role.findOne({ where: { name: 'SUPERADMIN' } });
         if (!superRole) return res.status(500).json({ message: 'Rol SUPERADMIN no encontrado' });
 
@@ -94,10 +105,40 @@ exports.createSuperAdmin = async (req, res) => {
             username: email,
             roleId: superRole.id,
             accountType: 'HOSPITAL',
-            isActive: true
+            isActive: true,
+            mustChangePassword: true
         });
 
         res.status(201).json({ message: 'SuperAdministrador creado con éxito', user });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Create a new PlatformAdmin (vendedor) — solo SUPERADMIN puede hacerlo
+exports.createPlatformAdmin = async (req, res) => {
+    try {
+        const { firstName, lastName, email, password } = req.body;
+
+        const platformRole = await Role.findOne({ where: { name: 'PLATFORM_ADMIN' } });
+        if (!platformRole) return res.status(500).json({ message: 'Rol PLATFORM_ADMIN no encontrado' });
+
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) return res.status(400).json({ message: 'El correo electrónico ya está registrado' });
+
+        const user = await User.create({
+            firstName,
+            lastName,
+            email,
+            password,
+            username: email,
+            roleId: platformRole.id,
+            accountType: 'HOSPITAL',
+            isActive: true,
+            mustChangePassword: true
+        });
+
+        res.status(201).json({ message: 'Administrador de plataforma creado con éxito', user });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

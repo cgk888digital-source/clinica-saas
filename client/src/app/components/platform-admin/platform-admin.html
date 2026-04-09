@@ -4,9 +4,9 @@
       <h2 class="fw-bold mb-1 text-primary-premium">{{ 'platform_admin.title' | translate }}</h2>
       <p class="text-muted small mb-0">{{ 'platform_admin.subtitle' | translate }}</p>
     </div>
-    
+
     <div class="d-flex gap-2">
-      <input type="text" class="form-control form-control-sm rounded-pill px-3" 
+      <input type="text" class="form-control form-control-sm rounded-pill px-3"
              [placeholder]="'platform_admin.searchPlaceholder' | translate" [(ngModel)]="searchTerm" style="min-width: 250px;">
       <button class="btn btn-primary-premium btn-sm rounded-pill px-3 shadow-sm" (click)="loadOrganizations(); loadUsers()">
         <i class="bi bi-arrow-clockwise me-1"></i>
@@ -26,7 +26,8 @@
         <i class="bi bi-people me-2"></i>{{ 'platform_admin.tabs.users' | translate }}
       </button>
     </li>
-    <li class="nav-item">
+    <!-- Tab Admins: solo visible para SUPERADMIN -->
+    <li class="nav-item" *ngIf="isSuperAdmin()">
       <button class="nav-link" [class.active]="activeTab === 'admins'" (click)="setTab('admins')">
         <i class="bi bi-shield-lock me-2"></i>{{ 'platform_admin.tabs.admins' | translate }}
       </button>
@@ -128,8 +129,8 @@
     </div>
   </div>
 
-  <!-- TAB: NEW ADMIN -->
-  <div *ngIf="!loading && activeTab === 'admins'" class="slide-in max-w-600 mx-auto">
+  <!-- TAB: NEW ADMIN (solo SUPERADMIN) -->
+  <div *ngIf="!loading && activeTab === 'admins' && isSuperAdmin()" class="slide-in max-w-600 mx-auto">
     <div class="card card-premium">
       <div class="card-body p-4">
         <div class="text-center mb-4">
@@ -139,8 +140,8 @@
             <h5 class="fw-bold">{{ 'platform_admin.newAdmin.title' | translate }}</h5>
             <p class="text-muted small">{{ 'platform_admin.newAdmin.description' | translate }}</p>
         </div>
-        
-        <form (ngSubmit)="onCreateSuperAdmin()" #adminForm="ngForm">
+
+        <form (ngSubmit)="onCreateAdmin()" #adminForm="ngForm">
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.firstName' | translate }}</label>
@@ -156,8 +157,19 @@
             </div>
             <div class="col-12">
               <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.password' | translate }}</label>
-              <input type="text" class="form-control rounded-3" [(ngModel)]="newAdmin.password" name="pass" 
+              <input type="text" class="form-control rounded-3" [(ngModel)]="newAdmin.password" name="pass"
                      [placeholder]="'platform_admin.newAdmin.passwordPlaceholder' | translate">
+            </div>
+            <!-- Selector de rol: SUPERADMIN solo disponible para emails autorizados -->
+            <div class="col-12">
+              <label class="form-label small fw-bold">Tipo de Administrador</label>
+              <select class="form-select rounded-3" [(ngModel)]="newAdmin.role" name="role">
+                <option value="PLATFORM_ADMIN">Admin de Plataforma (Vendedor)</option>
+                <option value="SUPERADMIN" *ngIf="canCreateSuperAdmin()">SuperAdmin (Maestro)</option>
+              </select>
+              <div class="form-text" *ngIf="!canCreateSuperAdmin()">
+                <i class="bi bi-info-circle me-1"></i>Solo los administradores maestros pueden crear SuperAdmins.
+              </div>
             </div>
             <div class="col-12 mt-4">
               <button type="submit" class="btn btn-primary-premium w-100 py-2 rounded-3" [disabled]="!adminForm.valid">
@@ -170,7 +182,7 @@
     </div>
   </div>
 
-  <div *ngIf="!loading && (filteredOrgs().length === 0 && activeTab === 'orgs' || filteredUsers().length === 0 && activeTab === 'users')" 
+  <div *ngIf="!loading && (filteredOrgs().length === 0 && activeTab === 'orgs' || filteredUsers().length === 0 && activeTab === 'users')"
        class="text-center py-5 glass-morphism rounded-4 mt-4">
     <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
     <h5>No se encontraron resultados para "{{ searchTerm }}"</h5>
@@ -187,7 +199,7 @@
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
   .org-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
-  
+
   .custom-pills .nav-link {
     border-radius: 50px;
     padding: 0.5rem 1.2rem;

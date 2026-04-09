@@ -43,8 +43,10 @@ Endpoints disponibles (solo local):
 ## 🛡️ Consola Maestro (Gestión Global)
 El sistema incluye una consola de administración avanzada para el dueño de la plataforma y su equipo de ventas, accesible en `/platform-admin`.
 - **Gestión de Organizaciones:** Visualización de todos los clientes, con capacidad para cambiar estados de suscripción (`ACTIVE`, `TRIAL`, `PAST_DUE`, `CANCELLED`).
-- **Control de Usuarios:** Listado global de todos los usuarios registrados con opción de bloqueo inmediato (bypass de acceso).
-- **Delegación Administrativa:** Los SuperAdmins pueden crear otras cuentas con privilegios de SuperAdmin para el equipo operativo.
+- **Control de Usuarios:** Listado global de todos los usuarios registrados con opción de bloqueo/activación inmediata (bypass de acceso).
+- **Roles de Plataforma:**
+  - `SUPERADMIN` — Acceso total. Puede crear `PLATFORM_ADMIN` y `SUPERADMIN`.
+  - `PLATFORM_ADMIN` — Perfil vendedor con acceso completo a la consola maestro, excepto: no puede eliminar usuarios ni crear `SUPERADMIN`. Solo los emails `edwarvilchez1977@gmail.com` y `cgk888digital@gmail.com` pueden crear nuevos `SUPERADMIN`.
 - **Auditoría Inmutable (v4.3.0):** Implementación automática de registros para cumplimiento **ISO 27001**, capturando cada creación, edición o borrado de datos médicos y financieros.
 
 ## 🏗️ Arquitectura Unificada

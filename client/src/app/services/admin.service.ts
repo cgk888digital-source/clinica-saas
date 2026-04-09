@@ -29,4 +29,8 @@ export class AdminService {
   createSuperAdmin(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/super-admins`, data);
   }
+
+  createPlatformAdmin(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/platform-admins`, data);
+  }
 }

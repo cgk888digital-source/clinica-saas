@@ -5,16 +5,18 @@ const authMiddleware = require('../middlewares/auth.middleware');
 const roleMiddleware = require('../middlewares/role.middleware');
 const contextMiddleware = require('../middlewares/context.middleware');
 
-// Platform-wide management (Only for SUPERADMIN)
-// Note: In a SaaS, 'SUPERADMIN' can be the Platform Owner
+// All admin routes require authentication and context
 router.use(authMiddleware);
 router.use(contextMiddleware);
-router.use(roleMiddleware(['SUPERADMIN']));
 
-router.get('/organizations', adminController.getAllOrganizations);
-router.get('/users', adminController.getAllUsers);
-router.put('/organizations/:id/status', adminController.updateOrganizationStatus);
-router.put('/users/:id/toggle-status', adminController.toggleUserStatus);
-router.post('/super-admins', adminController.createSuperAdmin);
+// PLATFORM_ADMIN can view and manage orgs/users, but NOT create superadmins
+router.get('/organizations', roleMiddleware(['SUPERADMIN', 'PLATFORM_ADMIN']), adminController.getAllOrganizations);
+router.get('/users', roleMiddleware(['SUPERADMIN', 'PLATFORM_ADMIN']), adminController.getAllUsers);
+router.put('/organizations/:id/status', roleMiddleware(['SUPERADMIN', 'PLATFORM_ADMIN']), adminController.updateOrganizationStatus);
+router.put('/users/:id/toggle-status', roleMiddleware(['SUPERADMIN', 'PLATFORM_ADMIN']), adminController.toggleUserStatus);
+
+// Only SUPERADMIN can create platform admins — email whitelist enforced in controller
+router.post('/super-admins', roleMiddleware(['SUPERADMIN']), adminController.createSuperAdmin);
+router.post('/platform-admins', roleMiddleware(['SUPERADMIN']), adminController.createPlatformAdmin);
 
 module.exports = router;

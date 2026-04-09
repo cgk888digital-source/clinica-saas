@@ -174,7 +174,7 @@ export const routes: Routes = [
     path: 'platform-admin',
     loadComponent: () => import('./components/platform-admin/platform-admin').then(m => m.PlatformAdmin),
     canActivate: [authGuard, roleGuard, firstLoginGuard],
-    data: { roles: ['SUPERADMIN'] },
+    data: { roles: ['SUPERADMIN', 'PLATFORM_ADMIN'] },
     title: 'MedicalCare 888 - Gestión Global'
   },
 

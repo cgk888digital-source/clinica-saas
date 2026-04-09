@@ -5,6 +5,28 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [4.3.3] — 2026-04-09
+
+### ✨ New Features
+
+- **Rol `PLATFORM_ADMIN` (Vendedor)** — Nuevo perfil de acceso a la Consola Maestro (`/platform-admin`) orientado al equipo de ventas:
+  - Puede gestionar organizaciones (cambio de estado de suscripción) y usuarios (bloqueo/activación).
+  - **Restricciones:** No puede eliminar usuarios ni crear cuentas `SUPERADMIN`.
+  - Solo los emails `edwarvilchez1977@gmail.com` y `cgk888digital@gmail.com` están autorizados para crear nuevos `SUPERADMIN` (validación a nivel de backend y UI).
+
+### 🔒 Security
+
+- `createSuperAdmin` — Añadida whitelist de emails a nivel de controlador. Cualquier `SUPERADMIN` que no sea uno de los dos emails autorizados recibe `403 Forbidden` al intentar crear otro `SUPERADMIN`.
+- Rutas `/admin/*` ahora usan middleware por ruta en lugar de middleware global, permitiendo granularidad por endpoint.
+
+### 🎨 UI
+
+- Tab "Admins" en Consola Maestro oculto para usuarios `PLATFORM_ADMIN`.
+- Selector de rol en formulario de creación: solo muestra la opción `SUPERADMIN` a los emails autorizados.
+- Sidebar muestra el enlace a Gestión Global también para `PLATFORM_ADMIN`.
+
+---
+
 ## [4.3.2] — 2026-04-09
 
 ### ✨ New Features
