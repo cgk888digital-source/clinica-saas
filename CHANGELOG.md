@@ -5,6 +5,22 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [4.3.4] — 2026-04-10
+
+### ✨ New Features & Adaptations (Nomimus Style)
+
+- **Resilient SuperAdmin Seeding** — Endpoints de creación de administradores ahora son auto-recuperables; si faltan roles en la DB, el sistema los siembra automáticamente antes de fallar.
+- **Enhanced Global Management** — Rol `PLATFORM_ADMIN` añadido al bypass de aislamiento de la base de datos, permitiendo visibilidad global en toda la plataforma SaaS.
+- **Admin Dashboard Stats** — Nuevo endpoint `GET /api/admin/dashboard-stats` que proporciona métricas de conversión de trials y alertas de expiración inmediata.
+- **Subscription Bypass Management** — Nuevo endpoint `PUT /api/admin/users/:id/toggle-bypass` para gestionar accesos VIP/Bypass por usuario.
+
+### 🔒 Security & Backend
+
+- **API Access Update** — Actualizada la protección de rutas en `index.js` para permitir que el rol `PLATFORM_ADMIN` acceda a los endpoints de gestión global.
+- **Extended Login Payload** — El objeto de usuario en el login ahora incluye `subscriptionBypass` para mejorar la reactividad del frontend.
+
+---
+
 ## [4.3.3] — 2026-04-09
 
 ### ✨ New Features

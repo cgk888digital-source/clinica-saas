@@ -188,7 +188,7 @@ const loadFullApp = async (req, res, next) => {
     app.use('/api/prescriptions', protectedRoutes, require('./routes/prescription.routes'));
     app.use('/api/bulk', protectedRoutes, require('./routes/bulk.routes'));
     app.use('/api/public', require('./routes/public.routes'));
-    app.use('/api/admin', [...protectedRoutes, roleMiddleware(['SUPERADMIN'])], require('./routes/admin.routes'));
+    app.use('/api/admin', [...protectedRoutes, roleMiddleware(['SUPERADMIN', 'PLATFORM_ADMIN'])], require('./routes/admin.routes'));
 
     // Final 404 handler for API
     app.use('/api/*', (req, res) => {

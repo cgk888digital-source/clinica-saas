@@ -131,8 +131,8 @@ sequelize.addHook('beforeFind', (options) => {
     const orgId = context.getOrgId();
     const role = context.getRole();
 
-    // Skip if no orgId in context or user is a Super Admin
-    if (!orgId || role === 'SUPERADMIN' || role === 'SUPER_ADMIN') {
+    // Skip if no orgId in context or user is a Super Admin or Platform Admin
+    if (!orgId || role === 'SUPERADMIN' || role === 'SUPER_ADMIN' || role === 'PLATFORM_ADMIN') {
       return;
     }
 

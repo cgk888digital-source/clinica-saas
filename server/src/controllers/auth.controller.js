@@ -311,6 +311,7 @@ exports.login = async (req, res) => {
         gender: user.gender,
         organizationId: user.organizationId,
         Organization: user.Organization,
+        subscriptionBypass: user.subscriptionBypass, // Nomimus-inspired flag
         mustChangePassword: user.mustChangePassword  // Exponer flag al frontend
       }
     });

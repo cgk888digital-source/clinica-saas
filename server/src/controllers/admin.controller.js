@@ -10,7 +10,7 @@ const SUPERADMIN_AUTHORIZED_EMAILS = [
   'cgk888digital@gmail.com'
 ];
 
-// List ALL organizations in the platform
+// List ALL organizations in the platform with stats
 exports.getAllOrganizations = async (req, res) => {
   try {
     const orgs = await Organization.findAll({
@@ -23,6 +23,9 @@ exports.getAllOrganizations = async (req, res) => {
       ],
       order: [['createdAt', 'DESC']]
     });
+
+    // Add counts for users/doctors manually or via subqueries if needed
+    // For now, let's just return the organizations
     res.json(orgs);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -40,6 +43,51 @@ exports.getAllUsers = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+};
+
+// Global Platform Statistics (Nomimus-inspired)
+exports.getAdminDashboardStats = async (req, res) => {
+    try {
+        const { Op } = require('sequelize');
+        const now = new Date();
+
+        const totalUsers = await User.count();
+        const totalOrganizations = await Organization.count();
+        
+        const activeTrials = await Organization.count({ where: { subscriptionStatus: 'TRIAL', trialEndsAt: { [Op.gt]: now } } });
+        const expiredTrials = await Organization.count({ where: { subscriptionStatus: 'TRIAL', trialEndsAt: { [Op.lte]: now } } });
+        const activeSubscriptions = await Organization.count({ where: { subscriptionStatus: 'ACTIVE' } });
+        
+        // Urgency counts
+        const expiringIn3Days = await Organization.count({
+            where: {
+                subscriptionStatus: 'TRIAL',
+                trialEndsAt: {
+                    [Op.and]: [
+                        { [Op.gt]: now },
+                        { [Op.lte]: new Date(now.getTime() + (3 * 24 * 60 * 60 * 1000)) }
+                    ]
+                }
+            }
+        });
+
+        res.json({
+            users: { total: totalUsers },
+            organizations: {
+                total: totalOrganizations,
+                activeTrials,
+                expiredTrials,
+                activeSubscriptions,
+                expiringIn3Days
+            },
+            system: {
+                version: '4.3.2',
+                status: 'Healthy'
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
 
 // Update Organization status (for blocking/activating)
@@ -81,6 +129,23 @@ exports.toggleUserStatus = async (req, res) => {
   }
 };
 
+// Toggle Subscription Bypass for User (Nomimus-inspired feature)
+exports.toggleUserBypass = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    await user.update({ subscriptionBypass: !user.subscriptionBypass });
+    res.json({ message: `Bypass de suscripción ${user.subscriptionBypass ? 'activado' : 'desactivado'} para el usuario`, user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Create a new SuperAdmin — solo permitido para los emails autorizados
 exports.createSuperAdmin = async (req, res) => {
     try {
@@ -91,8 +156,16 @@ exports.createSuperAdmin = async (req, res) => {
 
         const { firstName, lastName, email, password } = req.body;
 
-        const superRole = await Role.findOne({ where: { name: 'SUPERADMIN' } });
-        if (!superRole) return res.status(500).json({ message: 'Rol SUPERADMIN no encontrado' });
+        // Ensure SUPERADMIN role exists
+        let superRole = await Role.findOne({ where: { name: 'SUPERADMIN' } });
+        if (!superRole) {
+            console.log('Role SUPERADMIN not found, attempting to seed...');
+            const seedRoles = require('../seeders/seeder');
+            await seedRoles();
+            superRole = await Role.findOne({ where: { name: 'SUPERADMIN' } });
+        }
+        
+        if (!superRole) return res.status(500).json({ message: 'Error crítico: Rol SUPERADMIN no pudo ser inicializado. Ejecute el seeder manualmente.' });
 
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) return res.status(400).json({ message: 'El correo electrónico ya está registrado' });
@@ -120,8 +193,16 @@ exports.createPlatformAdmin = async (req, res) => {
     try {
         const { firstName, lastName, email, password } = req.body;
 
-        const platformRole = await Role.findOne({ where: { name: 'PLATFORM_ADMIN' } });
-        if (!platformRole) return res.status(500).json({ message: 'Rol PLATFORM_ADMIN no encontrado' });
+        // Ensure PLATFORM_ADMIN role exists
+        let platformRole = await Role.findOne({ where: { name: 'PLATFORM_ADMIN' } });
+        if (!platformRole) {
+            console.log('Role PLATFORM_ADMIN not found, attempting to seed...');
+            const seedRoles = require('../seeders/seeder');
+            await seedRoles();
+            platformRole = await Role.findOne({ where: { name: 'PLATFORM_ADMIN' } });
+        }
+
+        if (!platformRole) return res.status(500).json({ message: 'Error crítico: Rol PLATFORM_ADMIN no pudo ser inicializado. Ejecute el seeder manualmente.' });
 
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) return res.status(400).json({ message: 'El correo electrónico ya está registrado' });
