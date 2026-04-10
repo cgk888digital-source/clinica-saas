@@ -5,6 +5,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [4.3.7] — 2026-04-10
+
+### 🏥 System Resilience & Maintenance
+
+- **Resilient Logger Boot** — Implementada validación de niveles de log en `logger.js` con fallback automático a `info`. Esto previene fallos de arranque ("Critical Boot Failure") causados por variables de entorno corruptas o con caracteres invisibles en Vercel.
+- **Improved Log Cleansing** — Eliminación de strings residuales en archivos de configuración local.
+
+---
+
 ## [4.3.6] — 2026-04-10
 
 ### 🛡️ Security & Architecture (Master Hardening)
