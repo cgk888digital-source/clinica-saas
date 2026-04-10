@@ -5,6 +5,6 @@ const authMiddleware = require('../middlewares/auth.middleware');
 const roleMiddleware = require('../middlewares/role.middleware');
 
 router.get('/settings', authMiddleware, organizationController.getSettings);
-router.put('/settings', authMiddleware, roleMiddleware(['SUPERADMIN', 'SUPER_ADMIN', 'ADMIN']), organizationController.updateSettings);
+router.put('/settings', authMiddleware, roleMiddleware(['SUPERADMIN', 'SUPERADMIN', 'ADMIN']), organizationController.updateSettings);
 
 module.exports = router;

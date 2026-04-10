@@ -4,11 +4,10 @@ const { Organization, User, Role } = require('../models');
  * Super Admin Controller for Platform Management
  */
 
-// Emails autorizados para crear nuevos SUPERADMIN
-const SUPERADMIN_AUTHORIZED_EMAILS = [
-  'edwarvilchez1977@gmail.com',
-  'cgk888digital@gmail.com'
-];
+// Emails autorizados para crear nuevos SUPERADMIN - Cargados desde variables de entorno
+const ALLOWED_MASTER_EMAILS = process.env.ALLOWED_MASTER_EMAILS 
+  ? process.env.ALLOWED_MASTER_EMAILS.split(',') 
+  : ['edwarvilchez1977@gmail.com'];
 
 // List ALL organizations in the platform with stats
 exports.getAllOrganizations = async (req, res) => {
@@ -174,7 +173,7 @@ exports.toggleUserBypass = async (req, res) => {
 exports.createSuperAdmin = async (req, res) => {
     try {
         const requestingUser = await User.findByPk(req.user.id, { attributes: ['email'] });
-        if (!requestingUser || !SUPERADMIN_AUTHORIZED_EMAILS.includes(requestingUser.email)) {
+        if (!requestingUser || !ALLOWED_MASTER_EMAILS.includes(requestingUser.email)) {
             return res.status(403).json({ message: 'Solo los administradores maestros pueden crear nuevos SuperAdmins.' });
         }
 

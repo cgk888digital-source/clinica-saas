@@ -5,6 +5,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [4.3.6] — 2026-04-10
+
+### 🛡️ Security & Architecture (Master Hardening)
+
+- **Centralized Shield Middleware v3.0** — Migración al escudo de seguridad centralizado del ecosistema CGK888 via `middleware_acceso.js`.
+- **RBAC Standardization** — Unificación global del rol `SUPERADMIN` en todo el core del backend y frontend.
+- **Environment Whitelisting** — Seguridad reforzada mediante la externalización de administradores maestros a variables de entorno (`ALLOWED_MASTER_EMAILS`).
+- **Data Integrity** — Sincronización persistente de identidad del usuario en `localStorage` para garantizar la efectividad del escudo de acceso.
+
+---
+
 ## [4.3.5] — 2026-04-10
 
 ### 🛡️ Security & Access Control

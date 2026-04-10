@@ -31,13 +31,13 @@ exports.register = async (req, res) => {
     const finalAccountType = accountType || 'PATIENT';
 
     // ROLES THAT REQUIRE INVITATION
-    const restrictedRoles = ['SUPER_ADMIN', 'ADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'NURSE'];
+    const restrictedRoles = ['SUPERADMIN', 'ADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'NURSE'];
     const isRestrictedRole = restrictedRoles.includes(finalRoleName);
     
     // Verify invite token for restricted roles
     if (isRestrictedRole) {
       const validInviteTokens = {
-        'super-admin-token': 'SUPER_ADMIN',
+        'super-admin-token': 'SUPERADMIN',
         'admin-token': 'ADMIN',
         'staff-token': 'ADMINISTRATIVE',
       };

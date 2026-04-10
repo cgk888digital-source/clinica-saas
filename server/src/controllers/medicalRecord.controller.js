@@ -1,7 +1,7 @@
 const { MedicalRecord, Patient, Doctor, User, Prescription, Drug } = require('../models');
 
 const validatePatientAccess = async (patientId, organizationId, role) => {
-  const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+  const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
   if (isSuperAdmin) return true;
 
   const patient = await Patient.findByPk(patientId, { include: [User] });

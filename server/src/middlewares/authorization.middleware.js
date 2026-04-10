@@ -6,7 +6,7 @@
 const logger = require('../utils/logger');
 
 const ROLES = {
-  SUPER_ADMIN: 'SUPER_ADMIN',
+  SUPER_ADMIN: 'SUPERADMIN',
   ADMIN: 'ADMIN',
   ADMINISTRATIVE: 'ADMINISTRATIVE',
   DOCTOR: 'DOCTOR',

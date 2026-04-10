@@ -2,7 +2,7 @@ const { Prescription, Drug, MedicalRecord, Patient, User } = require('../models'
 const logger = require('../utils/logger');
 
 const validatePrescriptionAccess = async (prescriptionId, organizationId, role) => {
-  const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+  const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
   if (isSuperAdmin) return true;
 
   const prescription = await Prescription.findByPk(prescriptionId, {
@@ -25,7 +25,7 @@ exports.createPrescription = async (req, res) => {
     const { organizationId, role } = req.user;
     const { medicalRecordId } = req.body;
 
-    const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+    const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
     
     if (!isSuperAdmin && organizationId) {
       const record = await MedicalRecord.findByPk(medicalRecordId, {

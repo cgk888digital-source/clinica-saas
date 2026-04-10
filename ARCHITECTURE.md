@@ -121,7 +121,7 @@ El sistema utiliza un modelo relacional centrado en el usuario:
 
 El sistema implementa un control de acceso basado en roles (**RBAC**) robusto.
 
-- **Roles Soportados**: `SUPER_ADMIN`, `ADMIN`, `DOCTOR`, `NURSE`, `PATIENT`.
+- **Roles Soportados**: `SUPERADMIN`, `PLATFORM_ADMIN`, `DOCTOR`, `NURSE`, `ADMINISTRATIVE`, `PATIENT`.
 - **Protección Backend**: Middleware de autenticación JWT. (Nota: ACL a nivel de rutas pendiente, lógica actual en controladores).
 - **Protección Frontend**:
   - **Guards**: `AuthGuard` protege rutas privadas.

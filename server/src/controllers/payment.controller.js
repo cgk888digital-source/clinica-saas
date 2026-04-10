@@ -87,7 +87,7 @@ exports.getPayments = async (req, res) => {
 
     let whereClause = {};
 
-    const isSuperAdmin = userRole === 'SUPER_ADMIN' || userRole === 'SUPERADMIN';
+    const isSuperAdmin = userRole === 'SUPERADMIN';
 
     if (userRole === 'PATIENT') {
        const patient = await Patient.findOne({ where: { userId } });

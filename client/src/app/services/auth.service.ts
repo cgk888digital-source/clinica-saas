@@ -33,6 +33,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('user_email');
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }
@@ -40,6 +41,7 @@ export class AuthService {
   private setSession(authResult: any) {
     localStorage.setItem('token', authResult.token);
     localStorage.setItem('user', JSON.stringify(authResult.user));
+    localStorage.setItem('user_email', authResult.user.email);
     this.currentUser.set(authResult.user);
   }
 

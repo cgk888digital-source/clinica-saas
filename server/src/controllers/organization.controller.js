@@ -21,7 +21,7 @@ exports.getSettings = async (req, res) => {
 exports.updateSettings = async (req, res) => {
   try {
     const { organizationId, role } = req.user;
-    const isOwner = role === 'SUPERADMIN' || role === 'SUPER_ADMIN'; // Simple check for now, ideally verify ownerId
+    const isOwner = role === 'SUPERADMIN' || role === 'SUPERADMIN'; // Simple check for now, ideally verify ownerId
 
     if (!organizationId) {
       return res.status(404).json({ message: 'No tienes una organización asignada' });

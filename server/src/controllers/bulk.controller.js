@@ -9,7 +9,7 @@ exports.importData = async (req, res) => {
   let successCount = 0;
 
   const { organizationId, role } = req.user;
-  const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+  const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
 
   // Non-superadmins must have an organization
   const userOrgId = isSuperAdmin ? null : organizationId;
