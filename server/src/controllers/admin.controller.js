@@ -35,7 +35,19 @@ exports.getAllOrganizations = async (req, res) => {
 // List ALL users in the platform
 exports.getAllUsers = async (req, res) => {
   try {
+    const requestingUser = await User.findByPk(req.user.id, { include: [Role] });
+    const isPlatformAdmin = requestingUser.Role.name === 'PLATFORM_ADMIN';
+
+    const { Op } = require('sequelize');
+    const where = {};
+    
+    // Platform Admins cannot see SuperAdmins
+    if (isPlatformAdmin) {
+      where['$Role.name$'] = { [Op.not]: 'SUPERADMIN' };
+    }
+
     const users = await User.findAll({
+      where,
       include: [Role, Organization],
       order: [['createdAt', 'DESC']]
     });
@@ -116,10 +128,16 @@ exports.updateOrganizationStatus = async (req, res) => {
 exports.toggleUserStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, { include: [Role] });
 
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Protection: Platform Admins cannot modify SuperAdmins
+    const requestingUser = await User.findByPk(req.user.id, { include: [Role] });
+    if (requestingUser.Role.name === 'PLATFORM_ADMIN' && user.Role.name === 'SUPERADMIN') {
+        return res.status(403).json({ message: 'No tienes permisos para modificar a un SuperAdministrador' });
     }
 
     await user.update({ isActive: !user.isActive });
@@ -133,10 +151,16 @@ exports.toggleUserStatus = async (req, res) => {
 exports.toggleUserBypass = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, { include: [Role] });
 
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Protection: Platform Admins cannot modify SuperAdmins
+    const requestingUser = await User.findByPk(req.user.id, { include: [Role] });
+    if (requestingUser.Role.name === 'PLATFORM_ADMIN' && user.Role.name === 'SUPERADMIN') {
+        return res.status(403).json({ message: 'No tienes permisos para modificar a un SuperAdministrador' });
     }
 
     await user.update({ subscriptionBypass: !user.subscriptionBypass });

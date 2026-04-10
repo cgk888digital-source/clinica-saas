@@ -9,15 +9,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### ✨ New Features & Adaptations (Nomimus Style)
 
-- **Resilient SuperAdmin Seeding** — Endpoints de creación de administradores ahora son auto-recuperables; si faltan roles en la DB, el sistema los siembra automáticamente antes de fallar.
-- **Enhanced Global Management** — Rol `PLATFORM_ADMIN` añadido al bypass de aislamiento de la base de datos, permitiendo visibilidad global en toda la plataforma SaaS.
-- **Admin Dashboard Stats** — Nuevo endpoint `GET /api/admin/dashboard-stats` que proporciona métricas de conversión de trials y alertas de expiración inmediata.
-- **Subscription Bypass Management** — Nuevo endpoint `PUT /api/admin/users/:id/toggle-bypass` para gestionar accesos VIP/Bypass por usuario.
+- **Hierarchical Security Model** — Implementado bypass global en `roleMiddleware.js` para `SUPERADMIN` (Root) y `PLATFORM_ADMIN` (Demo/Global).
+- **Administrative Privacy** — Los `PLATFORM_ADMIN` ahora tienen restringida la visibilidad y modificación de cuentas `SUPERADMIN`.
+- **Resilient SuperAdmin Seeding** — Endpoints de creación de administradores ahora son auto-recuperables.
+- **Admin Dashboard Stats** — Métricas de conversión de trials y alertas de expiración inmediata.
+- **Subscription Bypass Management** — Gestión de accesos VIP/Bypass por usuario.
 
 ### 🔒 Security & Backend
 
-- **API Access Update** — Actualizada la protección de rutas en `index.js` para permitir que el rol `PLATFORM_ADMIN` acceda a los endpoints de gestión global.
-- **Extended Login Payload** — El objeto de usuario en el login ahora incluye `subscriptionBypass` para mejorar la reactividad del frontend.
+- **Root CRUD Access** — `SUPERADMIN` ahora tiene permisos de "usuario root" automáticos en toda la aplicación.
+- **API Access Update** — Habilitado acceso global para demostraciones a favor del rol `PLATFORM_ADMIN`.
+- **Extended Login Payload** — Inclusión de `subscriptionBypass` en la respuesta de autenticación.
 
 ---
 
