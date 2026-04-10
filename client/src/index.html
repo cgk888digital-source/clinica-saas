@@ -4,6 +4,29 @@
     <meta charset="utf-8" />
     <title>MedicalCare 888 - Gestión Profesional</title>
     <base href="/" />
+    <script>
+      /**
+       * CGK888 DIGITAL - Shield Middleware Universal
+       * Bloqueo de acceso directo en aplicaciones del ecosistema.
+       */
+      (function() {
+          const APP_ID = 'medicalcare'; 
+          const REDIRECT_URL = 'https://cgk888.org/pagos?product=' + APP_ID;
+
+          const hasAccess = localStorage.getItem('cgk_authorized_apps');
+          let isPaid = false;
+          try {
+              isPaid = hasAccess ? JSON.parse(hasAccess)[APP_ID] : false;
+          } catch (e) {
+              isPaid = false;
+          }
+
+          if (!isPaid && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+              console.log('🛡️ CGK888 Shield: Acceso no autorizado. Redirigiendo...');
+              window.location.href = REDIRECT_URL;
+          }
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="Plataforma SaaS de gestión clínica moderna y eficiente - MedicalCare 888" />
     <meta name="theme-color" content="#10b981" />

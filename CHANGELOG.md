@@ -5,6 +5,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [4.3.5] — 2026-04-10
+
+### 🛡️ Security & Access Control
+
+- **CGK888 Shield Middleware** — Implementación del sistema de bloqueo universal `Shield Middleware`.
+- **Enforced Payment Funnel** — Los accesos sin suscripción válida son redirigidos automáticamente a la pasarela de pagos de `cgk888.org`.
+- **Environment Awareness** — El sistema de seguridad detecta automáticamente entornos de desarrollo (`localhost`) para permitir pruebas sin interrupciones.
+
+---
+
 ## [4.3.4] — 2026-04-10
 
 ### ✨ New Features & Adaptations (Nomimus Style)
