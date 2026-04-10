@@ -2,10 +2,11 @@ const { ROLES, PERMISSIONS, hasPermission, authorize } = require('../../middlewa
 
 describe('RBAC Authorization', () => {
   describe('hasPermission', () => {
-    it('should allow SUPER_ADMIN to do everything', () => {
+    it('should allow SUPERADMIN and PLATFORM_ADMIN to do everything', () => {
       expect(hasPermission(ROLES.SUPER_ADMIN, 'patients:write')).toBe(true);
-      expect(hasPermission(ROLES.SUPER_ADMIN, 'users:delete')).toBe(true);
-      expect(hasPermission(ROLES.SUPER_ADMIN, 'anything:read')).toBe(true);
+      expect(hasPermission(ROLES.PLATFORM_ADMIN, 'patients:write')).toBe(true);
+      expect(hasPermission(ROLES.PLATFORM_ADMIN, 'users:delete')).toBe(true);
+      expect(hasPermission(ROLES.PLATFORM_ADMIN, 'any:module:access')).toBe(true);
     });
 
     it('should allow DOCTOR to read and write patients', () => {

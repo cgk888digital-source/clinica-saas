@@ -1,10 +1,11 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, inject, computed, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService } from '../../services/admin.service';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../services/translate.pipe';
 import { LanguageService } from '../../services/language.service';
 import { AuthService } from '../../services/auth.service';
+import { finalize } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 const SUPERADMIN_AUTHORIZED_EMAILS = [
@@ -22,6 +23,7 @@ const SUPERADMIN_AUTHORIZED_EMAILS = [
 export class PlatformAdmin implements OnInit {
   private adminService = inject(AdminService);
   private langService = inject(LanguageService);
+  private cdr = inject(ChangeDetectorRef);
   authService = inject(AuthService);
 
   organizations: any[] = [];
@@ -54,36 +56,50 @@ export class PlatformAdmin implements OnInit {
 
   setTab(tab: 'orgs' | 'users' | 'admins') {
     this.activeTab = tab;
+    console.log('🔄 [PlatformAdmin] Cambiando a pestaña:', tab);
     if (tab === 'orgs') this.loadOrganizations();
     if (tab === 'users') this.loadUsers();
+    this.cdr.detectChanges();
   }
 
   loadOrganizations() {
+    console.log('🔍 [PlatformAdmin] Iniciando carga de organizaciones...');
     this.loading = true;
-    this.adminService.getOrganizations().subscribe({
-      next: (data) => {
-        this.organizations = data;
+    this.adminService.getOrganizations()
+      .pipe(finalize(() => {
         this.loading = false;
-      },
-      error: () => {
-        Swal.fire(this.langService.translate('common.error'), this.langService.translate('platform_admin.messages.loadError'), 'error');
-        this.loading = false;
-      }
-    });
+        this.cdr.detectChanges();
+      }))
+      .subscribe({
+        next: (data) => {
+          console.log('✅ [PlatformAdmin] Organizaciones recibidas:', data.length);
+          this.organizations = data;
+        },
+        error: (err) => {
+          console.error('❌ [PlatformAdmin] Error cargando organizaciones:', err);
+          Swal.fire(this.langService.translate('common.error'), this.langService.translate('platform_admin.messages.loadError'), 'error');
+        }
+      });
   }
 
   loadUsers() {
+    console.log('🔍 [PlatformAdmin] Iniciando carga de usuarios...');
     this.loading = true;
-    this.adminService.getUsers().subscribe({
-      next: (data) => {
-        this.users = data;
+    this.adminService.getUsers()
+      .pipe(finalize(() => {
         this.loading = false;
-      },
-      error: () => {
-        Swal.fire(this.langService.translate('common.error'), this.langService.translate('platform_admin.messages.loadErrorUsers'), 'error');
-        this.loading = false;
-      }
-    });
+        this.cdr.detectChanges();
+      }))
+      .subscribe({
+        next: (data) => {
+          console.log('✅ [PlatformAdmin] Usuarios recibidos:', data.length);
+          this.users = data;
+        },
+        error: (err) => {
+          console.error('❌ [PlatformAdmin] Error cargando usuarios:', err);
+          Swal.fire(this.langService.translate('common.error'), this.langService.translate('platform_admin.messages.loadErrorUsers'), 'error');
+        }
+      });
   }
 
   updateStatus(org: any) {

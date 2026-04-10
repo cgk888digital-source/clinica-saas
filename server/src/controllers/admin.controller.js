@@ -11,6 +11,7 @@ const ALLOWED_MASTER_EMAILS = process.env.ALLOWED_MASTER_EMAILS
 
 // List ALL organizations in the platform with stats
 exports.getAllOrganizations = async (req, res) => {
+  console.log('🔍 [Admin] Fetching all organizations...');
   try {
     const orgs = await Organization.findAll({
       include: [

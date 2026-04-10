@@ -150,50 +150,6 @@ sequelize.addHook('beforeFind', (options) => {
   }
 });
 
-/**
- * 🔒 AUTOMATED AUDIT TRAIL HOOKS (ISO 27001 Compliance)
- * Captures all critical changes without manual controller intervention.
- */
-const modelsToAudit = ['User', 'Patient', 'Doctor', 'Appointment', 'MedicalRecord', 'Payment', 'Organization', 'Nurse', 'Staff', 'Prescription'];
-
-modelsToAudit.forEach(modelName => {
-  const model = sequelize.models[modelName];
-  if (!model) return;
-
-  // AFTER CREATE
-  model.addHook('afterCreate', async (instance, options) => {
-    await AuditTrail.log(modelName, 'CREATE', {
-      entityId: instance.id,
-      newValues: instance.toJSON()
-    });
-  });
-
-  // AFTER UPDATE
-  model.addHook('afterUpdate', async (instance, options) => {
-    const oldValues = instance._previousDataValues;
-    const newValues = instance.get();
-    const changes = AuditTrail.getChanges(oldValues, newValues);
-
-    // Only log if there are actual changes
-    if (Object.keys(changes).length > 0) {
-      await AuditTrail.log(modelName, 'UPDATE', {
-        entityId: instance.id,
-        oldValues,
-        newValues,
-        details: { changes }
-      });
-    }
-  });
-
-  // AFTER DESTROY
-  model.addHook('afterDestroy', async (instance, options) => {
-    await AuditTrail.log(modelName, 'DELETE', {
-      entityId: instance.id,
-      oldValues: instance.toJSON()
-    });
-  });
-});
-
 module.exports = {
   User,
   Role,

@@ -7,6 +7,7 @@ const logger = require('../utils/logger');
 
 const ROLES = {
   SUPER_ADMIN: 'SUPERADMIN',
+  PLATFORM_ADMIN: 'PLATFORM_ADMIN', // Manager de la plataforma (Vendedor)
   ADMIN: 'ADMIN',
   ADMINISTRATIVE: 'ADMINISTRATIVE',
   DOCTOR: 'DOCTOR',
@@ -103,8 +104,8 @@ const PERMISSIONS = {
  * Check if user role has permission for specific action
  */
 const hasPermission = (userRole, permission) => {
-  // SUPER_ADMIN always has permission
-  if (userRole === ROLES.SUPER_ADMIN) {
+  // SUPERADMIN & PLATFORM_ADMIN (Manager/Vendedor) always have full system permissions
+  if (userRole === ROLES.SUPER_ADMIN || userRole === ROLES.PLATFORM_ADMIN) {
     return true;
   }
 
@@ -159,7 +160,7 @@ const authorizeOwner = (Model, ownerField = 'userId') => {
     const userRole = req.user.role;
     const resourceId = req.params.id || req.body.id;
 
-    if (userRole === ROLES.SUPER_ADMIN || userRole === ROLES.ADMIN) {
+    if (userRole === ROLES.SUPER_ADMIN || userRole === ROLES.PLATFORM_ADMIN || userRole === ROLES.ADMIN) {
       return next();
     }
 
