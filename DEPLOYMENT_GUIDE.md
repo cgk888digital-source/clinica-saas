@@ -1,8 +1,8 @@
-# 🚀 Guía de Despliegue - MedicalCare 888 (v4.3.2)
+# 🚀 Guía de Despliegue - MedicalCare 888 (v4.3.12)
 
 ## ✅ Estado del Ecosistema CGK 888
 
-**Versión:** v4.3.2 - "Production Ready"
+**Versión:** v4.3.12 - "Production Ready"
 **Plataforma:** MedicalCare 888 Professional Clinics
 **Stack:** Angular 21 + Node.js/Express + PostgreSQL (Supabase) + Resend SDK + Docker
 

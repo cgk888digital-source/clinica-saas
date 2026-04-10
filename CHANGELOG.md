@@ -5,6 +5,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [4.3.12] — 2026-04-10
+
+### 📋 Documentation & Version Sync
+
+- **Version Synchronization** — Actualización a v4.3.12 para consistencia con producción.
+
+---
+
 ## [4.3.7] — 2026-04-10
 
 ### 🏥 System Resilience & Maintenance
