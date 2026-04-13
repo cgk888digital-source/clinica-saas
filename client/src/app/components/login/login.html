@@ -61,7 +61,6 @@
       <div class="col-lg-5">
         <div class="card-premium border-0 p-4 shadow-lg animate-fade-in">
           <div class="text-center mb-4">
-            <!-- Branding -->
             <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
               <div class="bg-primary rounded-2 p-1 d-inline-flex">
                 <i class="bi bi-activity text-white fs-5"></i>
@@ -69,7 +68,10 @@
               <h2 class="fw-bold mb-0 text-primary fs-4">MEDICALCARE 888</h2>
             </div>
             <h3 class="h6 fw-bold mb-1">{{ 'landing.loginTitle' | translate }}</h3>
-            <p class="text-muted x-small mb-0">{{ 'landing.loginDesc' | translate }}</p>
+            <p class="text-muted x-small mb-1">{{ 'landing.loginDesc' | translate }}</p>
+            <a routerLink="/landing" class="x-small text-decoration-none fw-bold text-success animate-fade-in">
+              <i class="bi bi-info-circle me-1"></i>Conocer Beneficios y Ventajas
+            </a>
           </div>
 
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">

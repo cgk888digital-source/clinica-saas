@@ -40,6 +40,12 @@ Endpoints disponibles (solo local):
 - `/api/system/init-888?key=INIT_SECRET` - Modo Demo (con datos de prueba)
 - `/api/system/init-prod?key=INIT_SECRET` - Modo Producción (limpio)
 
+## ✨ Página Informativa (Landing Page)
+Desde la versión 4.5.0, el sistema incluye una página de aterrizaje premium accesible en la ruta raíz (`/`) o `/landing`.
+- **Diseño Moderno:** Interfaz con efectos de glassmorphism, degradados vibrantes y optimizada para la conversión.
+- **Secciones:** Hero interactivo, grid de funcionalidades, ventajas competitivas (segurida, velocidad, multi-dispositivo) y CTA para registro.
+- **Navegación:** Enlace directo desde el login para informar a nuevos prospectos sobre los beneficios de la plataforma.
+
 ## 🛡️ Consola Maestro (Gestión Global)
 El sistema incluye una consola de administración avanzada para el dueño de la plataforma y su equipo de ventas, accesible en `/platform-admin`.
 - **Gestión de Organizaciones:** Visualización de todos los clientes, con capacidad para cambiar estados de suscripción (`ACTIVE`, `TRIAL`, `PAST_DUE`, `CANCELLED`).
