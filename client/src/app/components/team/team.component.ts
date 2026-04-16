@@ -31,7 +31,7 @@ import Swal from 'sweetalert2';
           <form (ngSubmit)="onSubmit()" #memberForm="ngForm">
             <div class="row g-3">
               <div class="col-md-6">
-                <label class="form-label small fw-bold text-muted">{{ 'medical_history.name' | translate }}</label>
+                <label class="form-label small fw-bold text-muted">{{ 'doctors.fields.firstName' | translate }}</label>
                 <input type="text" class="form-control glass-morphism border" [(ngModel)]="newMember.firstName" name="firstName" required>
               </div>
               <div class="col-md-6">
@@ -48,7 +48,7 @@ import Swal from 'sweetalert2';
                   <option value="" disabled>{{ 'team.selectRole' | translate }}</option>
                   <option value="DOCTOR">{{ 'roles.DOCTOR' | translate }}</option>
                   <option value="NURSE">{{ 'roles.NURSE' | translate }}</option>
-                  <option value="ADMINISTRATIVE">{{ 'roles.STAFF' | translate }}</option>
+                  <option value="ADMINISTRATIVE">{{ 'roles.ADMINISTRATIVE' | translate }}</option>
                 </select>
               </div>
               

@@ -1,166 +1,207 @@
 const express = require('express');
 const app = express();
+require('dotenv').config();
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const compression = require('compression');
 
-// Ensure these are picked up by Vercel's NFT (Node File Trace)
-try {
-  require('pg');
-  require('pg-hstore');
-} catch (e) {
-  console.warn('⚠️ [Vercel] Pre-loading pg failed at root level.');
+// Core config
+const corsOptions = {
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-auth-token', 'x-org-id', 'Accept'],
+  exposedHeaders: ['x-auth-token']
+};
+
+// Rate Limiters
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  message: { error: 'Demasiadas solicitudes, intenta de nuevo en 15 minutos' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { error: 'Demasiados intentos de login, intenta de nuevo en 15 minutos' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+const INIT_SECRET = process.env.INIT_SECRET || 'v888-dev';
+app.use(globalLimiter);
+app.use(cors(corsOptions));
+app.use(compression());
+
+// Boot diagnostics (Canary routes)
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'ok v4.3.1', 
+    env: process.env.NODE_ENV,
+    vercel: !!process.env.VERCEL,
+    time: new Date().toISOString() 
+  });
+});
+
+/**
+ * 🛠️ EMERGENCY DATABASE INITIALIZER (Standalone)
+ * SOLO disponible en desarrollo - DESHABILITADO en producción
+ */
+const isDevMode = process.env.NODE_ENV !== 'production' && !process.env.VERCEL;
+const allowReset = process.env.ALLOW_DB_RESET === 'true' && isDevMode;
+
+if (allowReset) {
+  app.get('/api/system/init-888', async (req, res) => {
+    const { key } = req.query;
+    if (key !== INIT_SECRET) return res.status(403).json({ error: 'Unauthorized Access Key' });
+
+    try {
+      const sequelize = require('./config/db.config');
+      const seedRoles = require('./utils/seeder');
+      const seedTestData = require('./utils/legacy/testSeeder');
+      
+      await sequelize.authenticate();
+      await sequelize.sync({ force: true });
+      await seedRoles();
+      await seedTestData();
+
+      res.status(200).json({ success: true, message: 'Database reset successfully (Dev Mode)' });
+    } catch (err) {
+      res.status(500).json({ error: 'Initialization failed', detail: err.message });
+    }
+  });
+
+  /**
+   * 💎 CLEAN PRODUCTION INITIALIZER (DEV ONLY)
+   */
+  app.get('/api/system/init-prod', async (req, res) => {
+    const { key } = req.query;
+    if (key !== INIT_SECRET) return res.status(403).json({ error: 'Unauthorized Access Key' });
+
+    try {
+      const sequelize = require('./config/db.config');
+      const seedProductionData = require('./utils/prodSeeder');
+      
+      await sequelize.authenticate();
+      await sequelize.sync({ force: true });
+      await seedProductionData();
+
+      res.status(200).json({ success: true, message: 'Production database initialized successfully (CLEAN)' });
+    } catch (err) {
+      res.status(500).json({ error: 'Production Initialization failed', detail: err.message });
+    }
+  });
 }
 
 /**
- * 🛡️ ULTRA-ISOLATED BOOT (Emergency Mode)
- * This is the ONLY thing that runs immediately at top-level.
- * If this fails, then Vercel's environment is broken.
+ * ENVIRONMENT & INTEGRITY CHECKS
  */
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'ok', 
-    isolated: true,
-    vercel: !!process.env.VERCEL,
-    timestamp: new Date().toISOString()
-  });
-});
+const fs = require('fs');
+const path = require('path');
 
-app.get('/api/debug-files', (req, res) => {
-  const fs = require('fs');
-  const path = require('path');
-  
-  function listFiles(dir, depth = 0) {
-    if (depth > 3) return [];
-    try {
-      const entries = fs.readdirSync(dir, { withFileTypes: true });
-      let result = [];
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-        if (entry.isDirectory()) {
-          result.push({ name: entry.name, type: 'dir', children: listFiles(fullPath, depth + 1) });
-        } else {
-          result.push({ name: entry.name, type: 'file' });
-        }
-      }
-      return result;
-    } catch (e) {
-      return [{ error: e.message }];
-    }
+if (!process.env.VERCEL) {
+  const uploadDir = path.resolve(__dirname, '../uploads');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+    console.log('📁 Local upload directory ensured.');
   }
+}
 
-  const root = path.resolve('.');
-  res.json({
-    root,
-    files: listFiles(root)
-  });
-});
-
-// --- NO OTHER TOP-LEVEL REQUIRES EXCEPT MINIMAL BOOTSTRAP ---
+// --- LAZY LOADING CONTEXT (Performance & Compatibility) ---
 
 let isAppLoaded = false;
 let bootError = null;
 
-/**
- * Lazy Application Loader
- * This drags in the rest of the universe (sequelize, models, routes) 
- * ONLY when an actual API request comes in.
- */
-const loadApp = async (req, res, next) => {
-  if (req.path === '/api/health' || req.path === '/api/debug-files') return next();
-
+const loadFullApp = async (req, res, next) => {
+  // Skip for canary routes
+  if (req.path === '/api/health' || req.path.startsWith('/api/system')) return next();
+  
   if (isAppLoaded) return next();
   if (bootError) return res.status(500).json({ error: 'Critical Boot Failure', detail: bootError.message });
 
   try {
-    console.log('🚀 [Vercel] Lazy-loading full application context...');
-    
-    // Dependencies
-    const cors = require('cors');
-    const morgan = require('morgan');
-    const helmet = require('helmet');
-    const compression = require('compression');
-    require('dotenv').config();
-    const sequelize = require('./config/db.config');
-    const logger = require('./utils/logger');
+    console.log('🚀 [Server] Loading full application context...');
+
+    // Load heavy dependencies
     const { sanitizeInput } = require('./utils/sanitize');
     const authMiddleware = require('./middlewares/auth.middleware');
+    const contextMiddleware = require('./middlewares/context.middleware');
+    const roleMiddleware = require('./middlewares/role.middleware');
+    const sequelize = require('./config/db.config');
+    const protectedRoutes = [authMiddleware, contextMiddleware];
 
-    // App Middleware Configuration
-    app.use(cors({ origin: true, credentials: true }));
-    app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+    // Security Hardening (Helmet + CSP)
+    app.use(helmet({ 
+      crossOriginResourcePolicy: { policy: "cross-origin" },
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
+          styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+          fontSrc: ["'self'", "https://fonts.gstatic.com"],
+          imgSrc: ["'self'", "data:", "https:*"],
+          connectSrc: ["'self'", "https:*", "wss:*"]
+        }
+      }
+    }));
+
     app.use(express.json({ limit: '1mb' }));
     app.use(express.urlencoded({ extended: true, limit: '1mb' }));
     app.use(morgan('dev'));
-    app.use(compression());
     app.use(sanitizeInput);
 
-    // Database check
+    // Verify DB Connection
     await sequelize.authenticate();
 
-    // Routes (Loaded on demand inside this function)
-    const routes = {
-      auth: require('./routes/auth.routes'),
-      exchange: require('./routes/exchange.routes'),
-      doctors: require('./routes/doctor.routes'),
-      patients: require('./routes/patient.routes'),
-      appointments: require('./routes/appointment.routes'),
-      medicalRecords: require('./routes/medicalRecord.routes'),
-      payments: require('./routes/payment.routes'),
-      organizations: require('./routes/organization.routes'),
-      specialties: require('./routes/specialty.routes'),
-      staff: require('./routes/staff.routes'),
-      labCatalog: require('./routes/labCatalog.routes'),
-      labResults: require('./routes/labResult.routes'),
-      drugs: require('./routes/drug.routes'),
-      nurses: require('./routes/nurse.routes'),
-      video: require('./routes/videoConsultation.routes'),
-      stats: require('./routes/stats.routes'),
-      team: require('./routes/team.routes'),
-      prescriptions: require('./routes/prescription.routes'),
-      bulk: require('./routes/bulk.routes'),
-      public: require('./routes/public.routes'),
-    };
+    // Mount API Routes
+    app.use('/api/auth', authLimiter, require('./routes/auth.routes'));
+    app.use('/api/exchange', require('./routes/exchange.routes'));
+    app.use('/api/doctors', protectedRoutes, require('./routes/doctor.routes'));
+    app.use('/api/patients', protectedRoutes, require('./routes/patient.routes'));
+    app.use('/api/appointments', protectedRoutes, require('./routes/appointment.routes'));
+    app.use('/api/medical-records', protectedRoutes, require('./routes/medicalRecord.routes'));
+    app.use('/api/payments', protectedRoutes, require('./routes/payment.routes'));
+    app.use('/api/organizations', protectedRoutes, require('./routes/organization.routes'));
+    app.use('/api/specialties', protectedRoutes, require('./routes/specialty.routes'));
+    app.use('/api/staff', protectedRoutes, require('./routes/staff.routes'));
+    app.use('/api/lab-catalog', protectedRoutes, require('./routes/labCatalog.routes'));
+    app.use('/api/lab-results', protectedRoutes, require('./routes/labResult.routes'));
+    app.use('/api/drugs', protectedRoutes, require('./routes/drug.routes'));
+    app.use('/api/nurses', protectedRoutes, require('./routes/nurse.routes'));
+    app.use('/api/video-consultations', protectedRoutes, require('./routes/videoConsultation.routes'));
+    app.use('/api/stats', protectedRoutes, require('./routes/stats.routes'));
+    app.use('/api/team', protectedRoutes, require('./routes/team.routes'));
+    app.use('/api/prescriptions', protectedRoutes, require('./routes/prescription.routes'));
+    app.use('/api/bulk', protectedRoutes, require('./routes/bulk.routes'));
+    app.use('/api/public', require('./routes/public.routes'));
+    app.use('/api/admin', [...protectedRoutes, roleMiddleware(['SUPERADMIN', 'PLATFORM_ADMIN'])], require('./routes/admin.routes'));
 
-    // Mount Routes
-    app.use('/api/auth', routes.auth);
-    app.use('/api/exchange', routes.exchange);
-    app.use('/api/doctors', authMiddleware, routes.doctors);
-    app.use('/api/patients', authMiddleware, routes.patients);
-    app.use('/api/appointments', authMiddleware, routes.appointments);
-    app.use('/api/medical-records', authMiddleware, routes.medicalRecords);
-    app.use('/api/payments', authMiddleware, routes.payments);
-    app.use('/api/organizations', authMiddleware, routes.organizations);
-    app.use('/api/specialties', authMiddleware, routes.specialties);
-    app.use('/api/staff', authMiddleware, routes.staff);
-    app.use('/api/lab-catalog', authMiddleware, routes.labCatalog);
-    app.use('/api/lab-results', authMiddleware, routes.labResults);
-    app.use('/api/drugs', authMiddleware, routes.drugs);
-    app.use('/api/nurses', authMiddleware, routes.nurses);
-    app.use('/api/video-consultations', authMiddleware, routes.video);
-    app.use('/api/stats', authMiddleware, routes.stats);
-    app.use('/api/team', authMiddleware, routes.team);
-    app.use('/api/prescriptions', authMiddleware, routes.prescriptions);
-    app.use('/api/bulk', authMiddleware, routes.bulk);
-    app.use('/api/public', routes.public);
-
-    // 404 handler
-    app.use((req, res) => {
-      res.status(404).json({ message: 'Ruta no encontrada (Lazy Mode)' });
+    // Final 404 handler for API
+    app.use('/api/*', (req, res) => {
+        res.status(404).json({ message: 'Ruta API no encontrada' });
     });
 
     isAppLoaded = true;
-    console.log('✅ [Vercel] Full context loaded successfully.');
+    console.log('✅ [Server] Full context loaded successfully.');
     next();
   } catch (err) {
     bootError = err;
-    console.error('❌ [Vercel] FATAL BOOT ERROR:', err);
+    console.error('❌ [Server] FATAL BOOT ERROR:', err);
     res.status(500).json({ error: 'Fatal Boot Error', detail: err.message });
   }
 };
 
-// Apply Lazy loader to everything EXCEPT canary
-app.use(loadApp);
+// Dispatch all requests through the loader
+app.use(loadFullApp);
 
-// Final Error Handler
+// Global Error Handler
 app.use((err, req, res, next) => {
+  console.error('[Global Error]', err);
   res.status(err.status || 500).json({
     message: err.message || 'Error interno del servidor',
     error: process.env.NODE_ENV === 'development' ? err : {}
@@ -168,13 +209,25 @@ app.use((err, req, res, next) => {
 });
 
 /**
- * Local Server Boot (Only for development)
+ * 🛰️ LOCAL BOOT (Socket.io Signaling)
+ * Only runs if NOT on Vercel
  */
-if (!process.env.VERCEL) {
+if (!process.env.VERCEL && process.env.NODE_ENV !== 'test') {
   const http = require('http');
   const server = http.createServer(app);
-  server.listen(process.env.PORT || 5001, () => {
-    console.log(`Server running on port ${process.env.PORT || 5001} (Dev)`);
+  
+  try {
+    const { initializeSocket } = require('./sockets/videoSocket');
+    initializeSocket(server);
+    console.log('🎥 Socket.io initialized for real-time signaling');
+  } catch (e) {
+    console.warn('⚠️ Video signaling socket could not be initialized:', e.message);
+  }
+
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => {
+    console.log(`\n🚀 Server running on port ${PORT} (Unified Mode)`);
+    console.log(`🏥 MedicalCare 888 Backend - v4.3.1\n`);
   });
 }
 

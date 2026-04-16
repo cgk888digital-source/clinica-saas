@@ -7,7 +7,7 @@ import { API_URL } from '../api-config';
   providedIn: 'root'
 })
 export class OrganizationService {
-  private apiUrl = `${API_URL}/organization`;
+  private apiUrl = `${API_URL}/organizations`;
   
   // Settings signal for reactive updates across the app
   settings = signal<any>({

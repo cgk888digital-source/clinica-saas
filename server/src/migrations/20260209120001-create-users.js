@@ -32,6 +32,15 @@ module.exports = {
       resetToken: { type: Sequelize.STRING },
       resetExpires: { type: Sequelize.DATE },
       organizationId: { type: Sequelize.UUID },
+      roleId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Roles',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

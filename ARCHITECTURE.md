@@ -1,6 +1,6 @@
-# 🏗️ Arquitectura del Proyecto - Clinica SaaS
+# 🏗️ Arquitectura del Proyecto - MedicalCare 888
 
-**Clinica SaaS** es un sistema integral de gestión médica y hospitalaria diseñado para optimizar los flujos de trabajo clínicos y administrativos. Este documento detalla la arquitectura técnica, las tecnologías utilizadas y la estructura del código.
+**MedicalCare 888** es un sistema integral de gestión médica y hospitalaria diseñado para optimizar los flujos de trabajo clínicos y administrativos. Este documento detalla la arquitectura técnica, las tecnologías utilizadas y la estructura del código.
 
 ---
 
@@ -89,7 +89,9 @@ server/src/
 │   ├── Appointment.js    # Citas médicas
 │   └── index.js          # Relaciones (Associations)
 ├── routes/               # Rutas de Express
-├── utils/                # scripts utilitarios (Seeds, Fixes)
+├── seeders/              # Scripts de carga inicial y seeders operativos
+├── utils/                # Scripts utilitarios remanentes
+│   └── legacy/           # Scripts antiguos archivados
 └── app.js                # Punto de entrada
 ```
 
@@ -119,7 +121,7 @@ El sistema utiliza un modelo relacional centrado en el usuario:
 
 El sistema implementa un control de acceso basado en roles (**RBAC**) robusto.
 
-- **Roles Soportados**: `SUPER_ADMIN`, `ADMIN`, `DOCTOR`, `NURSE`, `PATIENT`.
+- **Roles Soportados**: `SUPERADMIN`, `PLATFORM_ADMIN`, `DOCTOR`, `NURSE`, `ADMINISTRATIVE`, `PATIENT`.
 - **Protección Backend**: Middleware de autenticación JWT. (Nota: ACL a nivel de rutas pendiente, lógica actual en controladores).
 - **Protección Frontend**:
   - **Guards**: `AuthGuard` protege rutas privadas.
@@ -306,6 +308,39 @@ Workflow de promoción de código entre entornos.
 - **CI/CD**: GitHub Actions para promoción automática.
 - **Easypanel**: Webhooks para auto-despliegue.
 
+## 🔐 13. Aislamiento Proactivo (v2.3.0+)
+
+Capa de seguridad proactiva para entornos SaaS multi-tenant que garantiza el aislamiento total de los datos.
+
+- **Tecnología**: `AsyncLocalStorage` (Node.js) + Sequelize Hooks.
+- **Funcionamiento**: Un middleware captura la identidad de la organización y la mantiene en un contexto asíncrono. Un hook global en Sequelize inyecta automáticamente el filtro `organizationId` en todas las consultas `finding`.
+- **Ventaja**: El aislamiento es gestionado por la infraestructura, eliminando el riesgo de errores humanos (olvido de filtros manuales).
+
+## 📋 14. Sistema de Auditoría AUTOMATIZADO (v4.3.0+)
+
+Registro inmutable y automático de acciones críticas para cumplimiento legal y estándares **ISO 27001**.
+
+- **Automatización mediante Hooks**: El sistema ya no depende de llamadas manuales en controladores. Se utilizan ganchos globales de Sequelize (`afterCreate`, `afterUpdate`, `afterDestroy`) para capturar cada cambio en la base de datos de forma garantizada.
+- **Audit Trail Inteligente**: El servicio captura automáticamente:
+  - **Acción**: `CREATE`, `UPDATE`, `DELETE`.
+  - **Diferencial de Datos**: Payload JSON con valores anteriores, nuevos y el detalle de los campos modificados.
+  - **Metadatos de Contexto**: Usuario, Organización, IP y User-Agent extraídos mediante `AsyncLocalStorage`.
+- **Cobertura Total**: Implementado automáticamente para Usuarios, Pacientes, Doctores, Citas, Historiales, Pagos y Organizaciones.
+
+## 🌐 15. Arquitectura Unificada y Convergente (v4.3.0+)
+
+El sistema utiliza una estructura de fuente única para entornos de desarrollo local y despliegues en Vercel.
+
+- **Single Source of Truth**: Se eliminó la duplicidad de código entre `api/src` y `server/src`. Todo el núcleo lógico reside en **`server/src`**.
+- **Entrada Nativa Serverless**: El archivo `api/server.js` actúa como el puente oficial hacia el núcleo unificado, garantizando que las configuraciones de seguridad sean idénticas en todos los niveles.
+- **Seguridad End-to-End**: El servidor unificado incluye:
+  - **Rate Limiting Heredado**: Protección global y por endpoints sensibles (Auth).
+  - **Helmet & CSP Estricto**: Cabeceras de seguridad optimizadas para evitar XSS e inyecciones.
+  - **Lazy Loading Contextual**: Inicialización bajo demanda para optimizar los recursos en la nube.
+- **Ruta Estándar de Salida**: El `Output Directory` en el Dashboard se establece en **`client/dist/browser`**. Esto garantiza que el compilador nativo de Vercel encuentre los activos estáticos sin conflictos.
+- **Root Contextual**: Se utiliza `Root Directory: .` (punto) para que las funciones serverless de la carpeta `api/` y el código del frontend en `client/` convivan en el mismo ecosistema de despliegue.
+- **Despliegue Determinista**: Todo el flujo de CI/CD en GitHub Actions delega la compilación a la nube de Vercel, garantizando compatibilidad total con los entornos de ejecución modernos.
+
 ---
 
-_Documentación actualizada por Antigravity Agent - Marzo 2026 (v2.1.0)_
+_Documentación actualizada por Antigravity Agent - Abril 2026 (v4.3.2)_

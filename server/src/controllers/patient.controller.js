@@ -10,7 +10,7 @@ exports.getPatients = async (req, res) => {
     const offset = (page - 1) * limit;
 
     let whereClause = {};
-    const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+    const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
     
     if (isSuperAdmin) {
       whereClause = {};

@@ -1,6 +1,6 @@
 {
   "name": "clinica-saas-server",
-  "version": "2.1.1",
+  "version": "4.3.12",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,8 @@
     "test:coverage": "jest --coverage",
     "test:old": "node test/runTests.js",
     "migrate": "npx sequelize-cli db:migrate",
-    "test-email": "node src/utils/testEmail.js"
+    "test-email": "node src/utils/testEmail.js",
+    "vercel-build": "node src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +31,7 @@
     "dotenv": "^17.3.1",
     "exceljs": "^4.4.0",
     "express": "4.18.2",
+    "express-rate-limit": "^7.5.0",
     "helmet": "^8.1.0",
     "ioredis": "^5.9.3",
     "joi": "^18.0.2",
@@ -45,6 +47,8 @@
     "resend": "^6.10.0",
     "sequelize": "^6.37.7",
     "socket.io": "^4.8.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

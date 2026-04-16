@@ -197,7 +197,7 @@ export class VideoHistory implements OnInit {
     const doc = new jsPDF();
 
     // Header
-    doc.setFillColor('#4a90e2');
+    doc.setFillColor('#10b981'); // MedicalCare Emerald Green
     doc.rect(0, 0, 210, 40, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
@@ -242,8 +242,8 @@ export class VideoHistory implements OnInit {
     const pageH = doc.internal.pageSize.height;
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
-    doc.text(`${t('video_history.generatedOn')} ${new Date().toLocaleString()}`, 20, pageH - 10);
-    doc.text('MedicalCare888.app', 170, pageH - 10);
+    doc.text(`${t('video_history.generatedOn')} / Generated: ${new Date().toLocaleString()}`, 20, pageH - 10);
+    doc.text('MedicalCare888.com', 170, pageH - 10);
 
     doc.save(`MedicalCare888_Report_${vc.id}.pdf`);
   }

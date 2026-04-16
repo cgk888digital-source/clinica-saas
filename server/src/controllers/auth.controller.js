@@ -31,13 +31,13 @@ exports.register = async (req, res) => {
     const finalAccountType = accountType || 'PATIENT';
 
     // ROLES THAT REQUIRE INVITATION
-    const restrictedRoles = ['SUPER_ADMIN', 'ADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'NURSE'];
+    const restrictedRoles = ['SUPERADMIN', 'ADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'NURSE'];
     const isRestrictedRole = restrictedRoles.includes(finalRoleName);
     
     // Verify invite token for restricted roles
     if (isRestrictedRole) {
       const validInviteTokens = {
-        'super-admin-token': 'SUPER_ADMIN',
+        'super-admin-token': 'SUPERADMIN',
         'admin-token': 'ADMIN',
         'staff-token': 'ADMINISTRATIVE',
       };
@@ -204,8 +204,7 @@ exports.register = async (req, res) => {
         gender: user.gender,
         mustChangePassword: true
       },
-      // En modo desarrollo se expone la contraseña temporal para facilitar las pruebas
-      ...(process.env.NODE_ENV !== 'production' && { temporaryPassword: finalPassword })
+      temporaryPassword: finalPassword
     });
   } catch (error) {
     await t.rollback();
@@ -217,20 +216,16 @@ exports.register = async (req, res) => {
       });
     }
 
-    res.status(500).json({ message: 'No se pudo completar el registro. Error interno del servidor.' });
+    res.status(500).json({ 
+      message: 'No se pudo completar el registro. Error interno del servidor.',
+      debug_error: error.message,
+      stack: process.env.NODE_ENV !== 'production' ? error.stack : undefined
+    });
   }
 };
 
-const fs = require('fs');
-const path = require('path');
-const logFile = path.resolve(__dirname, '../../login_debug.log');
-
 const log = (msg) => {
-  try {
-    fs.appendFileSync(logFile, `${new Date().toISOString()} - ${msg}\n`);
-  } catch (e) {
-    console.error('LOGGING FAILED:', e);
-  }
+  console.log(`[AUTH] ${new Date().toISOString()} - ${msg}`);
 };
 
 exports.login = async (req, res) => {
@@ -316,6 +311,7 @@ exports.login = async (req, res) => {
         gender: user.gender,
         organizationId: user.organizationId,
         Organization: user.Organization,
+        subscriptionBypass: user.subscriptionBypass, // Nomimus-inspired flag
         mustChangePassword: user.mustChangePassword  // Exponer flag al frontend
       }
     });

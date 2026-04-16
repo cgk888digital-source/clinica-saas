@@ -12,45 +12,42 @@ const getBaseUrl = (): string => {
   if (typeof window === 'undefined') return 'http://localhost:5000';
   
   const host = window.location.hostname;
-  let result = '';
   
+  // 1. Entorno de Desarrollo Local
   if (host === 'localhost' || host === '127.0.0.1') {
-    result = 'http://localhost:5000';
-  } else if (host.includes('.easypanel.host')) {
-    if (host.includes('-frontend')) {
-      result = 'https://' + host.replace('-frontend', '-api');
-    } else {
-      // Si no tiene el sufijo -frontend, asumimos que es el nombre base (ej. Clinica SaaS.xxx)
-      // y le agregamos -api (ej. clinicasaas-api.xxx)
-      const parts = host.split('.');
-      parts[0] = parts[0] + '-api';
-      result = 'https://' + parts.join('.');
-    }
-    } else if (host.includes('nominusve.com')) {
-      if (host === 'clinicasaas.nominusve.com') {
-        result = 'https://clinicasaas-api.nominusve.com';
-      } else {
-        result = 'https://' + host.replace('Clinica SaaS.', 'clinicasaas-api.');
-      }
-    } else if (host.includes('medicalcare-888.com')) {
-      result = 'https://api.medicalcare-888.com';
-    } else if (host.includes('vercel.app') || host.includes('clinica-888')) {
-      // Vercel deployment uses relative paths
-      result = ''; 
-    }
-
-  if (!result) {
-    console.warn('⚠️ No se detectó entorno de producción. Usando rutas relativas.');
-  } else {
-    console.log(`🚀 Clinica SaaS API detectada: ${result}`);
+    return 'http://localhost:5000';
+  }
+  
+  // 2. Entorno Vercel / Monorepo (Rutas relativas dentro del mismo dominio)
+  // Detecta subdominios de despliegue de Vercel o el nombre base del proyecto
+  if (host.includes('vercel.app') || host.includes('clinica-888')) {
+    return ''; // Uso de rutas relativas (/api/...)
   }
 
-  return result;
+  // 3. Dominio Oficial MedicalCare 888
+  if (host.includes('medicalcare-888.com')) {
+    return 'https://api.medicalcare-888.com';
+  }
+
+  // Por defecto para cualquier otro entorno de producción, usamos rutas relativas
+  return '';
+};
+
+const getSocketUrl = (): string => {
+  if (typeof window === 'undefined') return 'http://localhost:5000';
+  
+  const baseUrl = getBaseUrl();
+  // Si BASE_URL es vacío (relativo), usamos el origen de la ventana actual
+  if (!baseUrl) {
+    return window.location.origin;
+  }
+  
+  return baseUrl;
 };
 
 export const BASE_URL = getBaseUrl();
 export const API_URL = `${BASE_URL}/api`;
-export const SOCKET_URL = BASE_URL || 'http://localhost:5000';
+export const SOCKET_URL = getSocketUrl();
 
 // Exponer para debug en consola
 if (typeof window !== 'undefined') {

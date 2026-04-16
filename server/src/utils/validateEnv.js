@@ -25,14 +25,19 @@ const validateEnv = () => {
 
   if (missingCritical.length > 0) {
     logger.error({ missing: missingCritical }, '❌ CRITICAL: Missing Critical Environment Variables');
-    
+
     // In production, we exit to prevent inconsistent state, UNLESS we are on Vercel
     if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
       console.error('\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
       console.error('!!  SHUTTING DOWN: Missing required variables   !!');
       console.error(`!!  ${missingCritical.join(', ')}`);
+
       console.error('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n');
-      process.exit(1);
+      // Do NOT call process.exit(1) in serverless environments (Vercel):
+      // it kills the function instance and causes cold-start 500s on every request.
+      if (!process.env.VERCEL) {
+        process.exit(1);
+      }
     } else {
       logger.warn(`⚠️ Server starting with missing critical vars: ${missingCritical.join(', ')}`);
     }

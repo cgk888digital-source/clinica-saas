@@ -1,7 +1,7 @@
 const { LabResult, Patient, User } = require('../models');
 
 const validatePatientAccess = async (patientId, organizationId, role) => {
-  const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+  const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
   if (isSuperAdmin) return true;
 
   const patient = await Patient.findByPk(patientId, { include: [User] });
@@ -50,7 +50,7 @@ exports.getPatientLabs = async (req, res) => {
 exports.getAllLabs = async (req, res) => {
   try {
     const { organizationId, role } = req.user;
-    const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+    const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
 
     const options = {
       order: [['createdAt', 'DESC']],

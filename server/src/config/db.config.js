@@ -1,16 +1,10 @@
 const Sequelize = require('sequelize');
 require('dotenv').config();
 
+const env = process.env.NODE_ENV || 'development';
+
 const configs = {
   development: {
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-    logging: false
-  },
-  qa: {
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
@@ -27,16 +21,7 @@ const configs = {
     dialect: 'postgres',
     logging: false,
     dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    },
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
+      ssl: { require: true, rejectUnauthorized: false }
     }
   },
   test: {
@@ -49,29 +34,50 @@ const configs = {
   }
 };
 
-const env = process.env.NODE_ENV || 'development';
-const config = configs[env];
+const config = configs[env] || configs.development;
 
-const sequelize = config.url 
-  ? new Sequelize(config.url, {
+// DATABASE_URL takes priority (Supabase, Neon, Railway, Heroku, etc.)
+const databaseUrl = process.env.DATABASE_URL;
+
+let sequelize;
+if (databaseUrl) {
+  sequelize = new Sequelize(databaseUrl, {
+    dialect: 'postgres',
+    logging: false,
+    dialectOptions: {
+      ssl: { require: true, rejectUnauthorized: false },
+      keepAlive: true
+    },
+    pool: { 
+      max: 8, 
+      min: 0, 
+      acquire: 30000, 
+      idle: 10000,
+      evict: 1000
+    }
+  });
+} else if (config.url) {
+  sequelize = new Sequelize(config.url, {
+    dialect: config.dialect,
+    logging: config.logging,
+    pool: config.pool,
+    dialectOptions: config.dialectOptions
+  });
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    {
+      host: config.host,
+      port: config.port,
       dialect: config.dialect,
       logging: config.logging,
       pool: config.pool,
       dialectOptions: config.dialectOptions
-    })
-  : new Sequelize(
-      config.database,
-      config.username,
-      config.password,
-      {
-        host: config.host,
-        port: config.port,
-        dialect: config.dialect,
-        logging: config.logging,
-        pool: config.pool,
-        dialectOptions: config.dialectOptions
-      }
-    );
+    }
+  );
+}
 
 // Force inclusion for Vercel
 if (process.env.VERCEL) {

@@ -6,6 +6,11 @@ import { firstLoginGuard } from './guards/first-login.guard';
 export const routes: Routes = [
   // Public routes - no auth required
   {
+    path: 'landing',
+    loadComponent: () => import('./components/landing/landing').then(m => m.LandingComponent),
+    title: 'MedicalCare 888 - Revoluciona tu Clínica'
+  },
+  {
     path: 'login',
     loadComponent: () => import('./components/login/login').then(m => m.Login),
     title: 'MedicalCare 888 - Iniciar Sesión'
@@ -39,7 +44,7 @@ export const routes: Routes = [
   // Default redirect
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'landing',
     pathMatch: 'full'
   },
 
@@ -169,6 +174,13 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard, firstLoginGuard],
     data: { roles: ['SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR'] },
     title: 'MedicalCare 888 - Imagen Corporativa'
+  },
+  {
+    path: 'platform-admin',
+    loadComponent: () => import('./components/platform-admin/platform-admin').then(m => m.PlatformAdmin),
+    canActivate: [authGuard, roleGuard, firstLoginGuard],
+    data: { roles: ['SUPERADMIN', 'PLATFORM_ADMIN'] },
+    title: 'MedicalCare 888 - Gestión Global'
   },
 
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const appointmentController = require('../controllers/appointment.controller');
 const authMiddleware = require('../middlewares/auth.middleware');
+const { authorize } = require('../middlewares/authorization.middleware');
 const validate = require('../middlewares/validate.middleware');
 const {
   createAppointmentSchema,
@@ -56,7 +57,7 @@ const {
  *                 total:
  *                   type: integer
  */
-router.get('/', authMiddleware, appointmentController.getAppointments);
+router.get('/', authMiddleware, authorize('appointments:read'), appointmentController.getAppointments);
 
 /**
  * @swagger
@@ -97,7 +98,7 @@ router.get('/', authMiddleware, appointmentController.getAppointments);
  *       400:
  *         description: Error de validación
  */
-router.post('/', authMiddleware, validate(createAppointmentSchema), appointmentController.createAppointment);
+router.post('/', authMiddleware, authorize('appointments:write'), validate(createAppointmentSchema), appointmentController.createAppointment);
 
 /**
  * @swagger
@@ -128,7 +129,7 @@ router.post('/', authMiddleware, validate(createAppointmentSchema), appointmentC
  *       200:
  *         description: Estado actualizado
  */
-router.patch('/:id/status', authMiddleware, validate(appointmentIdSchema, 'params'), appointmentController.updateStatus);
+router.patch('/:id/status', authMiddleware, authorize('appointments:write'), validate(appointmentIdSchema, 'params'), appointmentController.updateStatus);
 
 /**
  * @swagger
@@ -149,7 +150,7 @@ router.patch('/:id/status', authMiddleware, validate(appointmentIdSchema, 'param
  *       200:
  *         description: Cita cancelada
  */
-router.post('/:id/cancel', authMiddleware, validate(appointmentIdSchema, 'params'), appointmentController.cancelAppointment);
+router.post('/:id/cancel', authMiddleware, authorize('appointments:delete'), validate(appointmentIdSchema, 'params'), appointmentController.cancelAppointment);
 
 /**
  * @swagger
@@ -182,6 +183,6 @@ router.post('/:id/cancel', authMiddleware, validate(appointmentIdSchema, 'params
  *       200:
  *         description: Cita reprogramada
  */
-router.post('/:id/reschedule', authMiddleware, validate(appointmentIdSchema, 'params'), validate(updateAppointmentSchema), appointmentController.rescheduleAppointment);
+router.post('/:id/reschedule', authMiddleware, authorize('appointments:write'), validate(appointmentIdSchema, 'params'), validate(updateAppointmentSchema), appointmentController.rescheduleAppointment);
 
 module.exports = router;

@@ -26,6 +26,7 @@ exports.createPayment = async (req, res) => {
     console.log('[DEBUG] Creating payment with body:', JSON.stringify(req.body, null, 2));
 
     const payment = await Payment.create(req.body);
+
     res.status(201).json(payment);
   } catch (error) {
     console.error('Error creating payment:', error);
@@ -86,7 +87,7 @@ exports.getPayments = async (req, res) => {
 
     let whereClause = {};
 
-    const isSuperAdmin = userRole === 'SUPER_ADMIN' || userRole === 'SUPERADMIN';
+    const isSuperAdmin = userRole === 'SUPERADMIN';
 
     if (userRole === 'PATIENT') {
        const patient = await Patient.findOne({ where: { userId } });
@@ -127,6 +128,7 @@ exports.collectPayment = async (req, res) => {
         return res.status(404).json({ error: 'Payment not found' });
     }
 
+    const oldStatus = payment.status;
     payment.status = 'Paid';
     await payment.save();
 
@@ -193,7 +195,9 @@ exports.deletePayment = async (req, res) => {
         }
     }
 
+    const paymentData = payment.toJSON();
     await payment.destroy();
+
     res.json({ message: 'Payment deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

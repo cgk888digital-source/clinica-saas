@@ -28,13 +28,13 @@ export class LabPdfService {
       tagline: user?.businessName ? 'Servicios de Salud Integrales' : 'Gestión Médica Profesional'
     };
 
-    // --- CABECERA PREMIUM (Clinica SaaS Header) ---
-    // Background Accent (Top Blue Bar)
-    doc.setFillColor(14, 165, 233); // #10b981 (Clinica SaaS Blue)
+    // --- CABECERA PREMIUM (MedicalCare 888 Header) ---
+    // Background Accent (Top Emerald Bar)
+    doc.setFillColor(16, 185, 129); // #10b981 (MedicalCare Emerald Green)
     doc.rect(0, 0, pageWidth, 2, 'F');
 
     // Heartbeat Icon / Logo Placeholder (Stylized Heart)
-    doc.setDrawColor(14, 165, 233);
+    doc.setDrawColor(16, 185, 129);
     doc.setLineWidth(1);
     doc.line(14, 15, 18, 15);
     doc.line(18, 15, 20, 10);
@@ -49,8 +49,8 @@ export class LabPdfService {
     doc.text(branding.name.toUpperCase(), 35, 18);
     
     doc.setFontSize(8.5);
-    doc.setFont('helvetica', 'medium'); // Try helvetica-bold if medium is not available
-    doc.setTextColor(14, 165, 233); // Clinica SaaS Blue
+    doc.setFont('helvetica', 'medium');
+    doc.setTextColor(16, 185, 129); // MedicalCare Emerald Green
     doc.text(branding.tagline.toUpperCase(), 35, 23);
 
     // Platform Identity (Top Right)
@@ -126,7 +126,7 @@ export class LabPdfService {
       doc.setFont('helvetica', 'bold');
       doc.text(section.title.toUpperCase(), 23, y + 5);
       
-      doc.setDrawColor(14, 165, 233); // Clinica SaaS Blue line
+      doc.setDrawColor(16, 185, 129); // MedicalCare Emerald Green line
       doc.setLineWidth(1);
       doc.line(23, y + 7, 60, y + 7); 
 

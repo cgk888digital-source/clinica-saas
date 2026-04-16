@@ -2,7 +2,7 @@ const { VideoConsultation, User, Appointment, Doctor, Patient } = require('../mo
 const { v4: uuidv4 } = require('uuid');
 
 const validateAppointmentAccess = async (appointmentId, organizationId, role) => {
-  const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+  const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
   if (isSuperAdmin) return true;
 
   const appointment = await Appointment.findByPk(appointmentId, {

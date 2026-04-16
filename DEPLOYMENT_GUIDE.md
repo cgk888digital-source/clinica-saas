@@ -1,8 +1,8 @@
-# 🚀 Guía de Despliegue - MedicalCare 888 (v2.2.0)
+# 🚀 Guía de Despliegue - MedicalCare 888 (v4.3.12)
 
 ## ✅ Estado del Ecosistema CGK 888
 
-**Versión:** v2.2.0 - "Production Ready"
+**Versión:** v4.3.12 - "Production Ready"
 **Plataforma:** MedicalCare 888 Professional Clinics
 **Stack:** Angular 21 + Node.js/Express + PostgreSQL (Supabase) + Resend SDK + Docker
 
@@ -80,5 +80,5 @@ PORT=5000
 
 ---
 
-**Última actualización:** 30 de Marzo, 2026
+**Última actualización:** 9 de Abril, 2026
 **Equipos:** CGK 888 Digital Ecosystem + Antigravity (Advanced Agentic Coding Team)

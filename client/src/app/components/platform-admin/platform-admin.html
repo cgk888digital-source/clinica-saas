@@ -1,0 +1,224 @@
+<div class="container-fluid p-4 animate-fade-in">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+    <div>
+      <h2 class="fw-bold mb-1 text-primary-premium">{{ 'platform_admin.title' | translate }}</h2>
+      <p class="text-muted small mb-0">{{ 'platform_admin.subtitle' | translate }}</p>
+    </div>
+
+    <div class="d-flex gap-2">
+      <input type="text" class="form-control form-control-sm rounded-pill px-3"
+             [placeholder]="'platform_admin.searchPlaceholder' | translate" [(ngModel)]="searchTerm" style="min-width: 250px;">
+      <button class="btn btn-primary-premium btn-sm rounded-pill px-3 shadow-sm" (click)="loadOrganizations(); loadUsers()">
+        <i class="bi bi-arrow-clockwise me-1"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Platform Admin Tabs -->
+  <ul class="nav nav-pills custom-pills mb-4 gap-2">
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="activeTab === 'orgs'" (click)="setTab('orgs')">
+        <i class="bi bi-building me-2"></i>{{ 'platform_admin.tabs.orgs' | translate }}
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="activeTab === 'users'" (click)="setTab('users')">
+        <i class="bi bi-people me-2"></i>{{ 'platform_admin.tabs.users' | translate }}
+      </button>
+    </li>
+    <!-- Tab Admins: solo visible para SUPERADMIN -->
+    <li class="nav-item" *ngIf="isSuperAdmin()">
+      <button class="nav-link" [class.active]="activeTab === 'admins'" (click)="setTab('admins')">
+        <i class="bi bi-shield-lock me-2"></i>{{ 'platform_admin.tabs.admins' | translate }}
+      </button>
+    </li>
+  </ul>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">{{ 'platform_admin.loadingCloud' | translate }}</p>
+  </div>
+
+  <!-- TAB: ORGANIZATIONS -->
+  <div *ngIf="!loading && activeTab === 'orgs'" class="row g-4 slide-in">
+    <div class="col-12" *ngFor="let org of filteredOrgs()">
+      <div class="card card-premium">
+        <div class="card-body p-0">
+          <div class="d-flex flex-column flex-md-row">
+            <div class="p-4 flex-grow-1">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="org-icon p-2 rounded-3 bg-primary bg-opacity-10 text-primary">
+                  <i class="bi bi-building-check fs-4"></i>
+                </div>
+                <div>
+                  <h5 class="fw-bold mb-0">{{ org.name }}</h5>
+                  <div class="d-flex gap-2 align-items-center mt-1">
+                    <span class="badge" [ngClass]="{
+                      'bg-success bg-opacity-10 text-success': org.subscriptionStatus === 'ACTIVE',
+                      'bg-warning bg-opacity-10 text-warning': org.subscriptionStatus === 'TRIAL',
+                      'bg-danger bg-opacity-10 text-danger': org.subscriptionStatus === 'PAST_DUE' || org.subscriptionStatus === 'CANCELLED'
+                    }">{{ org.subscriptionStatus }}</span>
+                    <span class="x-small text-muted fw-bold text-uppercase">{{ org.type }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row g-3 small">
+                <div class="col-md-6 text-truncate"><span class="text-muted fw-bold">ID:</span> {{ org.id }}</div>
+                <div class="col-md-6 text-truncate"><span class="text-muted fw-bold">{{ 'platform_admin.orgCard.owner' | translate }}:</span> {{ org.owner?.email || 'Desconocido' }}</div>
+                <div class="col-md-6"><span class="text-muted fw-bold">{{ 'platform_admin.orgCard.created' | translate }}:</span> {{ org.createdAt | date:'mediumDate' }}</div>
+                <div class="col-md-6"><span class="text-muted fw-bold">{{ 'platform_admin.orgCard.expires' | translate }}:</span> {{ org.trialEndsAt ? (org.trialEndsAt | date:'mediumDate') : ('platform_admin.orgCard.indefinite' | translate) }}</div>
+              </div>
+            </div>
+
+            <div class="bg-light bg-opacity-25 p-4 border-start d-flex flex-column justify-content-center gap-2 min-w-250">
+              <label class="x-small fw-bold text-muted text-uppercase">{{ 'platform_admin.orgCard.statusControl' | translate }}</label>
+              <select class="form-select form-select-sm rounded-pill" [(ngModel)]="org.subscriptionStatus">
+                <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+              </select>
+              <button class="btn btn-primary-premium btn-sm rounded-pill mt-1" (click)="updateStatus(org)">
+                {{ 'platform_admin.orgCard.save' | translate }}
+              </button>
+              <button class="btn btn-outline-dark btn-sm rounded-pill" (click)="toggleUser(org.owner)" *ngIf="org.owner">
+                {{ org.owner.isActive ? ('platform_admin.orgCard.closeAccess' | translate) : ('platform_admin.orgCard.restoreAccess' | translate) }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: USERS -->
+  <div *ngIf="!loading && activeTab === 'users'" class="slide-in">
+    <div class="card card-premium overflow-hidden">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th class="ps-4">{{ 'platform_admin.usersTable.user' | translate }}</th>
+              <th>{{ 'platform_admin.usersTable.email' | translate }}</th>
+              <th>{{ 'platform_admin.usersTable.role' | translate }}</th>
+              <th>{{ 'platform_admin.usersTable.company' | translate }}</th>
+              <th>{{ 'platform_admin.usersTable.status' | translate }}</th>
+              <th class="text-end pe-4">{{ 'platform_admin.usersTable.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of filteredUsers()">
+              <td class="ps-4">
+                <div class="fw-bold">{{ u.firstName }} {{ u.lastName }}</div>
+                <div class="x-small text-muted">{{ u.id | slice:0:13 }}...</div>
+              </td>
+              <td>{{ u.email }}</td>
+              <td><span class="badge rounded-pill bg-light text-dark border">{{ u.Role?.name }}</span></td>
+              <td>{{ u.Organization?.name || '---' }}</td>
+              <td>
+                <span class="badge rounded-pill" [class.bg-success]="u.isActive" [class.bg-danger]="!u.isActive">
+                  {{ u.isActive ? ('dashboard.active' | translate) : ('platform_admin.usersTable.block' | translate) }}
+                </span>
+              </td>
+              <td class="text-end pe-4">
+                <button class="btn btn-sm btn-light rounded-pill px-3" (click)="toggleUser(u)">
+                  {{ u.isActive ? ('platform_admin.usersTable.block' | translate) : ('platform_admin.usersTable.unblock' | translate) }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: NEW ADMIN (solo SUPERADMIN) -->
+  <div *ngIf="!loading && activeTab === 'admins' && isSuperAdmin()" class="slide-in max-w-600 mx-auto">
+    <div class="card card-premium">
+      <div class="card-body p-4">
+        <div class="text-center mb-4">
+            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-2">
+                <i class="bi bi-shield-check fs-2 text-primary"></i>
+            </div>
+            <h5 class="fw-bold">{{ 'platform_admin.newAdmin.title' | translate }}</h5>
+            <p class="text-muted small">{{ 'platform_admin.newAdmin.description' | translate }}</p>
+        </div>
+
+        <form (ngSubmit)="onCreateAdmin()" #adminForm="ngForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.firstName' | translate }}</label>
+              <input type="text" class="form-control rounded-3" [(ngModel)]="newAdmin.firstName" name="fname" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.lastName' | translate }}</label>
+              <input type="text" class="form-control rounded-3" [(ngModel)]="newAdmin.lastName" name="lname" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.email' | translate }}</label>
+              <input type="email" class="form-control rounded-3" [(ngModel)]="newAdmin.email" name="email" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold">{{ 'platform_admin.newAdmin.password' | translate }}</label>
+              <input type="text" class="form-control rounded-3" [(ngModel)]="newAdmin.password" name="pass"
+                     [placeholder]="'platform_admin.newAdmin.passwordPlaceholder' | translate">
+            </div>
+            <!-- Selector de rol: SUPERADMIN solo disponible para emails autorizados -->
+            <div class="col-12">
+              <label class="form-label small fw-bold">Tipo de Administrador</label>
+              <select class="form-select rounded-3" [(ngModel)]="newAdmin.role" name="role">
+                <option value="PLATFORM_ADMIN">Admin de Plataforma (Vendedor)</option>
+                <option value="SUPERADMIN" *ngIf="canCreateSuperAdmin()">SuperAdmin (Maestro)</option>
+              </select>
+              <div class="form-text" *ngIf="!canCreateSuperAdmin()">
+                <i class="bi bi-info-circle me-1"></i>Solo los administradores maestros pueden crear SuperAdmins.
+              </div>
+            </div>
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn btn-primary-premium w-100 py-2 rounded-3" [disabled]="!adminForm.valid">
+                <i class="bi bi-person-plus me-2"></i>{{ 'platform_admin.newAdmin.createBtn' | translate }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && (filteredOrgs().length === 0 && activeTab === 'orgs' || filteredUsers().length === 0 && activeTab === 'users')"
+       class="text-center py-5 glass-morphism rounded-4 mt-4">
+    <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
+    <h5>No se encontraron resultados para "{{ searchTerm }}"</h5>
+  </div>
+</div>
+
+<style>
+  .min-w-250 { min-width: 250px; }
+  .max-w-600 { max-width: 600px; }
+  .x-small { font-size: 0.7rem; }
+  .rounded-4 { border-radius: 1.25rem !important; }
+  .animate-fade-in { animation: fadeIn 0.5s ease; }
+  .slide-in { animation: slideIn 0.3s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  .org-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+
+  .custom-pills .nav-link {
+    border-radius: 50px;
+    padding: 0.5rem 1.2rem;
+    color: #666;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+  .custom-pills .nav-link.active {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+  }
+  .card-premium {
+    border: none;
+    border-radius: 1.25rem;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card-premium:hover {
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+  }
+</style>

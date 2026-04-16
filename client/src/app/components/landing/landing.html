@@ -1,0 +1,129 @@
+<div class="landing-container">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="bi bi-heart-pulse-fill"></i>
+      <span>MedicalCare 888</span>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/login" class="nav-link">Iniciar Sesión</a>
+      <a routerLink="/register" class="btn-primary">Registrarse Gratis</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="hero-content">
+      <span class="badge">SaaS Clínico de Próxima Generación</span>
+      <h1>Revoluciona la Gestión de tu <span>Clínica</span></h1>
+      <p>Digitaliza tu consulta, atiende a tus pacientes por video y gestiona todo tu equipo en una sola plataforma segura y escalable.</p>
+      <div class="hero-actions">
+        <a routerLink="/register" class="btn-large">Comenzar Ahora</a>
+        <a href="#features" class="btn-outline">Ver Funciones</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="dashboard-preview">
+        <div class="preview-header">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+        </div>
+        <div class="preview-body">
+          <div class="skeleton-chart"></div>
+          <div class="skeleton-list">
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="section-header">
+      <h2>Todo lo que tu clínica necesita</h2>
+      <p>Diseñado por profesionales de la salud para maximizar la productividad y el cuidado del paciente.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of features">
+        <div class="icon-box">
+          <i class="bi" [ngClass]="feature.icon"></i>
+        </div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section (Dark Theme Accent) -->
+  <section class="benefits">
+    <div class="benefits-content">
+      <div class="benefits-text">
+        <h2>Ventajas Competitivas</h2>
+        <ul class="benefit-list">
+          <li>
+            <i class="bi bi-check-circle-fill"></i>
+            <div>
+              <strong>Seguridad Certificada:</strong> Datos encriptados y cumplimiento con estándares médicos.
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-lightning-charge-fill"></i>
+            <div>
+              <strong>Velocidad Extrema:</strong> Interfaz reactiva sin tiempos de carga lentos.
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-phone-fill"></i>
+            <div>
+              <strong>Multi-dispositivo:</strong> Accede desde tu móvil, tablet o laptop sin instalar nada.
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="benefits-image">
+        <div class="stats-card">
+          <div class="stat-item">
+            <span class="value">+99%</span>
+            <span class="label">Disponibilidad</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="value">24/7</span>
+            <span class="label">Soporte Técnico</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="cta-card">
+      <h2>¿Listo para llevar tu clínica al siguiente nivel?</h2>
+      <p>Únete a cientos de profesionales que ya están optimizando su tiempo.</p>
+      <a routerLink="/register" class="btn-white">Crear Cuenta Ahora</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-info">
+        <h3>MedicalCare 888</h3>
+        <p>Potenciado por el ecosistema CGK888.</p>
+      </div>
+      <div class="footer-links">
+        <a routerLink="/login">Login</a>
+        <a routerLink="/subscription">Planes</a>
+        <a routerLink="/agendar-cita">Agendar Cita (Público)</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 MedicalCare 888 - Todos los derechos reservados.
+    </div>
+  </footer>
+</div>

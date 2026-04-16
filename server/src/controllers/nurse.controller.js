@@ -3,7 +3,7 @@ const { Nurse, User } = require('../models');
 exports.getNurses = async (req, res) => {
   try {
     const { organizationId, role } = req.user;
-    const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+    const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
 
     const whereClause = {};
     
@@ -24,7 +24,7 @@ exports.getNurses = async (req, res) => {
 exports.deleteNurse = async (req, res) => {
   try {
     const { organizationId, role } = req.user;
-    const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+    const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
     const { id } = req.params;
     
     const nurse = await Nurse.findByPk(id, { include: [User] });

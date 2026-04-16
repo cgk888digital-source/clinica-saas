@@ -4,7 +4,7 @@ const sequelize = require('../config/db.config');
 
 const getOrganizationFilter = (user) => {
   const { organizationId, role } = user;
-  const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+  const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
   
   if (isSuperAdmin || !organizationId) {
     return {};
@@ -16,7 +16,7 @@ const getOrganizationFilter = (user) => {
 exports.getStats = async (req, res) => {
   const { role, id: userId, organizationId } = req.user;
   const userRole = role ? role.toUpperCase() : 'GUEST';
-  const isSuperAdmin = role === 'SUPER_ADMIN' || role === 'SUPERADMIN';
+  const isSuperAdmin = role === 'SUPERADMIN' || role === 'SUPERADMIN';
 
   const responseData = {
     appointmentsToday: 0,
@@ -81,7 +81,7 @@ exports.getStats = async (req, res) => {
       where: { ...baseWhere, status: 'Pending' } 
     });
 
-    if (['SUPER_ADMIN', 'SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'NURSE', 'RECEPTIONIST'].includes(userRole)) {
+    if (['SUPERADMIN', 'SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'NURSE', 'RECEPTIONIST'].includes(userRole)) {
       const patientWhere = isSuperAdmin ? {} : orgFilter;
       responseData.totalPatients = await Patient.count({ include: [{ model: User, where: patientWhere, attributes: [] }] });
     }
@@ -158,7 +158,7 @@ exports.getStats = async (req, res) => {
     });
 
     // 4. Income Stats (only for authorized roles)
-    if (['SUPER_ADMIN', 'SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'RECEPTIONIST'].includes(userRole)) {
+    if (['SUPERADMIN', 'SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'RECEPTIONIST'].includes(userRole)) {
       const paymentWhere = isSuperAdmin ? {} : { organizationId };
       
       const dayPayments = await Payment.findAll({ 
@@ -186,7 +186,7 @@ exports.getStats = async (req, res) => {
     }
 
     // 5. Appointment Type Counts
-    if (['SUPER_ADMIN', 'SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'NURSE', 'RECEPTIONIST'].includes(userRole)) {
+    if (['SUPERADMIN', 'SUPERADMIN', 'ADMINISTRATIVE', 'DOCTOR', 'NURSE', 'RECEPTIONIST'].includes(userRole)) {
       const typeWhere = isSuperAdmin ? {} : { ...baseWhere };
       responseData.inPersonCount = await Appointment.count({ where: { ...typeWhere, type: 'In-Person' } });
       responseData.videoCount = await Appointment.count({ where: { ...typeWhere, type: 'Video' } });

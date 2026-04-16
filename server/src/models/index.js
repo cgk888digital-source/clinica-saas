@@ -35,28 +35,24 @@ Doctor.belongsTo(Specialty, { foreignKey: 'specialtyId' });
 User.hasOne(Doctor, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Doctor.belongsTo(User, { foreignKey: 'userId' });
 
-// Doctor belongs to Organization
 Organization.hasMany(Doctor, { foreignKey: 'organizationId' });
 Doctor.belongsTo(Organization, { foreignKey: 'organizationId' });
 
 User.hasOne(Nurse, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Nurse.belongsTo(User, { foreignKey: 'userId' });
 
-// Nurse belongs to Organization
 Organization.hasMany(Nurse, { foreignKey: 'organizationId' });
 Nurse.belongsTo(Organization, { foreignKey: 'organizationId' });
 
 User.hasOne(Staff, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Staff.belongsTo(User, { foreignKey: 'userId' });
 
-// Staff belongs to Organization
 Organization.hasMany(Staff, { foreignKey: 'organizationId' });
 Staff.belongsTo(Organization, { foreignKey: 'organizationId' });
 
 User.hasOne(Patient, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Patient.belongsTo(User, { foreignKey: 'userId' });
 
-// Patient belongs to Organization (multi-tenant)
 Organization.hasMany(Patient, { foreignKey: 'organizationId' });
 Patient.belongsTo(Organization, { foreignKey: 'organizationId' });
 
@@ -120,6 +116,38 @@ LabTest.belongsToMany(LabCombo, {
   foreignKey: 'testId',
   otherKey: 'comboId',
   as: 'combos'
+});
+
+// Global Isolation Hook (SaaS Multi-tenant)
+const context = require('../utils/context');
+const AuditTrail = require('../utils/auditTrail');
+
+/**
+ * Automatically inject organizationId filter into all queries
+ * Excludes SUPERADMIN or explicit unscoped queries
+ */
+sequelize.addHook('beforeFind', (options) => {
+  try {
+    const orgId = context.getOrgId();
+    const role = context.getRole();
+
+    // Skip if no orgId in context or user is a Super Admin or Platform Admin
+    if (!orgId || role === 'SUPERADMIN' || role === 'PLATFORM_ADMIN') {
+      return;
+    }
+
+    // Ensure 'where' exists
+    options.where = options.where || {};
+
+    // If the model has an 'organizationId' attribute, inject it
+    if (options.model?.rawAttributes?.organizationId) {
+      if (typeof options.where.organizationId === 'undefined') {
+         options.where.organizationId = orgId;
+      }
+    }
+  } catch (err) {
+    console.error('Sequelize beforeFind Hook Error:', err);
+  }
 });
 
 module.exports = {

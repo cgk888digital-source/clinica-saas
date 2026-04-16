@@ -65,13 +65,13 @@ exports.getAppointments = async (req, res) => {
     const offset = (page - 1) * limit;
 
     let whereClause = {};
-    const adminRoles = ['SUPER_ADMIN', 'SUPERADMIN', 'ADMINISTRATIVE', 'NURSE', 'RECEPTIONIST'];
+    const adminRoles = ['SUPERADMIN', 'SUPERADMIN', 'ADMINISTRATIVE', 'NURSE', 'RECEPTIONIST'];
 
     // Dynamic Include for Doctor to filter by Organization
     let doctorUserInclude = { model: User, attributes: ['id', 'firstName', 'lastName', 'email', 'organizationId'] };
 
     // If not SUPER_ADMIN and belongs to an Organization, filter Doctors by that Organization
-    const isSuperAdmin = userRole === 'SUPER_ADMIN' || userRole === 'SUPERADMIN';
+    const isSuperAdmin = userRole === 'SUPERADMIN' || userRole === 'SUPERADMIN';
     if (organizationId && !isSuperAdmin) {
         doctorUserInclude.where = { organizationId };
     }
@@ -131,8 +131,15 @@ exports.updateStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+    
+    // Get old data for audit
+    const oldAppointment = await Appointment.findByPk(id);
+    if (!oldAppointment) return res.status(404).json({ error: 'Cita no encontrada' });
+
     await Appointment.update({ status }, { where: { id } });
     
+    const updatedAppointment = await Appointment.findByPk(id);
+
     // Handle specific status updates (like cancellation) if done via this generic endpoint
     if (status === 'Cancelled') {
         const appointment = await Appointment.findByPk(id, {
@@ -164,6 +171,7 @@ exports.cancelAppointment = async (req, res) => {
 
         if (!appointment) return res.status(404).json({ error: 'Cita no encontrada' });
 
+        const oldValues = appointment.toJSON();
         appointment.status = 'Cancelled';
         await appointment.save();
 
@@ -196,6 +204,7 @@ exports.rescheduleAppointment = async (req, res) => {
 
         if (!appointment) return res.status(404).json({ error: 'Cita no encontrada' });
 
+        const oldValues = appointment.toJSON();
         appointment.date = newDate;
         appointment.status = 'Confirmed'; // Re-confirm if it was cancelled
         appointment.reminderSent = false; // Reset reminder

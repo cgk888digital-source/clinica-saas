@@ -13,7 +13,14 @@ module.exports = (allowedRoles) => {
     const userRole = req.user.role ? req.user.role.toUpperCase() : null;
     const roles = allowedRoles.map(role => role.toUpperCase());
 
-    // 3. Verificar si el rol del usuario está en la lista permitida
+    // 3. ROOT & GLOBAL MGT Bypasses (Architect's requirement)
+    // SUPERADMIN = Total System Root
+    // PLATFORM_ADMIN = Global Demo & Platform Management
+    if (userRole === 'SUPERADMIN' || userRole === 'SUPERADMIN' || userRole === 'PLATFORM_ADMIN') {
+      return next();
+    }
+
+    // 4. Verificar si el rol del usuario está en la lista permitida
     if (userRole && roles.includes(userRole)) {
       next(); // Acceso concedido
     } else {
