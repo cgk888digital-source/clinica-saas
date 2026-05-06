@@ -5,11 +5,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [4.3.13] — 2026-05-06
+
+### 🔧 Production Connectivity Fixes
+
+- **API Configuration Refactor** — Se cambió el uso de subdominios explícitos (`api.medicalcare-888.com`) por rutas relativas (`/api`) en `api-config.ts`. Esto resuelve errores de resolución de DNS en despliegues monorepo de Vercel.
+- **Hardcoded URL Removal** — Se reemplazaron referencias directas a `localhost:5000` por la constante dinámica `API_URL` en el componente de citas públicas.
+
+---
+
 ## [4.3.12] — 2026-04-10
-
-### 📋 Documentation & Version Sync
-
-- **Version Synchronization** — Actualización a v4.3.12 para consistencia con producción.
 
 ---
 
