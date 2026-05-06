@@ -1,6 +1,6 @@
 {
   "name": "clinica-888-monorepo",
-  "version": "4.3.2",
+  "version": "4.3.13",
   "private": true,
   "workspaces": [
     "server",
