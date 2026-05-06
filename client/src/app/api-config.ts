@@ -25,8 +25,9 @@ const getBaseUrl = (): string => {
   }
 
   // 3. Dominio Oficial MedicalCare 888
+  // Si se prefiere usar rutas relativas en producción (como en Vercel)
   if (host.includes('medicalcare-888.com')) {
-    return 'https://api.medicalcare-888.com';
+    return ''; // Uso de rutas relativas (/api/...) ya que el backend está en el mismo host
   }
 
   // Por defecto para cualquier otro entorno de producción, usamos rutas relativas

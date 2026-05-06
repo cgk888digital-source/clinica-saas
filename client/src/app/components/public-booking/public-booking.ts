@@ -79,7 +79,7 @@ export class PublicBooking implements OnInit, OnDestroy {
 
   loadDoctors() {
     // Public endpoint - no auth required
-    this.http.get<any[]>('http://localhost:5000/api/public/doctors')
+    this.http.get<any[]>(`${API_URL}/public/doctors`)
       .subscribe({
         next: (data) => this.doctors.set(data),
         error: (err) => console.error('Error loading doctors:', err)
